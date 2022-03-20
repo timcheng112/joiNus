@@ -24,14 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 public class BookingEntity implements Serializable {
 
-    public BookingEntity() {
-    }
-
-    public BookingEntity(SlotStatusEnum bookingStatus, Date creationDate) {
-        this.bookingStatus = bookingStatus;
-        this.creationDate = creationDate;
-    }
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,15 +36,21 @@ public class BookingEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
     
-    /*
-    relationships:
     @OneToOne(optional = false)
     private ActivityEntity activity;
     
     @OneToOne(optional = false)
     private TimeSlotEntity timeSlot;
-    */
-    
+        
+    public BookingEntity() {
+    }
+
+    public BookingEntity(SlotStatusEnum bookingStatus, Date creationDate, ActivityEntity activity, TimeSlotEntity timeSlot) {
+        this.bookingStatus = bookingStatus;
+        this.creationDate = creationDate;
+        this.activity = activity;
+        this.timeSlot = timeSlot;
+    }
 
     public Long getBookingId() {
         return bookingId;
@@ -113,6 +111,34 @@ public class BookingEntity implements Serializable {
      */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    /**
+     * @return the activity
+     */
+    public ActivityEntity getActivity() {
+        return activity;
+    }
+
+    /**
+     * @param activity the activity to set
+     */
+    public void setActivity(ActivityEntity activity) {
+        this.activity = activity;
+    }
+
+    /**
+     * @return the timeSlot
+     */
+    public TimeSlotEntity getTimeSlot() {
+        return timeSlot;
+    }
+
+    /**
+     * @param timeSlot the timeSlot to set
+     */
+    public void setTimeSlot(TimeSlotEntity timeSlot) {
+        this.timeSlot = timeSlot;
     }
     
 }

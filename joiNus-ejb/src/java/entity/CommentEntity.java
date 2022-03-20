@@ -6,12 +6,15 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -28,9 +31,19 @@ public class CommentEntity implements Serializable {
     private String text;
     @OneToOne
     private NormalUserEntity commentOwner;
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date commentDate;
 
     //Make Constructor
-    
+    public CommentEntity() {
+    }
+
+    public CommentEntity(String text, NormalUserEntity commentOwner, Date commentDate) {
+        this.text = text;
+        this.commentOwner = commentOwner;
+        this.commentDate = commentDate;
+    }
 
     public Long getCommentId() {
         return commentId;
@@ -78,5 +91,20 @@ public class CommentEntity implements Serializable {
     public void setText(String text) {
         this.text = text;
     }
+
+    /**
+     * @return the commentOwner
+     */
+    public NormalUserEntity getCommentOwner() {
+        return commentOwner;
+    }
+
+    /**
+     * @return the commentDate
+     */
+    public Date getCommentDate() {
+        return commentDate;
+    }
+
     
 }

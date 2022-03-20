@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,23 +28,28 @@ public class CategoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
+    
     @Column(nullable = false, length = 24)
     private String categoryName;
-    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
-    private CategoryEntity parentCategory;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    private CategoryEntity subCategory;
-    @ManyToOne
-    private ActivityEntity activities;
+    private CategoryEntity parentCategory;
+    
+    @OneToMany(mappedBy = "subCategories", fetch = FetchType.LAZY)
+    private List<CategoryEntity> subCategories;
+    
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<ActivityEntity> activities;
 
+    public CategoryEntity() {
+        this.subCategories = new ArrayList<>();
+        this.activities = new ArrayList<>();
+    }
 
     public CategoryEntity(String categoryName, CategoryEntity parentCategory, CategoryEntity subCategory, ActivityEntity activities) {
         this.categoryName = categoryName;
         this.parentCategory = parentCategory;
-        this.subCategory = subCategory;
-        this.activities = activities;
     }
-    
 
     public Long getCategoryId() {
         return categoryId;
@@ -106,31 +113,31 @@ public class CategoryEntity implements Serializable {
     }
 
     /**
-     * @return the subCategory
+     * @return the subCategories
      */
-    public CategoryEntity getSubCategory() {
-        return subCategory;
+    public List<CategoryEntity> getSubCategories() {
+        return subCategories;
     }
 
     /**
-     * @param subCategory the subCategory to set
+     * @param subCategories the subCategories to set
      */
-    public void setSubCategory(CategoryEntity subCategory) {
-        this.subCategory = subCategory;
+    public void setSubCategories(List<CategoryEntity> subCategories) {
+        this.subCategories = subCategories;
     }
 
     /**
      * @return the activities
      */
-    public ActivityEntity getActivities() {
+    public List<ActivityEntity> getActivities() {
         return activities;
     }
 
     /**
      * @param activities the activities to set
      */
-    public void setActivities(ActivityEntity activities) {
+    public void setActivities(List<ActivityEntity> activities) {
         this.activities = activities;
     }
-    
+
 }

@@ -5,9 +5,16 @@
  */
 package entity;
 
+import com.sun.istack.internal.Nullable;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale.Category;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -41,18 +48,18 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     @Max(value = 99999, message = "Booking Tokens should not be more than 99999")
     private Integer bookingTokens;
     
-    //@OneToMany(fetch = FetchType.LAZY, cascade={})
-    //protected List<Category> interests;
-    //@ManyToMany(mappedBy="participants", fetch = FetchType.LAZY)
-    //protected List<Activity> activitiesParticipated;
-    //@OneToMany(mappedBy="activityOwner", fetch = FetchType.LAZY)
-    //protected List<Activity> activitiesOwned;
+    @OneToMany(fetch = FetchType.LAZY, cascade={})
+    private List<CategoryEntity> interests;
+    @ManyToMany(mappedBy="participants", fetch = FetchType.LAZY)
+    private List<ActivityEntity> activitiesParticipated;
+    @OneToMany(mappedBy="activityOwner", fetch = FetchType.LAZY)
+    private List<ActivityEntity> activitiesOwned;
     
     public NormalUserEntity() {
         super();
-        //interests = new ArrayList<>();
-        //activitiesParticipated = new ArrayList<>();
-        //activitiesOwned = new ArrayList<>();
+        interests = new ArrayList<>();
+        activitiesParticipated = new ArrayList<>();
+        activitiesOwned = new ArrayList<>();
     }
 
     public NormalUserEntity(String email, String name, Integer socialCredits, Integer bookingTokens, String username, String password) {
@@ -144,6 +151,48 @@ public class NormalUserEntity extends UserEntity implements Serializable {
      */
     public void setBookingTokens(Integer bookingTokens) {
         this.bookingTokens = bookingTokens;
+    }
+
+    /**
+     * @return the interests
+     */
+    public List<CategoryEntity> getInterests() {
+        return interests;
+    }
+
+    /**
+     * @param interests the interests to set
+     */
+    public void setInterests(List<CategoryEntity> interests) {
+        this.interests = interests;
+    }
+
+    /**
+     * @return the activitiesParticipated
+     */
+    public List<ActivityEntity> getActivitiesParticipated() {
+        return activitiesParticipated;
+    }
+
+    /**
+     * @param activitiesParticipated the activitiesParticipated to set
+     */
+    public void setActivitiesParticipated(List<ActivityEntity> activitiesParticipated) {
+        this.activitiesParticipated = activitiesParticipated;
+    }
+
+    /**
+     * @return the activitiesOwned
+     */
+    public List<ActivityEntity> getActivitiesOwned() {
+        return activitiesOwned;
+    }
+
+    /**
+     * @param activitiesOwned the activitiesOwned to set
+     */
+    public void setActivitiesOwned(List<ActivityEntity> activitiesOwned) {
+        this.activitiesOwned = activitiesOwned;
     }
 
 
