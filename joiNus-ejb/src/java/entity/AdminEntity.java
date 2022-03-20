@@ -6,35 +6,38 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  *
  * @author User
  */
 @Entity
-public class AdminEntity implements Serializable {
+public class AdminEntity extends UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, length = 64, unique = true)
+    private String club;
+    @Column(nullable = false)
+    private Boolean isSuperAdmin;
 
-    public Long getId() {
-        return id;
+    public AdminEntity() {
+        super();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public AdminEntity(String club, Boolean isSuperAdmin, String username, String password) {
+        this();
+        this.username = username;
+        this.password = password;
+        this.club = club;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (userId != null ? userId.hashCode() : 0);
         return hash;
     }
 
@@ -45,7 +48,7 @@ public class AdminEntity implements Serializable {
             return false;
         }
         AdminEntity other = (AdminEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
         return true;
@@ -53,7 +56,35 @@ public class AdminEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AdminEntity[ id=" + id + " ]";
+        return "entity.AdminEntity[ id=" + userId + " ]";
+    }
+
+    /**
+     * @return the club
+     */
+    public String getClub() {
+        return club;
+    }
+
+    /**
+     * @param club the club to set
+     */
+    public void setClub(String club) {
+        this.club = club;
+    }
+
+    /**
+     * @return the isSuperAdmin
+     */
+    public Boolean getIsSuperAdmin() {
+        return isSuperAdmin;
+    }
+
+    /**
+     * @param isSuperAdmin the isSuperAdmin to set
+     */
+    public void setIsSuperAdmin(Boolean isSuperAdmin) {
+        this.isSuperAdmin = isSuperAdmin;
     }
     
 }
