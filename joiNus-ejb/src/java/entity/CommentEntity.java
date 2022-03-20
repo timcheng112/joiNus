@@ -35,7 +35,6 @@ public class CommentEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
 
-    //Make Constructor
     public CommentEntity() {
     }
 

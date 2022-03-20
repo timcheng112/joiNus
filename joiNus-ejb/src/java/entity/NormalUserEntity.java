@@ -47,14 +47,14 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     @Min(value = 0, message = "Booking Tokens should not be less than 0")
     @Max(value = 99999, message = "Booking Tokens should not be more than 99999")
     private Integer bookingTokens;
-    
-    @OneToMany(fetch = FetchType.LAZY, cascade={})
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {})
     private List<CategoryEntity> interests;
-    @ManyToMany(mappedBy="participants", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     private List<ActivityEntity> activitiesParticipated;
-    @OneToMany(mappedBy="activityOwner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "activityOwner", fetch = FetchType.LAZY)
     private List<ActivityEntity> activitiesOwned;
-    
+
     public NormalUserEntity() {
         super();
         interests = new ArrayList<>();
@@ -168,6 +168,13 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     }
 
     /**
+     * @param interest add an interest to set
+     */
+    public void addInterest(CategoryEntity interest) {
+        this.interests.add(interest);
+    }
+
+    /**
      * @return the activitiesParticipated
      */
     public List<ActivityEntity> getActivitiesParticipated() {
@@ -179,6 +186,13 @@ public class NormalUserEntity extends UserEntity implements Serializable {
      */
     public void setActivitiesParticipated(List<ActivityEntity> activitiesParticipated) {
         this.activitiesParticipated = activitiesParticipated;
+    }
+
+    /**
+     * @param activitiesParticipating add an activitiesParticipated to set
+     */
+    public void addActivitiesParticipated(ActivityEntity activitiesParticipating) {
+        this.activitiesParticipated.add(activitiesParticipating);
     }
 
     /**
@@ -195,5 +209,10 @@ public class NormalUserEntity extends UserEntity implements Serializable {
         this.activitiesOwned = activitiesOwned;
     }
 
-
+    /**
+     * @param activitiesOwning add an activitiesOwned to set
+     */
+    public void addActivitiesOwned(ActivityEntity activitiesOwning) {
+        this.activitiesOwned.add(activitiesOwning);
+    }
 }

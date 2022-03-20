@@ -161,5 +161,25 @@ public class FacilityEntity implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    /**
+     * @return the timeSlots
+     */
+    public List<TimeSlotEntity> getTimeSlots() {
+        return timeSlots;
+    }
+
+    /**
+     * @param timeSlots the timeSlots to set
+     */
+    public void setTimeSlots(List<TimeSlotEntity> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
     
+    /**
+     * @param timeSlot add a timeSlot to set
+     */
+    public void addTimeSlot(TimeSlotEntity timeSlot) {
+        this.timeSlots.add(timeSlot);
+    }
 }

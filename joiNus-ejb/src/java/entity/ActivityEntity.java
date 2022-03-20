@@ -34,32 +34,38 @@ public class ActivityEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activityId;
+    
     @Column(nullable = false, length = 32)
     private String activityName;
+    
     @Column(nullable = false)
     private String activityDescription;
+    
     @Column(nullable = false, length = 2)
     private Integer maxParticipants;
+    
     @Column
     private List<String> tags;
+    
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date activityCreationDate;
     
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private NormalUserEntity activityOwner;
-    
+
     @ManyToMany
     private List<NormalUserEntity> participants;
-    
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private CategoryEntity category;
-    
+
     @OneToOne(mappedBy = "activity")
     private BookingEntity booking;
-    
+
     @OneToMany
     private List<CommentEntity> comments;
 
@@ -79,7 +85,7 @@ public class ActivityEntity implements Serializable {
         this.booking = booking;
         this.activityCreationDate = activityCreationDate;
     }
-    
+
     public Long getActivityId() {
         return activityId;
     }
@@ -170,6 +176,13 @@ public class ActivityEntity implements Serializable {
     }
 
     /**
+     * @param tag add a tag to set
+     */
+    public void addTag(String tag) {
+        this.tags.add(tag);
+    }
+
+    /**
      * @return the activityOwner
      */
     public NormalUserEntity getActivityOwner() {
@@ -226,6 +239,13 @@ public class ActivityEntity implements Serializable {
     }
 
     /**
+     * @param comment add a comment to set
+     */
+    public void addComment(CommentEntity comment) {
+        this.comments.add(comment);
+    }
+
+    /**
      * @return the participants
      */
     public List<NormalUserEntity> getParticipants() {
@@ -238,12 +258,19 @@ public class ActivityEntity implements Serializable {
     public void setParticipants(List<NormalUserEntity> participants) {
         this.participants = participants;
     }
-
+    
+    /**
+     * @param user add a user to set
+     */
+    public void addParticipant(NormalUserEntity user) {
+        this.participants.add(user);
+    }
+    
     /**
      * @return the activityCreationDate
      */
     public Date getActivityCreationDate() {
         return activityCreationDate;
     }
-    
+
 }
