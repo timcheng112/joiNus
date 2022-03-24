@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -44,8 +46,11 @@ public class ImageEntity implements Serializable {
     }
 
     //attributes
+    
     @Column(nullable = true)
     private String imageDescription;
+    
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date datePosted;
     //relationship

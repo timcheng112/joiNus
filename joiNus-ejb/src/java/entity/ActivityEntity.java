@@ -68,10 +68,14 @@ public class ActivityEntity implements Serializable {
 
     @OneToMany
     private List<CommentEntity> comments;
+    
+    @OneToMany
+    private List<ImageEntity> gallery;
 
     public ActivityEntity() {
         this.comments = new ArrayList<>();
         this.participants = new ArrayList<>();
+        this.gallery = new ArrayList<>();
     }
 
     public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, NormalUserEntity participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
@@ -271,6 +275,20 @@ public class ActivityEntity implements Serializable {
      */
     public Date getActivityCreationDate() {
         return activityCreationDate;
+    }
+
+    /**
+     * @return the gallery
+     */
+    public List<ImageEntity> getGallery() {
+        return gallery;
+    }
+
+    /**
+     * @param gallery the gallery to set
+     */
+    public void setGallery(List<ImageEntity> gallery) {
+        this.gallery = gallery;
     }
 
 }
