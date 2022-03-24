@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>joiNus</title>
+        <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        <h:outputStylesheet library="css" name="default.css" />
+    </h:head>
+    <h:body>
+        
+        <p:layout fullPage="true">
+            
+            <p:layoutUnit position="north" size="120">
+            
+                <h1>joiNus</h1>
+
+                <ui:insert name="header">
+                    <ui:include src="/header.xhtml" />
+                </ui:insert>
+                
+            </p:layoutUnit>
+            
+            <p:layoutUnit size="240" position="west">
+                
+                <ui:insert name="mainmenu">
+                    <ui:include src="/mainmenu.xhtml" />
+                </ui:insert>        
+                
+            </p:layoutUnit>
+            
+            <p:layoutUnit position="center" >
+                
+                <ui:insert name="content">Content</ui:insert>
+                
+            </p:layoutUnit>
+            
+<!--            <p:layoutUnit minSize="200" position="east" header="Advertisements" collapsible="true" collapsed="true">
+                
+                <ui:insert name="sidebar">
+                    <ui:include src="/sidebar.xhtml" />
+                </ui:insert>        
+                
+            </p:layoutUnit>-->
+            
+            <p:layoutUnit position="south" size="70" >
+                
+                <ui:insert name="footer">
+                    <ui:include src="/footer.xhtml" />
+                </ui:insert>
+                
+            </p:layoutUnit>                
+            
+        </p:layout>
+        
+    </h:body>
+</html>

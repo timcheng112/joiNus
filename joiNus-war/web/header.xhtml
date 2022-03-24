@@ -1,6 +1,43 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h2>Header</h2>
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <header style="text-align: right;">
+        <h:panelGroup rendered="#{sessionScope.isLogin == false}">
+<!--            <h:form id="loginForm">
+
+                <p:outputLabel for="username" value="Username" />&nbsp;
+                <p:inputText id="username" value="#{loginManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
+                    <f:validateLength minimum="4" />
+                </p:inputText>
+                &nbsp;
+                <p:outputLabel for="password" value="Password" />&nbsp;
+                <p:password id="password" value="#{loginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
+                    <f:validateLength minimum="4" />
+                </p:password>
+                &nbsp;
+                <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />&nbsp;
+                <p:commandButton type="submit" value="Login" actionListener="#{loginManagedBean.login}" icon="pi pi-sign-in" />
+
+                <p:growl>
+                    <p:autoUpdate />
+                </p:growl>
+
+            </h:form>-->
+
+
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{sessionScope.isLogin == true}">
+            <h:form id="logoutForm">
+                <h:outputText value="You are login as #{sessionScope.currentStaffEntity.firstName} #{sessionScope.currentStaffEntity.lastName} (Access Right: #{sessionScope.currentStaffEntity.accessRightEnum})" />&nbsp;
+                <p:commandButton value="Logout" actionListener="#{loginManagedBean.logout}" icon="pi pi-sign-out" />
+            </h:form>
+        </h:panelGroup>
+
+    </header>
+
 </ui:composition>

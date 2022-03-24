@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -32,11 +33,12 @@ public class CategoryEntity implements Serializable {
     @Column(nullable = false, length = 24)
     private String categoryName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CategoryEntity parentCategory;
+    @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
+    private List<CategoryEntity> subCategories; 
 
-    @OneToMany(mappedBy = "subCategories", fetch = FetchType.LAZY)
-    private List<CategoryEntity> subCategories;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private CategoryEntity parentCategory;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<ActivityEntity> activities;

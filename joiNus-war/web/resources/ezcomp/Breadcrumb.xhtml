@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <cc:interface>
+        <cc:attribute name="pageName" required="true" />
+    </cc:interface>
+
+    <cc:implementation>
+        
+        <h:form id="formMain">
+        
+            <p:breadCrumb homeDisplay="false">
+
+                <p:menuitem icon="pi pi-home" url="#{application.contextPath}/index.xhtml" style="text-decoration-line: none;" />
+
+                <p:menuitem value="Cashier Operation" rendered="#{cc.attrs.pageName == 'checkout' ||
+                                                                        cc.attrs.pageName == 'voidRefund' ||
+                                                                        cc.attrs.pageName == 'viewMySaleTransactions'}" />
+
+                <p:menuitem value="Checkout" url="#{application.contextPath}/cashierOperation/checkout.xhtml" rendered="#{cc.attrs.pageName == 'checkout'}" />
+                <p:menuitem value="Void/Refund" url="#{application.contextPath}/cashierOperation/voidRefund.xhtml" rendered="#{cc.attrs.pageName == 'voidRefund'}" />
+                <p:menuitem value="View My Sale Transactions" url="#{application.contextPath}/cashierOperation/viewMySaleTransactions.xhtml" rendered="#{cc.attrs.pageName == 'viewMySaleTransactions'}" />
+
+                <p:menuitem value="System Administration" rendered="#{cc.attrs.pageName == 'productManagement' ||
+                                                                        cc.attrs.pageName == 'staffManagement' ||                                                                        
+                                                                        cc.attrs.pageName == 'searchProductsByName' ||
+                                                                        cc.attrs.pageName == 'filterProductsByCategory' ||
+                                                                        cc.attrs.pageName == 'filterProductsByTags'}" />
+
+                <p:menuitem value="Product Management" url="#{application.contextPath}/systemAdministration/productManagement.xhtml" rendered="#{cc.attrs.pageName == 'productManagement'}" />
+                <p:menuitem value="Staff Management" url="#{application.contextPath}/systemAdministration/staffManagement.xhtml" rendered="#{cc.attrs.pageName == 'staffManagement'}" />                        
+                <p:menuitem value="Search Products by Name" url="#{application.contextPath}/systemAdministration/searchProductsByName.xhtml" rendered="#{cc.attrs.pageName == 'searchProductsByName'}" />
+                <p:menuitem value="Filter Products by Category" url="#{application.contextPath}/systemAdministration/filterProductsByCategory.xhtml" rendered="#{cc.attrs.pageName == 'filterProductsByCategory'}" />
+                <p:menuitem value="Filter Products by Tags" url="#{application.contextPath}/systemAdministration/filterProductsByTags.xhtml" rendered="#{cc.attrs.pageName == 'filterProductsByTags'}" />
+
+            </p:breadCrumb>
+        
+        </h:form>
+        
+    </cc:implementation>
+</html>
