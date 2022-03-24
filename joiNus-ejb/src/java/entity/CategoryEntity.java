@@ -34,7 +34,7 @@ public class CategoryEntity implements Serializable {
     private String categoryName;
 
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
-    private List<CategoryEntity> subCategories; 
+    private List<CategoryEntity> subCategories;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -111,7 +111,19 @@ public class CategoryEntity implements Serializable {
      * @param parentCategory the parentCategory to set
      */
     public void setParentCategory(CategoryEntity parentCategory) {
+        if (this.parentCategory != null) {
+            if (this.parentCategory.getSubCategories().contains(this)) {
+                this.parentCategory.getSubCategories().remove(this);
+            }
+        }
+
         this.parentCategory = parentCategory;
+
+        if (this.parentCategory != null) {
+            if (!this.parentCategory.getSubCategories().contains(this)) {
+                this.parentCategory.getSubCategories().add(this);
+            }
+        }
     }
 
     /**
