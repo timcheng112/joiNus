@@ -31,11 +31,10 @@ public abstract class UserEntity implements Serializable {
     protected Long userId;
     @Column(nullable = false, length = 32, unique = true)
     @NotNull(message = "Username cannot be null")
-    @Size(min = 1, max = 32, message = "Username must be between 1 and 32 characters")
+    @Size(min = 4, max = 32, message = "Username must be between 4 and 32 characters")
     protected String username;
-    @Column(nullable = false, length = 32)
-    @NotNull(message = "Password cannot be null")
-    @Size(min = 6, max = 32, message = "Username must be between 6 and 32 characters")
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    @NotNull
     protected String password;
     
     @Column(columnDefinition = "CHAR(32) NOT NULL")

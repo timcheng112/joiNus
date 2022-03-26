@@ -5,7 +5,15 @@
  */
 package ejb.session.stateless;
 
+import entity.AdminEntity;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.AdminNotFoundException;
+import util.exception.AdminUsernameExistException;
+import util.exception.DeleteAdminException;
+import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +21,16 @@ import javax.ejb.Local;
  */
 @Local
 public interface AdminEntitySessionBeanLocal {
-    
+
+    public Long createNewAdmin(AdminEntity newAdminEntity) throws AdminUsernameExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<AdminEntity> retrieveAllAdmins();
+
+    public AdminEntity retrieveAdminByUserId(Long userId) throws AdminNotFoundException;
+
+    public AdminEntity retrieveAdminByUsername(String username) throws AdminNotFoundException;
+
+    public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public void deleteAdmin(Long adminId) throws AdminNotFoundException, DeleteAdminException;
 }

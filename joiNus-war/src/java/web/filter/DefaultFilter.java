@@ -5,7 +5,6 @@
  */
 package web.filter;
 
-import entity.AdminEntity;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,19 +47,11 @@ public class DefaultFilter implements Filter {
         }
 
         Boolean isLogin = (Boolean) httpSession.getAttribute("isLogin");
-        Boolean isSuperAdmin = (Boolean) httpSession.getAttribute("isSuperAdmin");
 
         if (!excludeLoginCheck(requestServletPath)) {
-            if (isLogin == true) {
-                AdminEntity currentAdminEntity = (AdminEntity) httpSession.getAttribute("currentAdminEntity");
+            if (isLogin != true) { // check that admin is logged in
 
-                if (checkAccessRight(requestServletPath, currentAdminEntity.getIsSuperAdmin())) {
-                    chain.doFilter(request, response);
-                } else {
-//                    httpServletResponse.sendRedirect(CONTEXT_ROOT + "/accessRightError.xhtml");
-                }
-            } else {
-//                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/accessRightError.xhtml");
+                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/accessRightError.xhtml");
             }
         } else {
             chain.doFilter(request, response);
@@ -71,41 +62,12 @@ public class DefaultFilter implements Filter {
 
     }
 
-    private Boolean checkAccessRight(String path, Boolean isSuperAdmin) {
-        if (isSuperAdmin.equals(true)) { // allow for superadmin
-            return true;
-        }
-//            if (path.equals("/cashierOperation/checkout.xhtml")
-//                    || path.equals("/cashierOperation/voidRefund.xhtml")
-//                    || path.equals("/cashierOperation/viewMySaleTransactions.xhtml")) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } else if (accessRight.equals(AccessRightEnum.MANAGER)) {
-//            if (path.equals("/cashierOperation/checkout.xhtml")
-//                    || path.equals("/cashierOperation/voidRefund.xhtml")
-//                    || path.equals("/cashierOperation/viewMySaleTransactions.xhtml")
-//                    || path.equals("/systemAdministration/staffManagement.xhtml")
-//                    || path.equals("/systemAdministration/productManagement.xhtml")
-//                    || path.equals("/systemAdministration/searchProductsByName.xhtml")
-//                    || path.equals("/systemAdministration/filterProductsByCategory.xhtml")
-//                    || path.equals("/systemAdministration/filterProductsByTags.xhtml")) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-
-        return false;
-    }
-
     private Boolean excludeLoginCheck(String path) {
         if (path.equals("/index.xhtml")
-//                || path.equals("/accessRightError.xhtml")
-//                || path.startsWith("/javax.faces.resource")
-//                || path.equals("/customerIndex.xhtml")
-//                || path.startsWith("/customerOperation")
+                || path.equals("/accessRightError.xhtml")
+                || path.startsWith("/javax.faces.resource") 
+                //|| path.equals("/customerIndex.xhtml")
+                //|| path.startsWith("/customerOperation")
                 ) {
             return true;
         } else {

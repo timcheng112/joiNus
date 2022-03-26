@@ -48,6 +48,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
         validator = validatorFactory.getValidator();
     }
     
+    @Override
     public Long createNewAdmin(AdminEntity newAdminEntity) throws AdminUsernameExistException, UnknownPersistenceException, InputDataValidationException
     {
         Set<ConstraintViolation<AdminEntity>>constraintViolations = validator.validate(newAdminEntity);
@@ -86,6 +87,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
         }
     }
    
+    @Override
     public List<AdminEntity> retrieveAllAdmins()
     {
         Query query = em.createQuery("SELECT a FROM AdminEntity a");
@@ -93,6 +95,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
         return query.getResultList();
     }
     
+    @Override
     public AdminEntity retrieveAdminByUserId(Long userId) throws AdminNotFoundException
     {
         AdminEntity adminEntity = em.find(AdminEntity.class, userId);
@@ -107,6 +110,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
         }
     }
     
+    @Override
     public AdminEntity retrieveAdminByUsername(String username) throws AdminNotFoundException
     {
         Query query = em.createQuery("SELECT a FROM AdminEntity a WHERE a.username = :inUsername");
@@ -122,6 +126,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
         }
     }
     
+    @Override
     public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException
     {
         try
@@ -146,6 +151,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
     
 //  only need change password method
     
+    @Override
     public void deleteAdmin(Long adminId) throws AdminNotFoundException, DeleteAdminException
     {
         AdminEntity adminEntityToRemove = retrieveAdminByUserId(adminId);

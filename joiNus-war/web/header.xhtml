@@ -7,34 +7,34 @@
 
     <header style="text-align: right;">
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
-<!--            <h:form id="loginForm">
+            <h:form id="loginForm">
 
                 <p:outputLabel for="username" value="Username" />&nbsp;
-                <p:inputText id="username" value="#{loginManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
+                <p:inputText id="username" value="#{adminLoginManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
                     <f:validateLength minimum="4" />
                 </p:inputText>
                 &nbsp;
                 <p:outputLabel for="password" value="Password" />&nbsp;
-                <p:password id="password" value="#{loginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
+                <p:password id="password" value="#{adminLoginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
                     <f:validateLength minimum="4" />
                 </p:password>
                 &nbsp;
                 <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />&nbsp;
-                <p:commandButton type="submit" value="Login" actionListener="#{loginManagedBean.login}" icon="pi pi-sign-in" />
+                <p:commandButton type="submit" value="Login" actionListener="#{adminLoginManagedBean.login}" icon="pi pi-sign-in" />
 
                 <p:growl>
                     <p:autoUpdate />
                 </p:growl>
 
-            </h:form>-->
+            </h:form>
 
 
         </h:panelGroup>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
             <h:form id="logoutForm">
-                <h:outputText value="You are login as #{sessionScope.currentStaffEntity.firstName} #{sessionScope.currentStaffEntity.lastName} (Access Right: #{sessionScope.currentStaffEntity.accessRightEnum})" />&nbsp;
-                <p:commandButton value="Logout" actionListener="#{loginManagedBean.logout}" icon="pi pi-sign-out" />
+                <h:outputText value="You are login as #{sessionScope.currentAdminEntity.userId} #{sessionScope.currentStaffEntity.username} (Super Admin: #{sessionScope.currentStaffEntity.isSuperAdmin})" />&nbsp;
+                <p:commandButton value="Logout" actionListener="#{adminLoginManagedBean.logout}" icon="pi pi-sign-out" />
             </h:form>
         </h:panelGroup>
 

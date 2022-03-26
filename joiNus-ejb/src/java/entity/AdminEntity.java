@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 public class AdminEntity extends UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Column(nullable = false, length = 64, unique = true)
+    @Column(nullable = true, length = 64, unique = true)
     private String club;
     @Column(nullable = false)
     private Boolean isSuperAdmin;
@@ -26,10 +26,13 @@ public class AdminEntity extends UserEntity implements Serializable {
         super();
     }
 
-    public AdminEntity(String club, Boolean isSuperAdmin, String username, String password) {
-        this();
-        this.username = username;
-        this.password = password;
+    public AdminEntity(String username, String password) {
+        super(username, password);
+    }
+
+    public AdminEntity(String username, String password, String club, Boolean isSuperAdmin) {
+        this(username, password);
+
         this.club = club;
         this.isSuperAdmin = isSuperAdmin;
     }

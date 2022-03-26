@@ -14,6 +14,7 @@
 
                     <p:submenu label="System">
                         <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
+                        <p:menuitem value="Logout" actionListener="#{adminLoginManagedBean.logout}" icon="pi pi-sign-out" rendered="#{sessionScope.isLogin == true}" />
                     </p:submenu>
                                             
 
