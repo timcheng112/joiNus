@@ -15,6 +15,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -36,13 +37,21 @@ public abstract class UserEntity implements Serializable {
     @NotNull(message = "Password cannot be null")
     @Size(min = 6, max = 32, message = "Username must be between 6 and 32 characters")
     protected String password;
+    
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    private String salt;
 
     public UserEntity() {
+        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
     }
 
     public UserEntity(String username, String password) {
+        this();
+        
         this.username = username;
         this.password = password;
+        
+        setPassword(password);
     }
     
     public Long getUserId() {
@@ -102,8 +111,23 @@ public abstract class UserEntity implements Serializable {
     /**
      * @param password the password to set
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String password)
+    {
+        if(password != null)
+        {
+            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        }
+        else
+        {
+            this.password = null;
+        }
     }
     
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 }
