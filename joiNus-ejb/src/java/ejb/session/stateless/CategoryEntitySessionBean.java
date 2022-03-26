@@ -51,6 +51,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
                     CategoryEntity parentCategoryEntity = retrieveCategoryByCategoryId(parentCategoryId);
 
                     newCategoryEntity.setParentCategory(parentCategoryEntity);
+                    parentCategoryEntity.addSubCategory(newCategoryEntity);
                 }
 
                 entityManager.persist(newCategoryEntity);
