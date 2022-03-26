@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.CategoryEntity;
 import entity.FacilityEntity;
 import entity.TimeSlotEntity;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -44,6 +46,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         validator = validatorFactory.getValidator();
     }
     
+    @Override
     public TimeSlotEntity createNewTimeSlotEntity(TimeSlotEntity newTimeSlotEntity, Long facilityId) throws CreateNewTimeSlotException, InputDataValidationException
     {
         Set<ConstraintViolation<TimeSlotEntity>> constraintViolations = validator.validate(newTimeSlotEntity);
@@ -70,6 +73,18 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
+    }
+    
+    public List<TimeSlotEntity> retrieveAllTimeSlots() {
+        Query query = entityManager.createQuery("SELECT c FROM TimeSlotEntity c");
+        List<TimeSlotEntity> timeSlotEntities = query.getResultList();
+        
+        for (TimeSlotEntity timeSlotEntity: timeSlotEntities){
+            timeSlotEntity.getFacility();
+            timeSlotEntity.getBooking();
+        }
+        
+        return timeSlotEntities;
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<TimeSlotEntity>> constraintViolations) {

@@ -5,7 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entity.TimeSlotEntity;
 import javax.ejb.Local;
+import util.exception.CreateNewTimeSlotException;
+import util.exception.InputDataValidationException;
 
 /**
  *
@@ -13,5 +16,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface TimeSlotEntitySessionBeanLocal {
+
+    public TimeSlotEntity createNewTimeSlotEntity(TimeSlotEntity newTimeSlotEntity, Long facilityId) throws CreateNewTimeSlotException, InputDataValidationException;
     
 }
