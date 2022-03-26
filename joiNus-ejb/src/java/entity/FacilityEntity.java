@@ -40,6 +40,9 @@ public class FacilityEntity implements Serializable {
     @Column(nullable = false, length = 3)
     private Integer capacity;
     
+    @Column(nullable = false, length = 128, unique = true)
+    private String address;
+    
     @OneToMany(mappedBy="facility", fetch = FetchType.LAZY)
     private List<TimeSlotEntity> timeSlots;
 
@@ -55,9 +58,6 @@ public class FacilityEntity implements Serializable {
         this.capacity = capacity;
         this.address = address;
     }
-    
-    @Column(nullable = false, length = 128, unique = true)
-    private String address;
 
     public Long getFacilityId() {
         return facilityId;

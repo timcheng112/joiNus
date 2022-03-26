@@ -151,6 +151,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                     facilityEntityToUpdate.setClub(facilityEntity.getClub());
                     facilityEntityToUpdate.setTokenCost(facilityEntity.getTokenCost());
                     facilityEntityToUpdate.setCapacity(facilityEntity.getCapacity());
+                    facilityEntityToUpdate.setAddress(facilityEntity.getAddress());
                     facilityEntityToUpdate.setTimeSlots(facilityEntity.getTimeSlots());
                 }
                 else
