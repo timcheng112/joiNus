@@ -33,7 +33,7 @@
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
             <h:form id="logoutForm">
-                <h:outputText value="You are login as #{sessionScope.currentAdminEntity.userId} #{sessionScope.currentStaffEntity.username} (Super Admin: #{sessionScope.currentStaffEntity.isSuperAdmin})" />&nbsp;
+                <h:outputText value="You are logged in as #{sessionScope.currentAdminEntity.username} [User ID: #{sessionScope.currentAdminEntity.userId}] (Super Admin: #{sessionScope.currentAdminEntity.isSuperAdmin})" />&nbsp;
                 <p:commandButton value="Logout" actionListener="#{adminLoginManagedBean.logout}" icon="pi pi-sign-out" />
             </h:form>
         </h:panelGroup>
