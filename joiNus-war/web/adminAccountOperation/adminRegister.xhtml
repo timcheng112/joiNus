@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <ez:Breadcrumb pageName="adminRegister" />
+
+        <div>
+            <h3>Admin Registration</h3>
+
+            <h:form id="formCreateNewAdmin">
+
+                <p:messages id="messagesCreateNewAdmin" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="username" value="Username : " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="username" value="#{adminManagementManagedBean.newAdminEntity.username}" placeholder="John" required="true" requiredMessage="Username is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="username" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="club" value="Club Name: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="club" value="#{adminManagementManagedBean.newAdminEntity.club}" placeholder="RC 0" required="false" requiredMessage="Club is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="club" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="password" value="Password: " style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="password" value="#{adminManagementManagedBean.newAdminEntity.password}" placeholder="********" required="true" requiredMessage="Password is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="password" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Admin Account" update="@form formCreateNewAdmin:messagesCreateNewAdmin" actionListener="#{adminManagementManagedBean.createNewAdmin}" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </h:form>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>

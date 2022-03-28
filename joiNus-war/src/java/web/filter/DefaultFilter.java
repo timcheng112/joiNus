@@ -26,7 +26,7 @@ public class DefaultFilter implements Filter {
 
     FilterConfig filterConfig;
 
-    private static final String CONTEXT_ROOT = "/PointOfSaleSystemV54JsfAdvPf";
+    private static final String CONTEXT_ROOT = "/joiNus-war";
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
@@ -52,6 +52,18 @@ public class DefaultFilter implements Filter {
             if (isLogin != true) { // check that admin is logged in
 
                 httpServletResponse.sendRedirect(CONTEXT_ROOT + "/accessRightError.xhtml");
+            } else {
+                Boolean isSuper = (Boolean) httpSession.getAttribute("isSuperAdmin");
+                
+                if (!isSuper) { // not super admin
+                    if (requestServletPath.equals("/adminAccountOperation/adminRegister.xhtml")) { // reach a super admin only paths
+                        httpServletResponse.sendRedirect(CONTEXT_ROOT + "/accessRightError.xhtml"); // send out
+                    } else {
+                        chain.doFilter(request, response);
+                    }
+                } else { // super admin
+                    chain.doFilter(request, response);
+                }
             }
         } else {
             chain.doFilter(request, response);
@@ -66,6 +78,7 @@ public class DefaultFilter implements Filter {
         if (path.equals("/index.xhtml")
                 || path.equals("/accessRightError.xhtml")
                 || path.startsWith("/javax.faces.resource") 
+//                || path.startsWith("/adminAccountOperation")
                 //|| path.equals("/customerIndex.xhtml")
                 //|| path.startsWith("/customerOperation")
                 ) {

@@ -49,7 +49,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
     }
     
     @Override
-    public Long createNewAdmin(AdminEntity newAdminEntity) throws AdminUsernameExistException, UnknownPersistenceException, InputDataValidationException
+    public AdminEntity createNewAdmin(AdminEntity newAdminEntity) throws AdminUsernameExistException, UnknownPersistenceException, InputDataValidationException
     {
         Set<ConstraintViolation<AdminEntity>>constraintViolations = validator.validate(newAdminEntity);
         
@@ -60,7 +60,7 @@ public class AdminEntitySessionBean implements AdminEntitySessionBeanLocal {
                 em.persist(newAdminEntity);
                 em.flush();
 
-                return newAdminEntity.getUserId();
+                return newAdminEntity;
             }
             catch(PersistenceException ex)
             {

@@ -17,6 +17,16 @@
 
                 <p:menuitem icon="pi pi-home" url="#{application.contextPath}/index.xhtml" style="text-decoration-line: none;" />
 
+                <p:menuitem value="Admin Account Operation" rendered="#{cc.attrs.pageName == 'adminRegister'}" />
+                <p:menuitem value="Register an Admin" url="#{application.contextPath}/adminAccountOperation/adminRegister.xhtml" rendered="#{cc.attrs.pageName == 'adminRegister'}" />
+
+                <p:menuitem value="Admin Activity Operation" rendered="#{cc.attrs.pageName == 'activityManagement'}" />
+                <p:menuitem value="Activity Management" url="#{application.contextPath}/adminActivityOperation/activityManagement.xhtml" rendered="#{cc.attrs.pageName == 'activityManagement'}" />
+                
+                <p:menuitem value="Admin Facility Operation" rendered="#{cc.attrs.pageName == 'facilityManagement' ||
+                                                                        cc.attrs.pageName == 'facilityManagement2'}" />
+                <p:menuitem value="Facility Management" url="#{application.contextPath}/adminFacilityOperation/facilityManagement.xhtml" rendered="#{cc.attrs.pageName == 'facilityManagement'}" />
+                <p:menuitem value="Facility Management 2" url="#{application.contextPath}/adminFacilityOperation/facilityManagement2.xhtml" rendered="#{cc.attrs.pageName == 'facilityManagement2'}" />
 
             </p:breadCrumb>
 

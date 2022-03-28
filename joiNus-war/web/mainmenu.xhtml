@@ -9,27 +9,33 @@
         <h3>Main Menu</h3>
         <nav>
             <h:form>
-                    
+
                 <p:menu style="width:200px;">
 
                     <p:submenu label="System">
                         <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
                         <p:menuitem value="Logout" actionListener="#{adminLoginManagedBean.logout}" icon="pi pi-sign-out" rendered="#{sessionScope.isLogin == true}" />
                     </p:submenu>
-                                
-                    <p:submenu label="Activity Operation" rendered="#{sessionScope.isLogin == true}">
-                        <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
+
+                    <p:submenu label="Admin Account Operation" rendered="#{sessionScope.isSuperAdmin == true}">
+                        <p:menuitem value="Register an Admin" outcome="/adminAccountOperation/adminRegister" icon="pi pi-user-plus" rendered="#{sessionScope.isSuperAdmin == true}"/>
                     </p:submenu>
-                    
-                    <p:submenu label="Facility Operation" rendered="#{sessionScope.isLogin == true}">
-                        <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
+
+                    <p:submenu label="Admin Activity Operation" rendered="#{sessionScope.isLogin == true}">
+                        <p:menuitem value="Activity Management" outcome="/adminActivityOperation/activityManagement" icon="pi pi-briefcase"/>
+                    </p:submenu>
+
+                    <p:submenu label="Admin Facility Operation" rendered="#{sessionScope.isLogin == true}">
+                        <p:menuitem value="Facility Management" outcome="/adminFacilityOperation/facilityManagement" icon="pi pi-map-marker"/>
+                        <p:menuitem value="Facility Management 2" outcome="/adminFacilityOperation/facilityManagement2" icon="pi pi-map-marker"/>
+
                     </p:submenu>
 
                 </p:menu>
 
             </h:form>
         </nav>
-            
+
     </section>
 
 </ui:composition>
