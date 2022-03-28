@@ -14,6 +14,18 @@
         <div>
             <h3>Activity Management</h3>
             
+            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{ActivityManagedBean.activityEntities}" var="activityEntity" rowKey="#{activityEntity.activityId}" rowIndexVar="row"                             
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                    
+                    <p:column headerText="Activity Name" sortBy="#{activityEntity.activityName}">
+                        <h:outputText value="#{activityEntity.activityName}" />
+                    </p:column>
+
+                    <p:column headerText="Activity ID" sortBy="#{activityEntity.activityId}">
+                        <h:outputText value="#{activityEntity.activityId}" />
+                    </p:column>                            
+
+                </p:dataTable>
 
         </div>
         
