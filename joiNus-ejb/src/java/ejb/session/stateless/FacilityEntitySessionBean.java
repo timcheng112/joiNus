@@ -145,7 +145,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
             {
                 FacilityEntity facilityEntityToUpdate = retrieveFacilityByFacilityId(facilityEntity.getFacilityId());
 
-                if(facilityEntityToUpdate.getFacilityName().equals(facilityEntity.getFacilityName()))
+                if(facilityEntityToUpdate.getFacilityId().equals(facilityEntity.getFacilityId()))
                 {
                     facilityEntityToUpdate.setFacilityName(facilityEntity.getFacilityName());
                     facilityEntityToUpdate.setClub(facilityEntity.getClub());
@@ -156,7 +156,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                 }
                 else
                 {
-                    throw new UpdateFacilityException("Name of facility to be updated does not match the existing record");
+                    throw new UpdateFacilityException("Facility ID error");
                 }
             }
             else
