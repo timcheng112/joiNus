@@ -95,6 +95,11 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
     public List<FacilityEntity> retrieveAllFacilities()
     {
         Query query = em.createQuery("SELECT f FROM FacilityEntity f ORDER BY f.facilityName ASC");
+        List<FacilityEntity> facilityEntitys = query.getResultList();
+        
+        for (FacilityEntity f: facilityEntitys) {
+            f.getTimeSlots().size();
+        }
         
         return query.getResultList();
     }
@@ -108,6 +113,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
         
         if(facilityEntity != null)
         {
+            facilityEntity.getTimeSlots().size();
             return facilityEntity;
         }
         else
@@ -126,7 +132,9 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
         
         try
         {
-            return (FacilityEntity)query.getSingleResult();
+            FacilityEntity facilityEntity = (FacilityEntity)query.getSingleResult();
+            facilityEntity.getTimeSlots().size();
+            return facilityEntity;
         }
         catch(NoResultException | NonUniqueResultException ex)
         {
