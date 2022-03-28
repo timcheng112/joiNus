@@ -5,13 +5,10 @@
  */
 package ejb.session.stateless;
 
-import entity.CategoryEntity;
 import entity.FacilityEntity;
 import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,6 +21,8 @@ import javax.validation.ValidatorFactory;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.TimeSlotNotFoundException;
+import util.exception.UpdateTimeSlotException;
 
 /**
  *
@@ -75,6 +74,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         }
     }
     
+    @Override
     public List<TimeSlotEntity> retrieveAllTimeSlots() {
         Query query = entityManager.createQuery("SELECT c FROM TimeSlotEntity c");
         List<TimeSlotEntity> timeSlotEntities = query.getResultList();
@@ -87,6 +87,63 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         return timeSlotEntities;
     }
     
+    @Override
+    //nothing wrong here
+    public TimeSlotEntity retrieveTimeSlotById(Long timeSlotId) throws TimeSlotNotFoundException
+    {
+        TimeSlotEntity timeSlotEntity = entityManager.find(TimeSlotEntity.class, timeSlotId);
+        
+        if(timeSlotEntity != null)
+        {
+            return timeSlotEntity;
+        } else {
+            throw new TimeSlotNotFoundException("TimeSlot ID " + timeSlotId + " does not exist!");
+        }
+    }
+    
+    @Override
+    public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException
+    {
+        Set<ConstraintViolation<TimeSlotEntity>>constraintViolations = validator.validate(timeSlotEntity);
+        
+        if (constraintViolations.isEmpty()){
+            if (timeSlotEntity.getTimeSlotId() != null) {
+                TimeSlotEntity timeSlotEntityToUpdate = retrieveTimeSlotById(timeSlotEntity.getTimeSlotId());
+                
+                if (timeSlotEntity.getFacility() != timeSlotEntityToUpdate.getFacility())
+                {
+                    throw new UpdateTimeSlotException("Updated timeslot and existing timeslot has a facility mismatch!");
+                } if (timeSlotEntity.getBooking() != null && timeSlotEntity.getBooking() != timeSlotEntityToUpdate.getBooking())
+                {
+                    throw new UpdateTimeSlotException("TimeSlot is already allotted another booking! Please Cancel previous booking first.");
+                }
+                
+                timeSlotEntityToUpdate.setBooking(timeSlotEntity.getBooking());
+                if (timeSlotEntity.getBooking() != null ){
+                    timeSlotEntity.getBooking().setTimeSlot(timeSlotEntity);
+                }
+                
+                //probably no need to update facility ever right?
+                //timeSlotEntityToUpdate.setFacility(facility);
+                
+                timeSlotEntityToUpdate.setTimeSlotTime(timeSlotEntity.getTimeSlotTime());
+                timeSlotEntityToUpdate.setStatus(timeSlotEntity.getStatus());
+            } else {
+                throw new TimeSlotNotFoundException("Time Slot ID not provided for category to be updated");
+            }
+        } else {
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+        }
+    }
+    
+    /*
+    public void deleteTimeSlot(Long timeSlotId) throws TimeSlotNotFoundException
+    {
+            TimeSlotEntity timeSlotEntityToRemove = retrieveTimeSlotById(timeSlotId);
+            
+            
+    }
+    */
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<TimeSlotEntity>> constraintViolations) {
         String msg = "Input data validation error!:";
 

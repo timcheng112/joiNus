@@ -6,9 +6,12 @@
 package ejb.session.stateless;
 
 import entity.TimeSlotEntity;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.InputDataValidationException;
+import util.exception.TimeSlotNotFoundException;
+import util.exception.UpdateTimeSlotException;
 
 /**
  *
@@ -18,5 +21,11 @@ import util.exception.InputDataValidationException;
 public interface TimeSlotEntitySessionBeanLocal {
 
     public TimeSlotEntity createNewTimeSlotEntity(TimeSlotEntity newTimeSlotEntity, Long facilityId) throws CreateNewTimeSlotException, InputDataValidationException;
+
+    public TimeSlotEntity retrieveTimeSlotById(Long timeSlotId) throws TimeSlotNotFoundException;
+
+    public List<TimeSlotEntity> retrieveAllTimeSlots();
+
+    public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException;
     
 }
