@@ -182,4 +182,8 @@ public class FacilityEntity implements Serializable {
     public void addTimeSlot(TimeSlotEntity timeSlot) {
         this.timeSlots.add(timeSlot);
     }
+    
+    public void removeTimeSlot(TimeSlotEntity timeSlot) {
+        this.timeSlots.remove(timeSlot);
+    }
 }

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import ejb.enums.SlotStatusEnum;
 import entity.FacilityEntity;
 import entity.TimeSlotEntity;
 import java.util.List;
@@ -19,6 +20,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewTimeSlotException;
+import util.exception.DeleteTimeSlotException;
 import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.TimeSlotNotFoundException;
@@ -102,6 +104,49 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
     }
     
     @Override
+    public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException
+    {
+        FacilityEntity facilityEntity = entityManager.find(FacilityEntity.class, facilityId);
+        
+        if (facilityEntity == null) {
+            throw new FacilityNotFoundException("Unable to find facility with provided id");
+        }
+
+        List<TimeSlotEntity> timeSlots = facilityEntity.getTimeSlots();
+        for (TimeSlotEntity timeSlot : timeSlots)
+        {
+            timeSlot.getBooking();
+            timeSlot.getFacility();
+        }
+        
+        return timeSlots;
+    }
+    
+    @Override
+    public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException
+    {
+        FacilityEntity facilityEntity = entityManager.find(FacilityEntity.class, facilityId);
+        
+        if (facilityEntity == null) {
+            throw new FacilityNotFoundException("Unable to find facility with provided id");
+        }
+        
+        Query query = entityManager.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility = :inFacility AND ts.status = :inStatus");
+        query.setParameter("inFacility", facilityEntity);
+        query.setParameter("inStatus", SlotStatusEnum.AVAILABLE);
+        
+        List<TimeSlotEntity> timeSlots = query.getResultList();
+        
+        for (TimeSlotEntity timeSlot : timeSlots)
+        {
+            timeSlot.getBooking();
+            timeSlot.getFacility();
+        }
+        
+        return timeSlots;
+    }
+    
+    @Override
     public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException
     {
         Set<ConstraintViolation<TimeSlotEntity>>constraintViolations = validator.validate(timeSlotEntity);
@@ -136,14 +181,25 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         }
     }
     
-    /*
-    public void deleteTimeSlot(Long timeSlotId) throws TimeSlotNotFoundException
+    
+    @Override
+    public void deleteTimeSlot(Long timeSlotId) throws TimeSlotNotFoundException, DeleteTimeSlotException
     {
-            TimeSlotEntity timeSlotEntityToRemove = retrieveTimeSlotById(timeSlotId);
-            
-            
+        TimeSlotEntity timeSlotEntityToRemove = retrieveTimeSlotById(timeSlotId);
+        
+        if (timeSlotEntityToRemove.getBooking() != null){
+            throw new DeleteTimeSlotException("The Time Slot to be deleted has a booking!");
+        }
+        
+        try{
+            timeSlotEntityToRemove.getFacility().removeTimeSlot(timeSlotEntityToRemove);
+            entityManager.remove(timeSlotEntityToRemove);
+        } catch (Exception ex) {
+            throw new DeleteTimeSlotException("Failed to remove both sides of facility-timeslot relationship!");
+        }
+        
     }
-    */
+    
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<TimeSlotEntity>> constraintViolations) {
         String msg = "Input data validation error!:";
 

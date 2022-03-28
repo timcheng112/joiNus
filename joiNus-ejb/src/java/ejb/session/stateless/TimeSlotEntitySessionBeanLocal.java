@@ -9,6 +9,8 @@ import entity.TimeSlotEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewTimeSlotException;
+import util.exception.DeleteTimeSlotException;
+import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.TimeSlotNotFoundException;
 import util.exception.UpdateTimeSlotException;
@@ -27,5 +29,11 @@ public interface TimeSlotEntitySessionBeanLocal {
     public List<TimeSlotEntity> retrieveAllTimeSlots();
 
     public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException;
+
+    public void deleteTimeSlot(Long timeSlotId) throws TimeSlotNotFoundException, DeleteTimeSlotException;
+
+    public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
+
+    public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
     
 }
