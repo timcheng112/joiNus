@@ -29,7 +29,7 @@ public interface ActivityEntitySessionBeanLocal {
 
     public List<ActivityEntity> filterActivitiesByCategory(String categoryName);
 
-    public void deleteActivity(Long activityId);
+    public void deleteActivity(Long activityId) throws ActivityNotFoundException;
 
     public void deleteImages(ActivityEntity activityEntityToRemove);
 

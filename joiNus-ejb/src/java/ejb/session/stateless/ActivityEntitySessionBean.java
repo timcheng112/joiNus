@@ -122,30 +122,28 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void deleteActivity(Long activityId) {
-        try {
-            ActivityEntity activityEntityToRemove = retrieveActivityByActivityId(activityId);
+    public void deleteActivity(Long activityId) throws ActivityNotFoundException {
 
-            activityEntityToRemove.getCategory().getActivities().remove(activityEntityToRemove);
+        ActivityEntity activityEntityToRemove = retrieveActivityByActivityId(activityId);
 
-            for (NormalUserEntity normalUserEntity : activityEntityToRemove.getParticipants()) {
-                normalUserEntity.getActivitiesParticipated().remove(activityEntityToRemove);
-            }
+        activityEntityToRemove.getCategory().getActivities().remove(activityEntityToRemove);
 
-            activityEntityToRemove.getActivityOwner().getActivitiesOwned().remove(activityEntityToRemove);
-
-            activityEntityToRemove.getParticipants().clear();
-
-            deleteImages(activityEntityToRemove);
-            activityEntityToRemove.getGallery().clear();
-
-            deleteComments(activityEntityToRemove);
-            activityEntityToRemove.getComments().clear();
-
-            em.remove(activityEntityToRemove);
-        } catch (ActivityNotFoundException ex) {
-            System.out.println(ex.getMessage());
+        for (NormalUserEntity normalUserEntity : activityEntityToRemove.getParticipants()) {
+            normalUserEntity.getActivitiesParticipated().remove(activityEntityToRemove);
         }
+
+        activityEntityToRemove.getActivityOwner().getActivitiesOwned().remove(activityEntityToRemove);
+
+        activityEntityToRemove.getParticipants().clear();
+
+        deleteImages(activityEntityToRemove);
+        activityEntityToRemove.getGallery().clear();
+
+        deleteComments(activityEntityToRemove);
+        activityEntityToRemove.getComments().clear();
+
+        em.remove(activityEntityToRemove);
+
     }
 
     @Override

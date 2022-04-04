@@ -23,7 +23,7 @@ import util.exception.UpdateFacilityException;
 @Local
 public interface FacilityEntitySessionBeanLocal {
 
-    public FacilityEntity createNewFacility(FacilityEntity newFacilityEntity, Long facilityId) throws FacilityNameExistException, UnknownPersistenceException, InputDataValidationException, CreateNewFacilityException;
+    public FacilityEntity createNewFacility(FacilityEntity newFacilityEntity) throws FacilityNameExistException, UnknownPersistenceException, InputDataValidationException, CreateNewFacilityException;
 
     public List<FacilityEntity> retrieveAllFacilities();
 

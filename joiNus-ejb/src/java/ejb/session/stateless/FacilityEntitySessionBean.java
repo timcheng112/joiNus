@@ -50,7 +50,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
 
     
     @Override
-    public FacilityEntity createNewFacility(FacilityEntity newFacilityEntity, Long facilityId) throws FacilityNameExistException, UnknownPersistenceException, InputDataValidationException, CreateNewFacilityException
+    public FacilityEntity createNewFacility(FacilityEntity newFacilityEntity) throws FacilityNameExistException, UnknownPersistenceException, InputDataValidationException, CreateNewFacilityException
     {
         Set<ConstraintViolation<FacilityEntity>>constraintViolations = validator.validate(newFacilityEntity);
         

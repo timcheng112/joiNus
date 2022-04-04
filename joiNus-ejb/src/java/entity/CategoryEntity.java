@@ -32,12 +32,11 @@ public class CategoryEntity implements Serializable {
 
     @Column(nullable = false, length = 24)
     private String categoryName;
-
+    
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
     private List<CategoryEntity> subCategories;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    
+    @ManyToOne
     private CategoryEntity parentCategory;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
@@ -48,9 +47,9 @@ public class CategoryEntity implements Serializable {
         this.activities = new ArrayList<>();
     }
 
-    public CategoryEntity(String categoryName, CategoryEntity parentCategory, CategoryEntity subCategory, ActivityEntity activities) {
+    public CategoryEntity(String categoryName) {
+        this();
         this.categoryName = categoryName;
-        this.parentCategory = parentCategory;
     }
 
     public Long getCategoryId() {
@@ -164,7 +163,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @param activity add an activity to set
      */
-    public void addSubCategory(ActivityEntity activity) {
+    public void addActivity(ActivityEntity activity) {
         this.activities.add(activity);
     }
 }

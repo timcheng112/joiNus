@@ -55,13 +55,12 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         if (constraintViolations.isEmpty()) {
             try {
                 //get facility by ID
+                entityManager.persist(newTimeSlotEntity);
+                entityManager.flush();
                 FacilityEntity facility = facilityEntitySessionBeanLocal.retrieveFacilityByFacilityId(facilityId);
                 //connect both sides
                 facility.addTimeSlot(newTimeSlotEntity);
-                newTimeSlotEntity.setFacility(facility);
-                
-                entityManager.persist(newTimeSlotEntity);
-                entityManager.flush();
+//                newTimeSlotEntity.setFacility(facility);
                 
                 return newTimeSlotEntity;
                 

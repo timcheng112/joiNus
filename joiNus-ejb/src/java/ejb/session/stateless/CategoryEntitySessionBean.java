@@ -76,7 +76,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 
     @Override
     public List<CategoryEntity> retrieveAllCategories() {
-        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c ORDER BY c.name ASC");
+        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c ORDER BY c.categoryName ASC");
         List<CategoryEntity> categoryEntities = query.getResultList();
 
         for (CategoryEntity categoryEntity : categoryEntities) {
@@ -107,7 +107,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
             if (categoryEntity.getCategoryId() != null) {
                 CategoryEntity categoryEntityToUpdate = retrieveCategoryByCategoryId(categoryEntity.getCategoryId());
 
-                Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.name = :inName AND c.categoryId <> :inCategoryId");
+                Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.categoryName = :inName AND c.categoryId <> :inCategoryId");
                 query.setParameter("inName", categoryEntity.getCategoryName());
                 query.setParameter("inCategoryId", categoryEntity.getCategoryId());
 
