@@ -9,10 +9,12 @@ import ejb.enums.SlotStatusEnum;
 import ejb.session.stateless.AdminEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import ejb.session.stateless.FacilityEntitySessionBeanLocal;
+import ejb.session.stateless.NormalUserEntitySessionBeanLocal;
 import ejb.session.stateless.TimeSlotEntitySessionBeanLocal;
 import entity.AdminEntity;
 import entity.CategoryEntity;
 import entity.FacilityEntity;
+import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
 import java.io.Console;
 import java.util.Calendar;
@@ -31,6 +33,7 @@ import util.exception.CreateNewFacilityException;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.NormalUserNameExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -42,6 +45,8 @@ import util.exception.UnknownPersistenceException;
 @Startup
 public class DataInitSessionBean {
 
+    @EJB
+    private NormalUserEntitySessionBeanLocal normalUserEntitySessionBeanLocal;
     @EJB
     private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
     @EJB
@@ -73,6 +78,9 @@ public class DataInitSessionBean {
             // create superadmin
             adminEntitySessionBeanLocal.createNewAdmin(new AdminEntity("superadmin1", "password", null, Boolean.TRUE));
 
+            NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email", "name", 420, 420, "user", "password"));
+            System.out.println("normalUser Id" + normalUser.getUserId());
+            
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "2 Sports Drive, Singapore 117288"));
 
@@ -108,7 +116,7 @@ public class DataInitSessionBean {
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Bouldering"), cat.getCategoryId());
 
             System.out.println("Data Initialization Ended");
-        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException ex) {
+        } catch (AdminUsernameExistException | NormalUserNameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException ex) {
             ex.printStackTrace();
         }
 
