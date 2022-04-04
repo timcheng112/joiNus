@@ -35,6 +35,7 @@ public class FacilitiyManagedBean implements Serializable {
     
     private FacilityEntity newFacilityEntity;
     private List<TimeSlotEntity> timeSlots;
+    private List<FacilityEntity> facilityEntities;
     
     /**
      * Creates a new instance of FacilitiyManagedBean
@@ -52,12 +53,14 @@ public class FacilitiyManagedBean implements Serializable {
     
     @PostConstruct
     public void postConstruct(){
+        setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilities());
         
-        try {
-            setTimeSlots(facilityEntitySessionBeanLocal.retrieveTimeSlotsByFacility(getNewFacilityEntity().getFacilityId()));
-        } catch (FacilityNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Facility Entry: " + ex.getMessage(), null));
-        }
+        
+//        try {
+//            setTimeSlots(facilityEntitySessionBeanLocal.retrieveTimeSlotsByFacility(getNewFacilityEntity().getFacilityId()));
+//        } catch (FacilityNotFoundException ex) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Facility Entry: " + ex.getMessage(), null));
+//        }
     }
     /*
     public void createNewFacility(ActionEvent event)
@@ -92,5 +95,19 @@ public class FacilitiyManagedBean implements Serializable {
      */
     public void setTimeSlots(List<TimeSlotEntity> timeSlots) {
         this.timeSlots = timeSlots;
+    }
+
+    /**
+     * @return the facilityEntities
+     */
+    public List<FacilityEntity> getFacilityEntities() {
+        return facilityEntities;
+    }
+
+    /**
+     * @param facilityEntities the facilityEntities to set
+     */
+    public void setFacilityEntities(List<FacilityEntity> facilityEntities) {
+        this.facilityEntities = facilityEntities;
     }
 }
