@@ -122,41 +122,45 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void deleteActivity(Long activityId) throws ActivityNotFoundException {
-        ActivityEntity activityEntityToRemove = retrieveActivityByActivityId(activityId);
+    public void deleteActivity(Long activityId) {
+        try {
+            ActivityEntity activityEntityToRemove = retrieveActivityByActivityId(activityId);
 
-        activityEntityToRemove.getCategory().getActivities().remove(activityEntityToRemove);
+            activityEntityToRemove.getCategory().getActivities().remove(activityEntityToRemove);
 
-        for (NormalUserEntity normalUserEntity : activityEntityToRemove.getParticipants()) {
-            normalUserEntity.getActivitiesParticipated().remove(activityEntityToRemove);
+            for (NormalUserEntity normalUserEntity : activityEntityToRemove.getParticipants()) {
+                normalUserEntity.getActivitiesParticipated().remove(activityEntityToRemove);
+            }
+
+            activityEntityToRemove.getActivityOwner().getActivitiesOwned().remove(activityEntityToRemove);
+
+            activityEntityToRemove.getParticipants().clear();
+
+            deleteImages(activityEntityToRemove);
+            activityEntityToRemove.getGallery().clear();
+
+            deleteComments(activityEntityToRemove);
+            activityEntityToRemove.getComments().clear();
+
+            em.remove(activityEntityToRemove);
+        } catch (ActivityNotFoundException ex) {
+            System.out.println(ex.getMessage());
         }
-
-        activityEntityToRemove.getActivityOwner().getActivitiesOwned().remove(activityEntityToRemove);
-
-        activityEntityToRemove.getParticipants().clear();
-        
-        deleteImages(activityEntityToRemove);
-        activityEntityToRemove.getGallery().clear();
-        
-        deleteComments(activityEntityToRemove);
-        activityEntityToRemove.getComments().clear();
-        
-        em.remove(activityEntityToRemove);
     }
-    
+
     @Override
     public void deleteImages(ActivityEntity activityEntityToRemove) {
         List<ImageEntity> imageEntities = activityEntityToRemove.getGallery();
-        
+
         for (ImageEntity imageEntity : imageEntities) {
             em.remove(imageEntity);
         }
     }
-    
+
     @Override
     public void deleteComments(ActivityEntity activityEntityToRemove) {
         List<CommentEntity> commentEntities = activityEntityToRemove.getComments();
-        
+
         for (CommentEntity commentEntity : commentEntities) {
             em.remove(commentEntity);
         }

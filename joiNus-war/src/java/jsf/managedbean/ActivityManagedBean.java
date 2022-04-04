@@ -36,10 +36,10 @@ public class ActivityManagedBean implements Serializable {
     private List<ActivityEntity> activityEntities;
     private List<ActivityEntity> filteredActivityEntities;
 
-    private ActivityEntity newActivityEntity;
+    private ActivityEntity activityEntityToView;
 
     public ActivityManagedBean() {
-        newActivityEntity = new ActivityEntity();
+        activityEntityToView = new ActivityEntity();
     }
 
     @PostConstruct
@@ -87,6 +87,20 @@ public class ActivityManagedBean implements Serializable {
 
     public void setFilteredActivityEntities(List<ActivityEntity> filteredActivityEntities) {
         this.filteredActivityEntities = filteredActivityEntities;
+    }
+
+    /**
+     * @return the activityEntityToView
+     */
+    public ActivityEntity getActivityEntityToView() {
+        return activityEntityToView;
+    }
+
+    /**
+     * @param activityEntityToView the activityEntityToView to set
+     */
+    public void setActivityEntityToView(ActivityEntity activityEntityToView) {
+        this.activityEntityToView = activityEntityToView;
     }
 
 }

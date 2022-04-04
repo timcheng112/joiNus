@@ -8,27 +8,137 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        
+
         <ez:Breadcrumb pageName="activityManagement" />
-        
+
         <div>
+
             <h3>Activity Management</h3>
-            
-            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{ActivityManagedBean.activityEntities}" var="activityEntity" rowKey="#{activityEntity.activityId}" rowIndexVar="row"                             
+
+            <h:form id="formAllActivities">
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable id="dataTableAllActivities" widgetVar="dataTableMain" value="#{activityManagedBean.activityEntities}" var="activityEntity" rowKey="#{activityEntity.activityId}" rowIndexVar="row"                             
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
-                    
+
                     <p:column headerText="Activity Name" sortBy="#{activityEntity.activityName}">
                         <h:outputText value="#{activityEntity.activityName}" />
                     </p:column>
 
                     <p:column headerText="Activity ID" sortBy="#{activityEntity.activityId}">
                         <h:outputText value="#{activityEntity.activityId}" />
+                    </p:column>
+
+                    <p:column headerText="Date" sortBy="#{activityEntity.booking.creationDate}">
+                        <h:outputText value="#{activityEntity.booking.creationDate}" />
                     </p:column>                            
+
+                    <p:column headerText="Action" >
+                        <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View">
+                            <f:setPropertyActionListener value="#{activityEntity}" target="#{activityManagedBean.activityEntityToView}" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages">
+                            <f:attribute name="activityEntityToDelete" value="#{activityEntity}" />
+                            <p:confirm header="Confirmation" message="Are you sure you want to delete #{activityEntity.activityName} (Activity ID: #{activityEntity.activityId})?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
 
                 </p:dataTable>
 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </h:form>
+
+            <h:form id="formViewActivity">
+
+                <p:dialog id="dialogViewActivity" widgetVar="dialogViewActivity" header="View Activity" closable="true">
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Name: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.activityName}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="ID: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.activityId}" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Description: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.activityDescription}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Booking Date: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.creationDate}" />
+                            </p:column>
+                        </p:row>
+                        
+                         <p:row>
+                            <p:column>
+                                <h:outputLabel value="Booking Date: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.creationDate}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Booking Timing: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.timeSlot.timeSlotTime}" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Category: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.category}" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Tag(s): " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.tags}" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+
         </div>
-        
+
     </ui:define>
 
 </ui:composition>
