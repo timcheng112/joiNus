@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.FacilityEntity;
+import entity.TimeSlotEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewFacilityException;
@@ -34,6 +35,10 @@ public interface FacilityEntitySessionBeanLocal {
     public void updateFacility(FacilityEntity facilityEntity) throws FacilityNotFoundException, UpdateFacilityException, InputDataValidationException;
 
     public void deleteFacility(Long facilityId) throws FacilityNotFoundException, DeleteFacilityException;
+
+    public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
+
+    public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
 
     
 }

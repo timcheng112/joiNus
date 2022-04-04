@@ -102,6 +102,8 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         }
     }
     
+    /**
+    Commented out because not sure if we need it.
     @Override
     public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException
     {
@@ -144,7 +146,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         
         return timeSlots;
     }
-    
+    **/
     @Override
     public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException
     {

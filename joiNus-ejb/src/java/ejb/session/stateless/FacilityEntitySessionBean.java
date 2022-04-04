@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import ejb.enums.SlotStatusEnum;
 import entity.FacilityEntity;
+import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -193,6 +195,48 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
         {
             throw new DeleteFacilityException("Facility ID " + facilityId + " cannot be deleted!");
         }
+    }
+    
+    @Override
+    public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException
+    {
+        FacilityEntity facilityEntity = em.find(FacilityEntity.class, facilityId);
+        if (facilityEntity == null) {
+            throw new FacilityNotFoundException("Unable to find facility with provided id");
+        }
+        List<TimeSlotEntity> timeSlots = facilityEntity.getTimeSlots();
+        for (TimeSlotEntity timeSlot : timeSlots)
+        {
+            timeSlot.getBooking();
+            timeSlot.getFacility();
+        }
+        
+        return timeSlots;
+        
+    }
+    
+    @Override
+    public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException
+    {
+        FacilityEntity facilityEntity = em.find(FacilityEntity.class, facilityId);
+        
+        if (facilityEntity == null) {
+            throw new FacilityNotFoundException("Unable to find facility with provided id");
+        }
+        
+        Query query = em.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility = :inFacility AND ts.status = :inStatus");
+        query.setParameter("inFacility", facilityEntity);
+        query.setParameter("inStatus", SlotStatusEnum.AVAILABLE);
+        
+        List<TimeSlotEntity> timeSlots = query.getResultList();
+        
+        for (TimeSlotEntity timeSlot : timeSlots)
+        {
+            timeSlot.getBooking();
+            timeSlot.getFacility();
+        }
+        
+        return timeSlots;
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<FacilityEntity>>constraintViolations)

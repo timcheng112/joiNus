@@ -14,8 +14,13 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import util.exception.FacilityNotFoundException;
 
 /**
  *
@@ -47,7 +52,12 @@ public class FacilitiyManagedBean implements Serializable {
     
     @PostConstruct
     public void postConstruct(){
-        //timeSlots = timeSlotEntitySessionBeanLocal.retrieveAllTimeSlots();
+        
+        try {
+            setTimeSlots(facilityEntitySessionBeanLocal.retrieveTimeSlotsByFacility(getNewFacilityEntity().getFacilityId()));
+        } catch (FacilityNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Facility Entry: " + ex.getMessage(), null));
+        }
     }
     /*
     public void createNewFacility(ActionEvent event)
@@ -55,4 +65,32 @@ public class FacilitiyManagedBean implements Serializable {
         if()
     }
     */
+
+    /**
+     * @return the newFacilityEntity
+     */
+    public FacilityEntity getNewFacilityEntity() {
+        return newFacilityEntity;
+    }
+
+    /**
+     * @param newFacilityEntity the newFacilityEntity to set
+     */
+    public void setNewFacilityEntity(FacilityEntity newFacilityEntity) {
+        this.newFacilityEntity = newFacilityEntity;
+    }
+
+    /**
+     * @return the timeSlots
+     */
+    public List<TimeSlotEntity> getTimeSlots() {
+        return timeSlots;
+    }
+
+    /**
+     * @param timeSlots the timeSlots to set
+     */
+    public void setTimeSlots(List<TimeSlotEntity> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
 }
