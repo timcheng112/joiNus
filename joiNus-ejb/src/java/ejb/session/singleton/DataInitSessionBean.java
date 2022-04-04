@@ -86,7 +86,7 @@ public class DataInitSessionBean {
             adminEntitySessionBeanLocal.createNewAdmin(new AdminEntity("superadmin1", "password", null, Boolean.TRUE));
 
             // create normal user
-            NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email", "name", 420, 420, "user", "password"));
+            NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "name", 420, 420, "user", "password"));
 
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "2 Sports Drive, Singapore 117288"));
