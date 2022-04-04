@@ -42,7 +42,7 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @Override
-    public BookingEntity createNewBooking(BookingEntity newBookingEntity, Long bookingId) throws UnknownPersistenceException, InputDataValidationException {
+    public BookingEntity createNewBooking(BookingEntity newBookingEntity) throws UnknownPersistenceException, InputDataValidationException {
         Set<ConstraintViolation<BookingEntity>> constraintViolations = validator.validate(newBookingEntity);
 
         if (constraintViolations.isEmpty()) {
@@ -77,6 +77,16 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
         }
 
         return bookingEntities;
+    }
+    
+    @Override
+    public void associateBookingWithActivity(Long bookingId, Long activityId) {
+        BookingEntity booking = em.find(BookingEntity.class, bookingId);
+        ActivityEntity activity = em.find(ActivityEntity.class, activityId);
+        
+        booking.setActivity(activity);
+        activity.setBooking(booking);
+       
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<BookingEntity>> constraintViolations) {

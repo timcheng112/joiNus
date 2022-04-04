@@ -18,8 +18,10 @@ import util.exception.UnknownPersistenceException;
 @Local
 public interface BookingEntitySessionBeanLocal {
 
-    public BookingEntity createNewBooking(BookingEntity newBookingEntity, Long bookingId) throws UnknownPersistenceException, InputDataValidationException;
+    public BookingEntity createNewBooking(BookingEntity newBookingEntity) throws UnknownPersistenceException, InputDataValidationException;
 
     public List<BookingEntity> retrieveBookingByActivity(Long activityId);
+
+    public void associateBookingWithActivity(Long bookingId, Long activityId);
     
 }

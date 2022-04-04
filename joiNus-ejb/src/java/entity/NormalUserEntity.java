@@ -60,10 +60,15 @@ public class NormalUserEntity extends UserEntity implements Serializable {
         activitiesOwned = new ArrayList<>();
     }
 
+    public NormalUserEntity(String username, String password) {
+        super(username, password);
+        interests = new ArrayList<>();
+        activitiesParticipated = new ArrayList<>();
+        activitiesOwned = new ArrayList<>();
+    }
+
     public NormalUserEntity(String email, String name, Integer socialCredits, Integer bookingTokens, String username, String password) {
-        this();
-        this.username = username;
-        this.password = password;
+        this(username, password);
         this.email = email;
         this.name = name;
         this.socialCredits = socialCredits;
