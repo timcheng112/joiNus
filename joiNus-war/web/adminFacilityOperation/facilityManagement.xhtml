@@ -8,15 +8,67 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        
+
         <ez:Breadcrumb pageName="facilityManagement" />
-        
+
         <div>
             <h3>Facility Management</h3>
-            
+
+            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{facilitiyManagedBean.facilityEntities}" var="facilityEntity" rowKey="#{facilityEntity.facilityId}" rowIndexVar="row"                             
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                <p:column headerText="Facility ID" sortBy="#{facilityEntity.facilityId}">
+                    <h:outputText value="#{facilityEntity.facilityId}" />
+                </p:column>
+                
+                <p:column headerText="Facility Name" sortBy="#{facilityEntity.facilityName}">
+                    <h:outputText value="#{facilityEntity.facilityName}" />
+                </p:column>
+
+                <p:column headerText="Club" sortBy="#{facilityEntity.club}">
+                    <h:outputText value="#{facilityEntity.club}" />
+                </p:column>
+
+                <p:column headerText="Token Cost" sortBy="#{facilityEntity.tokenCost}">
+                    <h:outputText value="#{facilityEntity.tokenCost}" />
+                </p:column>
+
+                <p:column headerText="Capacity" sortBy="#{facilityEntity.capacity}">
+                    <h:outputText value="#{facilityEntity.capacity}" />
+                </p:column>
+
+                <p:column headerText="Address" sortBy="#{facilityEntity.address}">
+                    <h:outputText value="#{facilityEntity.address}" />
+                </p:column>
+
+                <p:column headerText="Timeslots" sortBy="#{facilityEntity.timeSlots}">
+                    <ui:repeat value="#{facilityEntity.timeSlots}" var="timeSlot">
+                        <li>
+                            <h:outputText value="#{timeSlot.timeSlotTime}">
+                                <f:convertDateTime pattern = "h aa" />
+                            </h:outputText>
+                        </li>
+                    </ui:repeat>
+                </p:column>
+
+                <p:column headerText="Functions" style="text-align: center" >
+                    <p:commandButton value="View" icon="pi pi-search" title="View">
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
+                        
+                    </p:commandButton>
+                    <p:commandButton value="Edit Timeslots" icon="pi pi-clock" title="Edit Timeslots">
+                        
+                    </p:commandButton>
+                </p:column>
+
+
+            </p:dataTable>
+
 
         </div>
-        
+
     </ui:define>
 
 </ui:composition>
