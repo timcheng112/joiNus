@@ -76,9 +76,10 @@ public class ActivityEntity implements Serializable {
         this.comments = new ArrayList<>();
         this.participants = new ArrayList<>();
         this.gallery = new ArrayList<>();
+        this.participants = new ArrayList<>();
     }
 
-    public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, NormalUserEntity participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
+    public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, List<NormalUserEntity> participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
         this();
         this.activityName = activityName;
         this.activityDescription = activityDescription;

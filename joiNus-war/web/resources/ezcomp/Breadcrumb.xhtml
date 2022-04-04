@@ -28,6 +28,8 @@
                 <p:menuitem value="Facility Management" url="#{application.contextPath}/adminFacilityOperation/facilityManagement.xhtml" rendered="#{cc.attrs.pageName == 'facilityManagement'}" />
                 <p:menuitem value="Facility Management 2" url="#{application.contextPath}/adminFacilityOperation/facilityManagement2.xhtml" rendered="#{cc.attrs.pageName == 'facilityManagement2'}" />
 
+                <p:menuitem value="Admin Category Operation" rendered="#{cc.attrs.pageName == 'categoryManagement'}" />
+                <p:menuitem value="Category Management" url="#{application.contextPath}/adminCategoryOperation/categoryManagement.xhtml" rendered="#{cc.attrs.pageName == 'categoryManagement'}" />
             </p:breadCrumb>
 
         </h:form>

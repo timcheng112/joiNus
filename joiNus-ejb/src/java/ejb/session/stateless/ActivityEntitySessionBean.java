@@ -45,7 +45,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long activityId) throws UnknownPersistenceException, InputDataValidationException {
+    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity) throws UnknownPersistenceException, InputDataValidationException {
         Set<ConstraintViolation<ActivityEntity>> constraintViolations = validator.validate(newActivityEntity);
 
         if (constraintViolations.isEmpty()) {

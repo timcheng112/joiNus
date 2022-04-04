@@ -33,7 +33,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
-    
+
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
@@ -44,96 +44,77 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
     public void persist(Object object) {
         em.persist(object);
     }
-    
+
     @Override
     public NormalUserEntity createNewNormalUser(NormalUserEntity newNormalUser) throws UnknownPersistenceException, InputDataValidationException, NormalUserNameExistException {
-        Set<ConstraintViolation<NormalUserEntity>>constraintViolations = validator.validate(newNormalUser);
-        
-        if(constraintViolations.isEmpty())
-        {
-            try
-            {
+        System.out.println("ejb.session.stateless.NormalUserEntitySessionBean.createNewNormalUser()");
+        Set<ConstraintViolation<NormalUserEntity>> constraintViolations = validator.validate(newNormalUser);
+
+        System.err.println("violation clear");
+        if (constraintViolations.isEmpty()) {
+            System.err.println("violation empty");
+            try {
                 em.persist(newNormalUser);
                 //set linkages
                 em.flush();
 
                 return newNormalUser;
-            }
-            catch(PersistenceException ex)
-            {
-                if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException"))
-                {
-                    if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
-                    {
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
                         throw new NormalUserNameExistException();
-                    }
-                    else
-                    {
+                    } else {
                         throw new UnknownPersistenceException(ex.getMessage());
                     }
-                }
-                else
-                {
+                } else {
                     throw new UnknownPersistenceException(ex.getMessage());
                 }
             }
-        }
-        else
-        {
+        } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
 
     @Override
-    public List<NormalUserEntity> retrieveAllNormalUser()
-    {
+    public List<NormalUserEntity> retrieveAllNormalUser() {
         Query query = em.createQuery("SELECT f FROM NormalUserEntity f ORDER BY f.name ASC");
         List<NormalUserEntity> normalUserEntities = query.getResultList();
-        
-        for (NormalUserEntity f: normalUserEntities) {
+
+        for (NormalUserEntity f : normalUserEntities) {
             f.getActivitiesOwned().size();
             f.getActivitiesParticipated().size();
             f.getInterests().size();
         }
-        
+
         return query.getResultList();
     }
-    
+
     @Override
-    public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException
-    {
+    public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException {
         NormalUserEntity normalUserEntity = em.find(NormalUserEntity.class, normalUserId);
-        
-        if(normalUserEntity != null)
-        {
+
+        if (normalUserEntity != null) {
             normalUserEntity.getActivitiesOwned().size();
             normalUserEntity.getActivitiesParticipated().size();
             normalUserEntity.getInterests().size();
             return normalUserEntity;
-        }
-        else
-        {
+        } else {
             throw new NormalUserNotFoundException("User ID =  " + normalUserId + " does not exist!");
-        }               
+        }
     }
-    
+
     @Override
-    public void updateNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException
-    {
-        if(normalUserEntity != null && normalUserEntity.getUserId()!= null)
-        {
-            Set<ConstraintViolation<NormalUserEntity>>constraintViolations = validator.validate(normalUserEntity);
-        
-            if(constraintViolations.isEmpty())
-            {
+    public void updateNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException {
+        if (normalUserEntity != null && normalUserEntity.getUserId() != null) {
+            Set<ConstraintViolation<NormalUserEntity>> constraintViolations = validator.validate(normalUserEntity);
+
+            if (constraintViolations.isEmpty()) {
                 NormalUserEntity normalUserEntityToUpdate = retrieveNormalUserByUserId(normalUserEntity.getUserId());
 
-                if(normalUserEntityToUpdate.getUserId().equals(normalUserEntity.getUserId()))
-                {
+                if (normalUserEntityToUpdate.getUserId().equals(normalUserEntity.getUserId())) {
                     normalUserEntityToUpdate.setActivitiesOwned(normalUserEntity.getActivitiesOwned());
                     normalUserEntityToUpdate.setActivitiesParticipated(normalUserEntity.getActivitiesParticipated());
                     normalUserEntityToUpdate.setBookingTokens(normalUserEntity.getBookingTokens());
@@ -141,43 +122,39 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
                     normalUserEntityToUpdate.setInterests(normalUserEntity.getInterests());
                     normalUserEntityToUpdate.setName(normalUserEntity.getName());
                     normalUserEntityToUpdate.setSocialCredits(normalUserEntity.getSocialCredits());
-                    
-                }
-                else
-                {
+
+                } else {
                     throw new UpdateNormalUserException("User ID error");
                 }
-            }
-            else
-            {
+            } else {
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
-        }
-        else
-        {
+        } else {
             throw new NormalUserNotFoundException("User ID not provided for user to be updated");
         }
     }
-    
+
     @Override
-    public void deleteNormal(Long normalUserId) throws NormalUserNotFoundException, DeleteNormalUserException
-    {
+    public void deleteNormal(Long normalUserId) throws NormalUserNotFoundException, DeleteNormalUserException {
         NormalUserEntity userEntityToRemove = retrieveNormalUserByUserId(normalUserId);
-        
+
         //check dependencies
-        
-        if(true)
-        {
+        if (true) {
             em.remove(userEntityToRemove);
-        }
-        else
-        {
+        } else {
             throw new DeleteNormalUserException("User ID " + normalUserId + " cannot be deleted!");
         }
     }
+
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<NormalUserEntity>> constraintViolations) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String msg = "Input data validation error!:";
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
+            msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
+        }
+
+        return msg;
     }
     //retrieve id, retreive all, delete, update
-    
+
 }

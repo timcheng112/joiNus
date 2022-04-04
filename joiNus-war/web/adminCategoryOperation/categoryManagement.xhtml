@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+
+        <ez:Breadcrumb pageName="categoryManagement" />
+
+        <div>
+            <h3>Category Management</h3>
+
+            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{categoryManagedBean.categoryEntities}" var="categoryEntity" rowKey="#{categoryEntity.categoryId}" rowIndexVar="row"                             
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                <p:column headerText="Category ID" sortBy="#{categoryEntity.categoryId}">
+                    <h:outputText value="#{categoryEntity.categoryId}" />
+                </p:column>
+                
+                <p:column headerText="Category Name" sortBy="#{categoryEntity.categoryName}">
+                    <h:outputText value="#{categoryEntity.categoryName}" />
+                </p:column>
+
+                <p:column headerText="Parent Category" sortBy="#{categoryEntity.parentCategory}">
+                    <h:outputText value="#{categoryEntity.parentCategory.categoryName}" />
+                </p:column>
+
+                <p:column headerText="Sub-Categories" sortBy="#{categoryEntity.subCategories}">
+                    <ui:repeat value="#{categoryEntity.subCategories}" var="sub">
+                        <li>
+                            <h:outputText value="#{sub.categoryName}"/>
+                        </li>
+                    </ui:repeat>
+                </p:column>
+
+                <p:column headerText="Activities" sortBy="#{categoryEntity.activities}">
+                    <ui:repeat value="#{categoryEntity.activities}" var="activity">
+                        <li>
+                            <h:outputText value="#{activity.activityName}"/>
+                        </li>
+                    </ui:repeat>
+                </p:column>
+
+                <p:column headerText="Functions" style="text-align: center" >
+                    <p:commandButton value="View" icon="pi pi-search" title="View">
+                        
+                    </p:commandButton>
+                    
+                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
+                        
+                    </p:commandButton>
+                    
+                </p:column>
+
+
+            </p:dataTable>
+
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>

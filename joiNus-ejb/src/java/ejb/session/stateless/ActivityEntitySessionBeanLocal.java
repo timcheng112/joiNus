@@ -19,8 +19,6 @@ import util.exception.UnknownPersistenceException;
 @Local
 public interface ActivityEntitySessionBeanLocal {
 
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long activityId) throws UnknownPersistenceException, InputDataValidationException;
-
     public List<ActivityEntity> retrieveAllActivities();
 
     public ActivityEntity retrieveActivityByActivityId(Long activityId) throws ActivityNotFoundException;
@@ -34,5 +32,7 @@ public interface ActivityEntitySessionBeanLocal {
     public void deleteImages(ActivityEntity activityEntityToRemove);
 
     public void deleteComments(ActivityEntity activityEntityToRemove);
-    
+
+    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity) throws UnknownPersistenceException, InputDataValidationException;
+
 }

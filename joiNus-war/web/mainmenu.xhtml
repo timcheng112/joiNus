@@ -30,6 +30,10 @@
                         <p:menuitem value="Facility Management 2" outcome="/adminFacilityOperation/facilityManagement2" icon="pi pi-map-marker"/>
 
                     </p:submenu>
+                    
+                    <p:submenu label="Admin Category Operation" rendered="#{sessionScope.isLogin == true}">
+                        <p:menuitem value="Category Management" outcome="/adminCategoryOperation/categoryManagement" icon="pi pi-tag"/>
+                    </p:submenu>
 
                 </p:menu>
 
