@@ -14,51 +14,79 @@
         <div>
             <h3>Category Management</h3>
 
-            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{categoryManagedBean.categoryEntities}" var="categoryEntity" rowKey="#{categoryEntity.categoryId}" rowIndexVar="row"                             
-                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+            <h:form>
+                <p:menubar>
 
-                <p:column headerText="Category ID" sortBy="#{categoryEntity.categoryId}">
-                    <h:outputText value="#{categoryEntity.categoryId}" />
-                </p:column>
-                
-                <p:column headerText="Category Name" sortBy="#{categoryEntity.categoryName}">
-                    <h:outputText value="#{categoryEntity.categoryName}" />
-                </p:column>
+                    <p:submenu label="File" icon="ui-icon-document">
+                        <p:menuitem value="Create New Category" onclick="PF('dialogCreateNewCategory').show()" icon="pi pi-plus" />
+                    </p:submenu>                                        
+                </p:menubar>
+                <br/>
+            </h:form>
 
-                <p:column headerText="Parent Category" sortBy="#{categoryEntity.parentCategory}">
-                    <h:outputText value="#{categoryEntity.parentCategory.categoryName}" />
-                </p:column>
+            <h:form id="formAllCategories">
 
-                <p:column headerText="Sub-Categories" sortBy="#{categoryEntity.subCategories}">
-                    <ui:repeat value="#{categoryEntity.subCategories}" var="sub">
-                        <li>
-                            <h:outputText value="#{sub.categoryName}"/>
-                        </li>
-                    </ui:repeat>
-                </p:column>
+                <p:messages id="messages" redisplay="false" closable="true" />
 
-                <p:column headerText="Activities" sortBy="#{categoryEntity.activities}">
-                    <ui:repeat value="#{categoryEntity.activities}" var="activity">
-                        <li>
-                            <h:outputText value="#{activity.activityName}"/>
-                        </li>
-                    </ui:repeat>
-                </p:column>
+                <p:dataTable id="dataTableAllCategories" widgetVar="dataTableAllCategories" value="#{categoryManagedBean.categoryEntities}" var="categoryEntity" rowKey="#{categoryEntity.categoryId}" rowIndexVar="row"                             
+                             filteredValue="#{categoryManagedBean.filteredCategoryEntities}"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-                <p:column headerText="Functions" style="text-align: center" >
-                    <p:commandButton value="View" icon="pi pi-search" title="View">
-                        
-                    </p:commandButton>
-                    
-                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
-                        
-                    </p:commandButton>
-                    
-                </p:column>
+                    <f:facet name="header">
+                        <p:outputPanel style="text-align: right;">
+                            <h:outputText value="Search all fields:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('dataTableAllCategories').filter()" style="width:300px" placeholder="Enter keyword"/>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Category ID" sortBy="#{categoryEntity.categoryId}" filterBy="#{categoryEntity.categoryId}" filterMatchMode="contains">
+                        <h:outputText value="#{categoryEntity.categoryId}" />
+                    </p:column>
+
+                    <p:column headerText="Category Name" sortBy="#{categoryEntity.categoryName}" filterBy="#{categoryEntity.categoryName}" filterMatchMode="contains">
+                        <h:outputText value="#{categoryEntity.categoryName}" />
+                    </p:column>
+
+                    <p:column headerText="Parent Category" sortBy="#{categoryEntity.parentCategory}" filterBy="#{categoryEntity.parentCategory.categoryName}" filterMatchMode="contains">
+                        <h:outputText value="#{categoryEntity.parentCategory.categoryName}" />
+                    </p:column>
+
+                    <p:column headerText="Sub-Categories" sortBy="#{categoryEntity.subCategories}" field="#{categoryEntity.subCategories}" filterBy="#{categoryEntity.subCategories}" filterMatchMode="contains">
+                        <f:facet name="filter">
+                            <p:selectOneMenu id="selCat" onchange="PF('dataTableAllCategories').filter()">
+                                <f:selectItem itemValue="#{null}" itemLabel="[Select One]" noSelectionOption="true" />
+                                <f:selectItems value="#{categoryManagedBean.leafCategories}" var="cat" itemValue="#{cat.categoryName}" itemLabel="#{cat.categoryName}" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <ui:repeat value="#{categoryEntity.subCategories}" var="sub">
+                            <li>
+                                <h:outputText value="#{sub.categoryName}"/>
+                            </li>
+                        </ui:repeat>
+                    </p:column>
+
+                    <p:column headerText="Activities" sortBy="#{categoryEntity.activities}" field="#{categoryEntity.activities}" filterBy="#{categoryEntity.activities}" filterMatchMode="contains">
+                        <ui:repeat value="#{categoryEntity.activities}" var="activity" >
+                            <li>
+                                <h:outputText value="#{activity.activityName}" />
+                            </li>
+                        </ui:repeat>
+                    </p:column>
+
+                    <p:column headerText="Functions" style="text-align: center" >
+                        <p:commandButton value="View" icon="pi pi-search" title="View">
+
+                        </p:commandButton>
+
+                        <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
+
+                        </p:commandButton>
+
+                    </p:column>
 
 
-            </p:dataTable>
-
+                </p:dataTable>
+            </h:form>
 
         </div>
 

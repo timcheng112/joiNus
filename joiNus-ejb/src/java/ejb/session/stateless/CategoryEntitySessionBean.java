@@ -160,4 +160,43 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 
         return msg;
     }
+    
+    @Override
+    public List<CategoryEntity> retrieveAllLeafCategories()
+    {
+        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.subCategories IS EMPTY ORDER BY c.categoryName ASC");
+        List<CategoryEntity> leafCategoryEntities = query.getResultList();
+        
+        for(CategoryEntity leafCategoryEntity:leafCategoryEntities)
+        {
+            leafCategoryEntity.getParentCategory();
+            leafCategoryEntity.getActivities().size();
+        }
+        
+        return leafCategoryEntities;
+    }
+    
+    @Override
+    public List<CategoryEntity> retrieveAllRootCategories()
+    {
+        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.parentCategory IS NULL ORDER BY c.categoryName ASC");
+        List<CategoryEntity> rootCategoryEntities = query.getResultList();
+        
+        for(CategoryEntity rootCategoryEntity:rootCategoryEntities)
+        {            
+            lazilyLoadSubCategories(rootCategoryEntity);
+            
+            rootCategoryEntity.getActivities().size();
+        }
+        
+        return rootCategoryEntities;
+    }
+    
+    private void lazilyLoadSubCategories(CategoryEntity categoryEntity)
+    {
+        for(CategoryEntity ce:categoryEntity.getSubCategories())
+        {
+            lazilyLoadSubCategories(ce);
+        }
+    }
 }

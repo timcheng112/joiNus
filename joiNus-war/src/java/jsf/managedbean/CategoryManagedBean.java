@@ -35,6 +35,8 @@ public class CategoryManagedBean implements Serializable {
 
     private List<CategoryEntity> categoryEntities;
     private List<CategoryEntity> filteredCategoryEntities;
+    private List<CategoryEntity> leafCategories;
+    private List<CategoryEntity> rootCategories;
     
     private CategoryEntity newCategoryEntity;
     private Long parentCategoryIdNew;
@@ -55,6 +57,8 @@ public class CategoryManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct()
     {
+        rootCategories = categoryEntitySessionBeanLocal.retrieveAllRootCategories();
+        leafCategories = categoryEntitySessionBeanLocal.retrieveAllLeafCategories();
         setCategoryEntities(getCategoryEntitySessionBeanLocal().retrieveAllCategories());
         for (CategoryEntity category : categoryEntities) {
             category.getSubCategories();
@@ -228,6 +232,22 @@ public class CategoryManagedBean implements Serializable {
     
     public void setCategoryEntityToView(CategoryEntity categoryEntityToView) {
         this.categoryEntityToView = categoryEntityToView;
+    }
+
+    public List<CategoryEntity> getLeafCategories() {
+        return leafCategories;
+    }
+
+    public void setLeafCategories(List<CategoryEntity> leafCategories) {
+        this.leafCategories = leafCategories;
+    }
+
+    public List<CategoryEntity> getRootCategories() {
+        return rootCategories;
+    }
+
+    public void setRootCategories(List<CategoryEntity> rootCategories) {
+        this.rootCategories = rootCategories;
     }
     
     
