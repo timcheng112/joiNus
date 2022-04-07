@@ -46,17 +46,25 @@ public class FacilityEntity implements Serializable {
     @OneToMany(mappedBy="facility", fetch = FetchType.LAZY)
     private List<TimeSlotEntity> timeSlots;
 
+    @Column(nullable = false, length = 2)
+    private int openingHour;
+    
+    @Column(nullable = false, length = 2)
+    private int closingHour;
+    
     public FacilityEntity() {
         this.timeSlots = new ArrayList<>();
     }
 
-    public FacilityEntity(String facilityName, String club, Integer tokenCost, Integer capacity, String address) {
+    public FacilityEntity(String facilityName, String club, Integer tokenCost, Integer capacity, String address, int openingHour, int closingHour) {
         this();
         this.facilityName = facilityName;
         this.club = club;
         this.tokenCost = tokenCost;
         this.capacity = capacity;
         this.address = address;
+        this.openingHour = openingHour;
+        this.closingHour = closingHour;
     }
 
     public Long getFacilityId() {
@@ -186,4 +194,22 @@ public class FacilityEntity implements Serializable {
     public void removeTimeSlot(TimeSlotEntity timeSlot) {
         this.timeSlots.remove(timeSlot);
     }
+
+    public int getOpeningHour() {
+        return openingHour;
+    }
+
+    public void setOpeningHour(int openingHour) {
+        this.openingHour = openingHour;
+    }
+
+    public int getClosingHour() {
+        return closingHour;
+    }
+
+    public void setClosingHour(int closingHour) {
+        this.closingHour = closingHour;
+    }
+    
+    
 }

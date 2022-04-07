@@ -20,9 +20,12 @@ import entity.CategoryEntity;
 import entity.FacilityEntity;
 import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -38,6 +41,7 @@ import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.NormalUserNameExistException;
+import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -72,6 +76,7 @@ public class DataInitSessionBean {
     @PostConstruct
     public void postConstruct() {
         try {
+            initializeTimeSlots();
             adminEntitySessionBeanLocal.retrieveAdminByUsername("superadmin1");
         } catch (AdminNotFoundException ex) {
             initializeData();
@@ -89,35 +94,18 @@ public class DataInitSessionBean {
             NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "name", 420, 420, "user", "password"));
 
             // create facility
-            FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "2 Sports Drive, Singapore 117288"));
+            FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "2 Sports Drive, Singapore 117288", 10, 18));
 
             // create timeslots from 10am to 2pm
-            Calendar c = Calendar.getInstance();
+            Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
             c.set(Calendar.MINUTE, 0);
             c.set(Calendar.SECOND, 0);
             c.set(Calendar.MILLISECOND, 0);
             Date date = c.getTime();
-
-            TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
-            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
+            
+            TimeSlotEntity ts = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(1l);
 
             BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
-
-            date.setHours(11);
-            ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
-            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
-
-            date.setHours(12);
-            ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
-            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
-
-            date.setHours(13);
-            ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
-            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
-
-            date.setHours(14);
-            ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
-            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
 
             // create category
             CategoryEntity cat = categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Sports"), null);
@@ -127,10 +115,51 @@ public class DataInitSessionBean {
             bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
 
             System.out.println("Data Initialization Ended");
-        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException ex) {
+        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | TimeSlotNotFoundException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    public void initializeTimeSlots() {
+        System.out.println("ejb.session.singleton.DataInitSessionBean.initializeTimeSlots()");
+        try {
+            List<TimeSlotEntity> timeSlots;
+
+            List<FacilityEntity> facilities = facilityEntitySessionBeanLocal.retrieveAllFacilities();
+
+            for (FacilityEntity facility : facilities) {
+                Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                int openingHour = facility.getOpeningHour();
+                int closingHour = facility.getClosingHour();
+
+                for (int count = 0; count <= 7; count++) { // today + 7 days
+                    System.out.println("day " + count);
+                    timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), facility.getFacilityId());
+
+                    if (timeSlots == null || timeSlots.isEmpty()) {
+                        System.out.println("****** Timeslot exist for " + c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + " for " + facility.getFacilityName() + " ******");
+
+                        for (int i = openingHour; i < closingHour; i++) {
+                            c.set(Calendar.HOUR_OF_DAY, i);
+                            TimeSlotEntity ts = new TimeSlotEntity(c.getTime(), SlotStatusEnum.AVAILABLE, facility);
+                            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, facility.getFacilityId());
+                            System.out.println("create new timeslot for hour " + i);
+                        }
+                    } else {
+                        System.out.println("****** Timeslot exist for " + c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + " for " + facility.getFacilityName() + " ******");
+
+                    }
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    c.add(Calendar.DATE, 1);
+                }
+
+            }
+        } catch (CreateNewTimeSlotException | InputDataValidationException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
