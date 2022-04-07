@@ -9,6 +9,7 @@ import entity.ActivityEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.ActivityNotFoundException;
+import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 
@@ -27,7 +28,7 @@ public interface ActivityEntitySessionBeanLocal {
 
     public List<ActivityEntity> filterActivitiesByCategory(String categoryName);
 
-    public void deleteActivity(Long activityId) throws ActivityNotFoundException;
+    public void deleteActivity(Long activityId) throws ActivityNotFoundException, BookingNotFoundException;
 
     public void deleteImages(ActivityEntity activityEntityToRemove);
 

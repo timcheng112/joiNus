@@ -88,7 +88,7 @@
 
                         <p:row>
                             <p:column>
-                                <h:outputLabel value="Booking Date: " />
+                                <h:outputLabel value="Booking Creation Date: " />
                             </p:column>
                             <p:column>
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.booking.creationDate}" />
@@ -97,16 +97,7 @@
                         
                          <p:row>
                             <p:column>
-                                <h:outputLabel value="Booking Date: " />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.creationDate}" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Booking Timing: " />
+                                <h:outputLabel value="Activity Date: " />
                             </p:column>
                             <p:column>
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.booking.timeSlot.timeSlotTime}" />
@@ -118,7 +109,7 @@
                                 <h:outputLabel value="Category: " />
                             </p:column>
                             <p:column>
-                                <h:outputText value="#{activityManagedBean.activityEntityToView.category}" />
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.category.categoryName}" />
                             </p:column>
                         </p:row>
                         

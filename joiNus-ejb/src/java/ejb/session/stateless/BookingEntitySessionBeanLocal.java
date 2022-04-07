@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.BookingEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 
@@ -23,5 +24,7 @@ public interface BookingEntitySessionBeanLocal {
     public List<BookingEntity> retrieveBookingByActivity(Long activityId);
 
     public void associateBookingWithActivity(Long bookingId, Long activityId);
+
+    public void deleteBooking(Long bookingId) throws BookingNotFoundException;
     
 }

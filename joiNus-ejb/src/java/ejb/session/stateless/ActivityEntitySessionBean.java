@@ -11,6 +11,7 @@ import entity.ImageEntity;
 import entity.NormalUserEntity;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +22,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.ActivityNotFoundException;
+import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 
@@ -30,6 +32,9 @@ import util.exception.UnknownPersistenceException;
  */
 @Stateless
 public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal {
+
+    @EJB(name = "BookingEntitySessionBeanLocal")
+    private BookingEntitySessionBeanLocal bookingEntitySessionBeanLocal;
 
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
@@ -122,7 +127,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void deleteActivity(Long activityId) throws ActivityNotFoundException {
+    public void deleteActivity(Long activityId) throws ActivityNotFoundException, BookingNotFoundException {
 
         ActivityEntity activityEntityToRemove = retrieveActivityByActivityId(activityId);
 
@@ -141,7 +146,9 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         deleteComments(activityEntityToRemove);
         activityEntityToRemove.getComments().clear();
-
+        
+        bookingEntitySessionBeanLocal.deleteBooking(activityEntityToRemove.getBooking().getBookingId());
+        
         em.remove(activityEntityToRemove);
 
     }

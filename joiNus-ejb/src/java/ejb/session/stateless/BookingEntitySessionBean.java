@@ -18,6 +18,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 
@@ -78,15 +79,41 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
 
         return bookingEntities;
     }
-    
+
+    public BookingEntity retrieveBookingByBookingId(Long bookingId) throws BookingNotFoundException {
+        BookingEntity bookingEntity = em.find(BookingEntity.class, bookingId);
+
+        if (bookingEntity != null) {
+            return bookingEntity;
+        } else {
+            throw new BookingNotFoundException("Activity ID " + bookingId + " does not exist!");
+        }
+    }
+
     @Override
     public void associateBookingWithActivity(Long bookingId, Long activityId) {
         BookingEntity booking = em.find(BookingEntity.class, bookingId);
         ActivityEntity activity = em.find(ActivityEntity.class, activityId);
-        
+
         booking.setActivity(activity);
         activity.setBooking(booking);
-       
+
+    }
+
+    @Override
+    public void deleteBooking(Long bookingId) throws BookingNotFoundException {
+
+        BookingEntity bookingEntityToRemove = retrieveBookingByBookingId(bookingId);
+
+        if (bookingEntityToRemove.getTimeSlot() != null) {
+            bookingEntityToRemove.getTimeSlot().setBooking(null);
+            bookingEntityToRemove.setTimeSlot(null);
+        }
+        
+        bookingEntityToRemove.getActivity().setBooking(null);
+        bookingEntityToRemove.setActivity(null);
+
+        em.remove(bookingEntityToRemove);
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<BookingEntity>> constraintViolations) {
