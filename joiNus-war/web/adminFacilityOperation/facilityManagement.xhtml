@@ -58,15 +58,15 @@
                         <h:outputText value="#{facilityEntity.address}" />
                     </p:column>
 
-
-
-                    <p:column headerText="Function" style="text-align: center" >
-                        <p:commandButton value="View" icon="pi pi-search" title="View">
-
-                        </p:commandButton>
-
+                    <p:column headerText="Opening Hours" sortBy="#{facilityEntity.openingHour}">
+                        <h:outputText value="#{facilityEntity.openingHour}00 - #{facilityEntity.closingHour}00" />
                     </p:column>
 
+                    <p:column headerText="Functions" style="text-align: center" >
+                        <p:commandButton value="View" icon="pi pi-search" title="View" action="timeSlotManagement.xhtml" actionListener="#{viewTimeSlotManagedBean.createFacility}">
+                            <f:attribute value="#{facilityEntity}" name="facilityEntityToAdd"/>               
+                        </p:commandButton>
+                    </p:column>
 
                 </p:dataTable>
 
