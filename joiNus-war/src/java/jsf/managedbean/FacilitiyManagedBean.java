@@ -77,7 +77,7 @@ public class FacilitiyManagedBean implements Serializable {
         try {
             System.out.println("jsf.managedbean.FacilitiyManagedBean.createNewFacility()");
             FacilityEntity facility = facilityEntitySessionBeanLocal.createNewFacility(newFacilityEntity);
-
+            
             facilityEntities.add(facility);
 
             newFacilityEntity = new FacilityEntity();
