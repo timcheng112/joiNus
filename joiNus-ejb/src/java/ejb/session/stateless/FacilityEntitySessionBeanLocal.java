@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.FacilityEntity;
+import entity.ImageEntity;
 import entity.TimeSlotEntity;
 import java.util.List;
 import javax.ejb.Local;
@@ -39,6 +40,8 @@ public interface FacilityEntitySessionBeanLocal {
     public List<TimeSlotEntity> retrieveTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
 
     public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
+
+    public ImageEntity persistImage(ImageEntity img);
 
     
 }

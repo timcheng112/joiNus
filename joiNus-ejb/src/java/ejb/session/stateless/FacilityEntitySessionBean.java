@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import ejb.enums.SlotStatusEnum;
 import entity.FacilityEntity;
+import entity.ImageEntity;
 import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
     @Override
     public FacilityEntity createNewFacility(FacilityEntity newFacilityEntity) throws FacilityNameExistException, UnknownPersistenceException, InputDataValidationException, CreateNewFacilityException
     {
+        System.out.println("ejb.session.stateless.FacilityEntitySessionBean.createNewFacility()");
         Set<ConstraintViolation<FacilityEntity>>constraintViolations = validator.validate(newFacilityEntity);
         
         if(constraintViolations.isEmpty())
@@ -72,6 +74,8 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
                     {
+                        System.out.println(ex.getMessage());
+                        
                         throw new FacilityNameExistException();
                     }
                     else
@@ -91,7 +95,12 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
         }
     }
     
-    
+    @Override
+    public ImageEntity persistImage(ImageEntity img) {
+        em.persist(img);
+        em.flush();
+        return img;
+    }
     
     @Override
     public List<FacilityEntity> retrieveAllFacilities()

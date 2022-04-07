@@ -22,20 +22,45 @@ import javax.persistence.TemporalType;
  */
 @Entity
 public class ImageEntity implements Serializable {
+    //attributes
 
-    public ImageEntity(String imageDescription, Date datePosted, NormalUserEntity postedBy) {
+
+    @Column(nullable = false)
+    private String imagePath;
+    
+    @Column(nullable = true)
+    private String imageDescription;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date datePosted;
+    
+    //relationship
+    @OneToOne(optional = false)
+    private UserEntity postedBy;
+
+    public ImageEntity() {
+    }
+
+    public ImageEntity(String imagePath, String imageDescription, Date datePosted, UserEntity postedBy) {
+        this.imagePath = imagePath;
         this.imageDescription = imageDescription;
         this.datePosted = datePosted;
         this.postedBy = postedBy;
-    }
-
-    public ImageEntity() {
     }
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     public Long getImageId() {
         return imageId;
@@ -45,18 +70,6 @@ public class ImageEntity implements Serializable {
         this.imageId = imageId;
     }
 
-    //attributes
-    
-    @Column(nullable = true)
-    private String imageDescription;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date datePosted;
-    //relationship
-    @OneToOne(optional = false)
-    private NormalUserEntity postedBy;
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -85,14 +98,14 @@ public class ImageEntity implements Serializable {
     /**
      * @return the postedBy
      */
-    public NormalUserEntity getPostedBy() {
+    public UserEntity getPostedBy() {
         return postedBy;
     }
 
     /**
      * @param postedBy the postedBy to set
      */
-    public void setPostedBy(NormalUserEntity postedBy) {
+    public void setPostedBy(UserEntity postedBy) {
         this.postedBy = postedBy;
     }
 
@@ -123,5 +136,5 @@ public class ImageEntity implements Serializable {
     public void setDatePosted(Date datePosted) {
         this.datePosted = datePosted;
     }
-    
+
 }

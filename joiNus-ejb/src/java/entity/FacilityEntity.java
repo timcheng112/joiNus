@@ -14,7 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -27,31 +29,34 @@ public class FacilityEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long facilityId;
-    
+
     @Column(nullable = false, length = 64, unique = true)
     private String facilityName;
-    
+
     @Column(nullable = false, length = 64)
     private String club;
-    
+
     @Column(nullable = false, length = 3)
     private Integer tokenCost;
-    
+
     @Column(nullable = false, length = 3)
     private Integer capacity;
-    
-    @Column(nullable = false, length = 128, unique = true)
+
+    @Column(nullable = false, length = 128, unique = false)
     private String address;
-    
-    @OneToMany(mappedBy="facility", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "facility", fetch = FetchType.LAZY)
     private List<TimeSlotEntity> timeSlots;
 
     @Column(nullable = false, length = 2)
     private int openingHour;
-    
+
     @Column(nullable = false, length = 2)
     private int closingHour;
-    
+
+    @JoinColumn(nullable = true)
+    private ImageEntity facilityImage;
+
     public FacilityEntity() {
         this.timeSlots = new ArrayList<>();
     }
@@ -183,14 +188,14 @@ public class FacilityEntity implements Serializable {
     public void setTimeSlots(List<TimeSlotEntity> timeSlots) {
         this.timeSlots = timeSlots;
     }
-    
+
     /**
      * @param timeSlot add a timeSlot to set
      */
     public void addTimeSlot(TimeSlotEntity timeSlot) {
         this.timeSlots.add(timeSlot);
     }
-    
+
     public void removeTimeSlot(TimeSlotEntity timeSlot) {
         this.timeSlots.remove(timeSlot);
     }
@@ -210,6 +215,13 @@ public class FacilityEntity implements Serializable {
     public void setClosingHour(int closingHour) {
         this.closingHour = closingHour;
     }
-    
-    
+
+    public ImageEntity getFacilityImage() {
+        return facilityImage;
+    }
+
+    public void setFacilityImage(ImageEntity facilityImage) {
+        this.facilityImage = facilityImage;
+    }
+
 }

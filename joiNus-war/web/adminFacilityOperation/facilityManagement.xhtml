@@ -14,60 +14,240 @@
         <div>
             <h3>Facility Management</h3>
 
-            <p:dataTable id="dataTableMain" widgetVar="dataTableMain" value="#{facilitiyManagedBean.facilityEntities}" var="facilityEntity" rowKey="#{facilityEntity.facilityId}" rowIndexVar="row"                             
-                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+            <h:form>
+                <p:menubar>
 
-                <p:column headerText="Facility ID" sortBy="#{facilityEntity.facilityId}">
-                    <h:outputText value="#{facilityEntity.facilityId}" />
-                </p:column>
-                
-                <p:column headerText="Facility Name" sortBy="#{facilityEntity.facilityName}">
-                    <h:outputText value="#{facilityEntity.facilityName}" />
-                </p:column>
+                    <p:submenu label="File" icon="ui-icon-document">
+                        <p:menuitem value="Create New Facility" onclick="PF('dialogCreateNewFacility').show()" icon="pi pi-plus" />
+                    </p:submenu>                                        
+                </p:menubar>
+                <br/>
+            </h:form>
 
-                <p:column headerText="Club" sortBy="#{facilityEntity.club}">
-                    <h:outputText value="#{facilityEntity.club}" />
-                </p:column>
+            <h:form id="formAllFacilities">
 
-                <p:column headerText="Token Cost" sortBy="#{facilityEntity.tokenCost}">
-                    <h:outputText value="#{facilityEntity.tokenCost}" />
-                </p:column>
+                <p:messages id="messages" redisplay="false" closable="true" />
+                <p:dataTable id="dataTableAllFacilities" widgetVar="dataTableAllFacilities" value="#{facilitiyManagedBean.facilityEntities}" var="facilityEntity" rowKey="#{facilityEntity.facilityId}" rowIndexVar="row"                             
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-                <p:column headerText="Capacity" sortBy="#{facilityEntity.capacity}">
-                    <h:outputText value="#{facilityEntity.capacity}" />
-                </p:column>
+                    <p:column headerText="Facility ID" sortBy="#{facilityEntity.facilityId}">
+                        <h:outputText value="#{facilityEntity.facilityId}" />
+                    </p:column>
 
-                <p:column headerText="Address" sortBy="#{facilityEntity.address}">
-                    <h:outputText value="#{facilityEntity.address}" />
-                </p:column>
+                    <p:column headerText="Facility Image" >
+                        <p:graphicImage rendered="#{facilityEntity.facilityImage != null}" value="#{facilityEntity.facilityImage.imagePath}" height="100px" />
+                    </p:column>
 
-                <p:column headerText="Timeslots" sortBy="#{facilityEntity.timeSlots}">
-                    <p:repeat value="#{facilityEntity.timeSlots}" var ="timeSlot">
-                        <li>
-                            <h:outputText value="#{timeSlot.timeSlotTime}">
-                                <f:convertDateTime pattern = "h aa" timeZone="Asia/Singapore" />
-                            </h:outputText>
-                        </li>
-                    </p:repeat>
+                    <p:column headerText="Facility Name" sortBy="#{facilityEntity.facilityName}">
+                        <h:outputText value="#{facilityEntity.facilityName}" />
+                    </p:column>
 
-                </p:column>
+                    <p:column headerText="Club" sortBy="#{facilityEntity.club}">
+                        <h:outputText value="#{facilityEntity.club}" />
+                    </p:column>
 
-                <p:column headerText="Functions" style="text-align: center" >
-                    <p:commandButton value="View" icon="pi pi-search" title="View">
-                        
-                    </p:commandButton>
-                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
-                        
-                    </p:commandButton>
-                    <p:commandButton value="Edit Timeslots" icon="pi pi-clock" title="Edit Timeslots">
-                        
-                    </p:commandButton>
-                </p:column>
+                    <p:column headerText="Token Cost" sortBy="#{facilityEntity.tokenCost}">
+                        <h:outputText value="#{facilityEntity.tokenCost}" />
+                    </p:column>
+
+                    <p:column headerText="Capacity" sortBy="#{facilityEntity.capacity}">
+                        <h:outputText value="#{facilityEntity.capacity}" />
+                    </p:column>
+
+                    <p:column headerText="Address" sortBy="#{facilityEntity.address}">
+                        <h:outputText value="#{facilityEntity.address}" />
+                    </p:column>
 
 
-            </p:dataTable>
+
+                    <p:column headerText="Functions" style="text-align: center" >
+                        <p:commandButton value="View" icon="pi pi-search" title="View">
+
+                        </p:commandButton>
+                        <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
+
+                        </p:commandButton>
+                        <p:commandButton value="Edit Timeslots" icon="pi pi-clock" title="Edit Timeslots">
+
+                        </p:commandButton>
+                    </p:column>
 
 
+                </p:dataTable>
+
+            </h:form>
+
+
+            <h:form id="formCreateNewFacility" enctype="multipart/form-data">
+
+                <p:dialog id="dialogCreateNewFacility" widgetVar="dialogCreateNewFacility" header="Create New Facility" closable="true">
+
+                    <p:messages id="messagesCreateNewFacility" redisplay="false"  />
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facName" value="Facility Name: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="facName" value="#{facilitiyManagedBean.newFacilityEntity.facilityName}" placeholder="Squash Court 1" required="true" requiredMessage="Facility Name is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facName" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facClub" value="Club: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="facClub" value="#{facilitiyManagedBean.newFacilityEntity.club}" placeholder="USC" required="false" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facClub" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facCost" value="Facility Token Cost " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputNumber id="facCost" value="#{facilitiyManagedBean.newFacilityEntity.tokenCost}" placeholder="5" required="true" requiredMessage="Token Cost is required" minValue="0" decimalPlaces="0"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facCost" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facCap" value="Capacity " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputNumber id="facCap" value="#{facilitiyManagedBean.newFacilityEntity.capacity}" placeholder="4" required="true" requiredMessage="Capacity is required" minValue="1" decimalPlaces="0"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facCap" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facAddress" value="Address " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputTextarea id="facAddress" value="#{facilitiyManagedBean.newFacilityEntity.address}" placeholder="USC, 2 Sports Drive, Singapore 117288" required="true" requiredMessage="Address is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facAddress" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facOpening" value="Opening Hour (24-hours) " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="facOpening" value="#{facilitiyManagedBean.newFacilityEntity.openingHour}" required="true">
+                                    <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
+                                    <f:selectItem itemValue="6" itemLabel="6am" />
+                                    <f:selectItem itemValue="7" itemLabel="7am" />
+                                    <f:selectItem itemValue="8" itemLabel="8am" />
+                                    <f:selectItem itemValue="9" itemLabel="9am" />
+                                    <f:selectItem itemValue="10" itemLabel="10am" />
+                                    <f:selectItem itemValue="11" itemLabel="11am" />
+                                    <f:selectItem itemValue="12" itemLabel="12pm" />
+                                    <f:selectItem itemValue="13" itemLabel="1pm" />
+                                    <f:selectItem itemValue="14" itemLabel="2pm" />
+                                    <f:selectItem itemValue="15" itemLabel="3pm" />
+                                    <f:selectItem itemValue="16" itemLabel="4pm" />
+                                    <f:selectItem itemValue="17" itemLabel="5pm" />
+                                    <f:selectItem itemValue="18" itemLabel="6pm" />
+                                    <f:selectItem itemValue="19" itemLabel="7pm" />
+                                    <f:selectItem itemValue="20" itemLabel="8pm" />
+                                    <f:selectItem itemValue="21" itemLabel="9pm" />
+                                    <f:selectItem itemValue="22" itemLabel="10pm" />
+                                    <f:selectItem itemValue="23" itemLabel="11pm" />
+                                    <f:selectItem itemValue="0" itemLabel="12mn" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facOpening" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facClosing" value="Closing Hour (24-hours) " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="facClosing" value="#{facilitiyManagedBean.newFacilityEntity.closingHour}" required="true">
+                                    <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
+                                    <f:selectItem itemValue="6" itemLabel="6am" />
+                                    <f:selectItem itemValue="7" itemLabel="7am" />
+                                    <f:selectItem itemValue="8" itemLabel="8am" />
+                                    <f:selectItem itemValue="9" itemLabel="9am" />
+                                    <f:selectItem itemValue="10" itemLabel="10am" />
+                                    <f:selectItem itemValue="11" itemLabel="11am" />
+                                    <f:selectItem itemValue="12" itemLabel="12pm" />
+                                    <f:selectItem itemValue="13" itemLabel="1pm" />
+                                    <f:selectItem itemValue="14" itemLabel="2pm" />
+                                    <f:selectItem itemValue="15" itemLabel="3pm" />
+                                    <f:selectItem itemValue="16" itemLabel="4pm" />
+                                    <f:selectItem itemValue="17" itemLabel="5pm" />
+                                    <f:selectItem itemValue="18" itemLabel="6pm" />
+                                    <f:selectItem itemValue="19" itemLabel="7pm" />
+                                    <f:selectItem itemValue="20" itemLabel="8pm" />
+                                    <f:selectItem itemValue="21" itemLabel="9pm" />
+                                    <f:selectItem itemValue="22" itemLabel="10pm" />
+                                    <f:selectItem itemValue="23" itemLabel="11pm" />
+                                    <f:selectItem itemValue="0" itemLabel="12mn" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facClosing" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facImage" value="Facility Image " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="facImage" listener="#{facilitiyManagedBean.handleFileUpload}" multiple="false" update="facTempImage" immediate="true"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facImage" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facTempImage" value="Facility Image Preview " />
+                            </p:column>
+                            <p:column>
+                                <p:graphicImage id="facTempImage" alt="#{facilitiyManagedBean.uploadedImage.imageDescription}" value="#{facilitiyManagedBean.uploadedFilePath}" height="100px" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facTempImage" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton type="reset" value="Clear" actionListener="#{facilitiyManagedBean.clear}" update="facTempImage" />&nbsp;
+                                <p:commandButton value="Create New Facility" actionListener="#{facilitiyManagedBean.createNewFacility}" update="@form formAllFacilities:dataTableAllFacilities" oncomplete="PF('dialogCreateNewFacility').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
         </div>
 
     </ui:define>
