@@ -56,6 +56,10 @@ public class CategoryManagedBean implements Serializable {
     public void postConstruct()
     {
         setCategoryEntities(getCategoryEntitySessionBeanLocal().retrieveAllCategories());
+        for (CategoryEntity category : categoryEntities) {
+            category.getSubCategories();
+            category.getActivities();
+        }
     }
     
     public void viewCategoryDetails(ActionEvent event) throws IOException

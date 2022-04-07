@@ -108,10 +108,15 @@ public class DataInitSessionBean {
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
-            
+                        
             // create booking
             BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
 
+            c.set(Calendar.HOUR_OF_DAY, 13);
+            date = c.getTime();
+            TimeSlotEntity ts2 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
+            timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts2, fac.getFacilityId());
+                                        
             // create category
             CategoryEntity cat = categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Sports"), null);
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Bouldering"), cat.getCategoryId());

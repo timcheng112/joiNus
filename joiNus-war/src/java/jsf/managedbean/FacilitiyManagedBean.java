@@ -55,6 +55,9 @@ public class FacilitiyManagedBean implements Serializable {
     public void postConstruct(){
         setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilities());
         
+        for (FacilityEntity facility : facilityEntities) {
+            facility.getTimeSlots();
+        }
         
 //        try {
 //            setTimeSlots(facilityEntitySessionBeanLocal.retrieveTimeSlotsByFacility(getNewFacilityEntity().getFacilityId()));

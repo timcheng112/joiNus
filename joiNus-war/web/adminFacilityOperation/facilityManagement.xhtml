@@ -42,13 +42,14 @@
                 </p:column>
 
                 <p:column headerText="Timeslots" sortBy="#{facilityEntity.timeSlots}">
-                    <ui:repeat value="#{facilityEntity.timeSlots}" var="timeSlot">
+                    <p:repeat value="#{facilityEntity.timeSlots}" var ="timeSlot">
                         <li>
                             <h:outputText value="#{timeSlot.timeSlotTime}">
-                                <f:convertDateTime pattern = "h aa" />
+                                <f:convertDateTime pattern = "h aa" timeZone="Asia/Singapore" />
                             </h:outputText>
                         </li>
-                    </ui:repeat>
+                    </p:repeat>
+
                 </p:column>
 
                 <p:column headerText="Functions" style="text-align: center" >
