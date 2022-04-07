@@ -102,7 +102,7 @@ public class DataInitSessionBean {
             c.set(Calendar.SECOND, 0);
             c.set(Calendar.MILLISECOND, 0);
             c.set(Calendar.DATE, 6);
-            c.set(Calendar.MONTH, 4);
+            c.set(Calendar.MONTH, 3); // month - 1
             c.set(Calendar.HOUR_OF_DAY, 12);
             Date date = c.getTime();
 
