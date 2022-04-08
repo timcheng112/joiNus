@@ -90,6 +90,55 @@
 
         </div>
 
+        <h:form id="formCreateNewCategory">
+
+            <p:dialog id="dialogCreateNewCategory" widgetVar="dialogCreateNewCategory" header="Create New Category" closable="true">
+
+                <p:messages id="messagesCreateNewCategory" redisplay="false" />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="categoryName" value="Category Name:" style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="categoryName" value="#{categoryManagedBean.newCategoryEntity.categoryName}" required="true" requiredMessage="Category name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="categoryName" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="parentCategory" value="Parent Category:" style="font-weight: bold;" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="parentCategory" value="#{categoryManagedBean.parentCategoryIdNew}" required="false">
+                                <f:selectItem itemValue="0" itemLabel="[No Parent Category]" noSelectionOption="false" />
+                                <f:selectItems value="#{categoryManagedBean.categoryEntities}" var="category" itemValue="#{category.categoryId}" itemLabel="#{category.categoryName}" />
+
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="parentCategory" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton  value="Create New Category" process="@form" update="@form formAllCategories" actionListener="#{categoryManagedBean.createNewCategory}" oncomplete="PF('dialogCreateNewCategory').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
     </ui:define>
+
 
 </ui:composition>
