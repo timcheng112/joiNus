@@ -43,6 +43,7 @@ public class FacilitiyManagedBean implements Serializable {
     private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
 
     private FacilityEntity newFacilityEntity;
+    private FacilityEntity facilityEntityToUpdate;
     private List<TimeSlotEntity> timeSlots;
     private List<FacilityEntity> facilityEntities;
     private String uploadedFilePath;
@@ -77,7 +78,7 @@ public class FacilitiyManagedBean implements Serializable {
         try {
             System.out.println("jsf.managedbean.FacilitiyManagedBean.createNewFacility()");
             FacilityEntity facility = facilityEntitySessionBeanLocal.createNewFacility(newFacilityEntity);
-            
+
             facilityEntities.add(facility);
 
             newFacilityEntity = new FacilityEntity();
@@ -96,6 +97,14 @@ public class FacilitiyManagedBean implements Serializable {
         } catch (CreateNewFacilityException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in creating facility CreateNewFacilityException", null));
         }
+    }
+
+    public void editExistingFacility() {
+        facilityEntityToUpdate = new FacilityEntity();
+        uploadedFilePath = "";
+        uploadedImage = new ImageEntity();
+        showImage = false;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucessfully edited facility", null));
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -136,6 +145,53 @@ public class FacilitiyManagedBean implements Serializable {
             ImageEntity facilityImage = new ImageEntity(uploadedFilePath, newFacilityEntity.getFacilityName() + " Image", new Date(), currAdmin);
             facilityImage = facilityEntitySessionBeanLocal.persistImage(facilityImage);
             newFacilityEntity.setFacilityImage(facilityImage);
+            uploadedImage = facilityImage;
+            showImage = true;
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+
+    public void handleFileUploadEdit(FileUploadEvent event) {
+        try {
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + event.getFile().getFileName();
+
+            System.err.println("********** FacilitiyManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** FacilitiyManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            File file = new File(newFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputStream();
+
+            while (true) {
+                a = inputStream.read(buffer);
+
+                if (a < 0) {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            fileOutputStream.close();
+            inputStream.close();
+
+            uploadedFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("uploadedFilesPath") + "/" + event.getFile().getFileName();
+            System.out.println("Photo Path is : " + uploadedFilePath);
+
+            AdminEntity currAdmin = (AdminEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentAdminEntity");
+
+            ImageEntity facilityImage = new ImageEntity(uploadedFilePath, newFacilityEntity.getFacilityName() + " Image", new Date(), currAdmin);
+            facilityImage = facilityEntitySessionBeanLocal.persistImage(facilityImage);
+            facilityEntityToUpdate.setFacilityImage(facilityImage);
             uploadedImage = facilityImage;
             showImage = true;
 
@@ -216,6 +272,20 @@ public class FacilitiyManagedBean implements Serializable {
 
     public void setShowImage(boolean showImage) {
         this.showImage = showImage;
+    }
+
+    /**
+     * @return the facilityEntityToUpdate
+     */
+    public FacilityEntity getFacilityEntityToUpdate() {
+        return facilityEntityToUpdate;
+    }
+
+    /**
+     * @param facilityEntityToUpdate the facilityEntityToUpdate to set
+     */
+    public void setFacilityEntityToUpdate(FacilityEntity facilityEntityToUpdate) {
+        this.facilityEntityToUpdate = facilityEntityToUpdate;
     }
 
 }
