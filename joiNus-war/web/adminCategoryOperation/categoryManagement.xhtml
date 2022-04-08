@@ -74,12 +74,8 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton value="View" icon="pi pi-search" title="View">
-
-                        </p:commandButton>
-
-                        <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
-
+                        <p:commandButton update="formEditCategoryName" oncomplete="PF('dialogEditCategoryName').show()" icon="ui-icon-pencil" title="View" >
+                            <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />
                         </p:commandButton>
 
                     </p:column>
@@ -136,6 +132,49 @@
                 </p:panelGrid>
 
             </p:dialog>
+        </h:form>
+
+
+
+        <h:form id="formEditCategoryName">
+
+            <p:dialog id="dialogEditCategoryName" widgetVar="dialogEditCategoryName" header="Update Category Name" closable="true">
+
+                <p:messages />
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Update Category Name " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{categoryManagedBean.categoryNameUpdate}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Update Parent Category " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="parentCategory" value="#{categoryManagedBean.parentCategoryIdUpdate}" required="false">
+                                <f:selectItem itemValue="0" itemLabel="[No Parent Category]" noSelectionOption="false" />
+                                <f:selectItems value="#{categoryManagedBean.categoryEntities}" var="category" itemValue="#{category.categoryId}" itemLabel="#{category.categoryName}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton update="@form formAllCategories" value="Update Categories" actionListener="#{categoryManagedBean.updateCategory}" oncomplete="PF('dialogEditCategoryName').show();"/>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
         </h:form>
 
     </ui:define>

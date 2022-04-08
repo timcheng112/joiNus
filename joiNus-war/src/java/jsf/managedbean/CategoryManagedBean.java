@@ -5,6 +5,7 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.CategoryEntitySessionBean;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import entity.CategoryEntity;
 import java.io.IOException;
@@ -42,7 +43,8 @@ public class CategoryManagedBean implements Serializable {
     private CategoryEntity newParentCategory;
     private Long parentCategoryIdNew;
     
-    private CategoryEntity selectedCategoryEntityToUpdate;
+    private CategoryEntity categoryUpdate;
+    private Long categoryIdUpdate;
     private String categoryNameUpdate;
     private Long parentCategoryIdUpdate;
     
@@ -114,13 +116,13 @@ public class CategoryManagedBean implements Serializable {
         
         try
         {
-            getCategoryEntitySessionBeanLocal().updateCategory(getSelectedCategoryEntityToUpdate(), getParentCategoryIdUpdate());
-                        
+            categoryEntitySessionBeanLocal.updateCategoryById(categoryIdUpdate, categoryNameUpdate, parentCategoryIdUpdate);
+            
             for(CategoryEntity ce:getCategoryEntities())
             {
                 if(ce.getCategoryId().equals(getParentCategoryIdUpdate()))
                 {
-                    getSelectedCategoryEntityToUpdate().setParentCategory(ce);
+                    getCategoryUpdate().setParentCategory(ce);
                     break;
                 }                
             }
@@ -209,12 +211,13 @@ public class CategoryManagedBean implements Serializable {
         
     }
 
-    public CategoryEntity getSelectedCategoryEntityToUpdate() {
-        return selectedCategoryEntityToUpdate;
+    public CategoryEntity getCategoryUpdate() {
+        return categoryUpdate;
     }
 
-    public void setSelectedCategoryEntityToUpdate(CategoryEntity selectedCategoryEntityToUpdate) {
-        this.selectedCategoryEntityToUpdate = selectedCategoryEntityToUpdate;
+    public void setCategoryUpdate(CategoryEntity categoryUpdate) {
+        categoryIdUpdate = categoryUpdate.getCategoryId();
+        this.categoryUpdate = categoryUpdate;
     }
 
     public String getCategoryNameUpdate() {
@@ -275,6 +278,20 @@ public class CategoryManagedBean implements Serializable {
             this.newParentCategory = newParentCategory;
         }
         
+    }
+
+    /**
+     * @return the categoryIdUpdate
+     */
+    public Long getCategoryIdUpdate() {
+        return categoryIdUpdate;
+    }
+
+    /**
+     * @param categoryIdUpdate the categoryIdUpdate to set
+     */
+    public void setCategoryIdUpdate(Long categoryIdUpdate) {
+        this.categoryIdUpdate = categoryIdUpdate;
     }
     
     
