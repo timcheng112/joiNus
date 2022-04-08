@@ -51,9 +51,6 @@ public class ActivityEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date activityCreationDate;
 
-    @Column(nullable = false, length = 2)
-    private Integer numberOfParticipants;
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private NormalUserEntity activityOwner;
@@ -79,7 +76,6 @@ public class ActivityEntity implements Serializable {
         this.participants = new ArrayList<>();
         this.gallery = new ArrayList<>();
         this.participants = new ArrayList<>();
-        this.numberOfParticipants = 1;
     }
 
     public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, List<NormalUserEntity> participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
@@ -299,14 +295,6 @@ public class ActivityEntity implements Serializable {
      * @return the numberOfParticipants
      */
     public Integer getNumberOfParticipants() {
-        return numberOfParticipants;
+        return 1 + participants.size();
     }
-
-    /**
-     * @param numberOfParticipants the numberOfParticipants to set
-     */
-    public void setNumberOfParticipants(Integer numberOfParticipants) {
-        this.numberOfParticipants = numberOfParticipants;
-    }
-
 }

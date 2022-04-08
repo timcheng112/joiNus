@@ -173,7 +173,7 @@
                                 <p:outputLabel for="updateDate" value="Update to (Date): " />
                             </p:column>
                             <p:column>
-                                <p:datePicker id="updateDate" value="#{activityManagedBean.editedActivityDate}" inline="true" required="true">
+                                <p:datePicker id="updateDate" value="#{activityManagedBean.editedActivityDate}" inline="true" required="true" requiredMessage="This field is required!">
                                     <p:ajax event="dateSelect" listener="#{activityManagedBean.retrieveTimeslots(event)}" update="updateTimeslot"/>
                                 </p:datePicker>
                             </p:column>
@@ -187,13 +187,13 @@
                                 <p:outputLabel for="updateTimeslot" value="Available Timeslots: " />
                             </p:column>
                             <p:column>
-                                <p:selectOneMenu id="updateTimeslot" value="#{activityManagedBean.selectedTimeSlotId}" required="true">
-                                    <f:selectItem itemLabel="[Select]" itemValue="null" noSelectionOption="true"/>
+                                <p:selectOneMenu id="updateTimeslot" value="#{activityManagedBean.selectedTimeSlotId}" required="true" requiredMessage="This field is required!">
+                                    <f:selectItem itemLabel="[Select]" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems value="#{activityManagedBean.timeSlots}" var="timeslot" itemValue="#{timeslot.timeSlotId}" itemLabel="#{timeslot.timeSlotTime.getHours()}00H"/>
                                 </p:selectOneMenu>
                             </p:column>
                             <p:column>
-                                <p:message for="updateTimeslot" />
+                                <p:message for="updateTimeslot"/>
                             </p:column>
                         </p:row>
 
