@@ -63,8 +63,8 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton value="View" icon="pi pi-search" title="View" action="timeSlotManagement.xhtml" actionListener="#{viewTimeSlotManagedBean.createFacility}">
-                            <f:attribute value="#{facilityEntity}" name="facilityEntityToAdd"/>               
+                        <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formEditFacility" oncomplete="PF('dialogEditFacility').show()">
+                            <f:setPropertyActionListener value="#{facilityEntity}" target="#{facilitiyManagedBean.facilityEntityToUpdate}"/>
                         </p:commandButton>
                     </p:column>
 
@@ -235,6 +235,179 @@
                             <p:column colspan="3">
                                 <p:commandButton type="reset" value="Clear" actionListener="#{facilitiyManagedBean.clear}" update="facTempImage" />&nbsp;
                                 <p:commandButton value="Create New Facility" actionListener="#{facilitiyManagedBean.createNewFacility}" update="@form formAllFacilities:dataTableAllFacilities" oncomplete="PF('dialogCreateNewFacility').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+            
+            <h:form id="formEditFacility" enctype="multipart/form-data">
+
+                <p:dialog id="dialogEditFacility" widgetVar="dialogEditFacility" header="Edit Facility Details" closable="true">
+
+                    <p:messages id="messagesEditFacility" redisplay="false"  />
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facName" value="Facility Name: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="facName" value="#{facilitiyManagedBean.facilityEntityToUpdate.facilityName}" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.facilityName}" required="true" requiredMessage="Facility Name is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facName" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facClub" value="Club: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="facClub" value="#{facilitiyManagedBean.facilityEntityToUpdate.club}" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.club}" required="false" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facClub" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facCost" value="Facility Token Cost " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputNumber id="facCost" value="#{facilitiyManagedBean.facilityEntityToUpdate.tokenCost}" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.tokenCost}" required="true" requiredMessage="Token Cost is required" minValue="0" decimalPlaces="0"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facCost" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facCap" value="Capacity " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputNumber id="facCap" value="#{facilitiyManagedBean.facilityEntityToUpdate.capacity}" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.capacity}" required="true" requiredMessage="Capacity is required" minValue="1" decimalPlaces="0"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facCap" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facAddress" value="Address " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputTextarea id="facAddress" value="#{facilitiyManagedBean.facilityEntityToUpdate.address}" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.address}" required="true" requiredMessage="Address is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="facAddress" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facOpening" value="Opening Hour (24-hours) " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="facOpening" value="#{facilitiyManagedBean.facilityEntityToUpdate.openingHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.openingHour}">
+                                    <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
+                                    <f:selectItem itemValue="6" itemLabel="6am" />
+                                    <f:selectItem itemValue="7" itemLabel="7am" />
+                                    <f:selectItem itemValue="8" itemLabel="8am" />
+                                    <f:selectItem itemValue="9" itemLabel="9am" />
+                                    <f:selectItem itemValue="10" itemLabel="10am" />
+                                    <f:selectItem itemValue="11" itemLabel="11am" />
+                                    <f:selectItem itemValue="12" itemLabel="12pm" />
+                                    <f:selectItem itemValue="13" itemLabel="1pm" />
+                                    <f:selectItem itemValue="14" itemLabel="2pm" />
+                                    <f:selectItem itemValue="15" itemLabel="3pm" />
+                                    <f:selectItem itemValue="16" itemLabel="4pm" />
+                                    <f:selectItem itemValue="17" itemLabel="5pm" />
+                                    <f:selectItem itemValue="18" itemLabel="6pm" />
+                                    <f:selectItem itemValue="19" itemLabel="7pm" />
+                                    <f:selectItem itemValue="20" itemLabel="8pm" />
+                                    <f:selectItem itemValue="21" itemLabel="9pm" />
+                                    <f:selectItem itemValue="22" itemLabel="10pm" />
+                                    <f:selectItem itemValue="23" itemLabel="11pm" />
+                                    <f:selectItem itemValue="0" itemLabel="12mn" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facOpening" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facClosing" value="Closing Hour (24-hours) " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="facClosing" value="#{facilitiyManagedBean.facilityEntityToUpdate.closingHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.closingHour}">
+                                    <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
+                                    <f:selectItem itemValue="6" itemLabel="6am" />
+                                    <f:selectItem itemValue="7" itemLabel="7am" />
+                                    <f:selectItem itemValue="8" itemLabel="8am" />
+                                    <f:selectItem itemValue="9" itemLabel="9am" />
+                                    <f:selectItem itemValue="10" itemLabel="10am" />
+                                    <f:selectItem itemValue="11" itemLabel="11am" />
+                                    <f:selectItem itemValue="12" itemLabel="12pm" />
+                                    <f:selectItem itemValue="13" itemLabel="1pm" />
+                                    <f:selectItem itemValue="14" itemLabel="2pm" />
+                                    <f:selectItem itemValue="15" itemLabel="3pm" />
+                                    <f:selectItem itemValue="16" itemLabel="4pm" />
+                                    <f:selectItem itemValue="17" itemLabel="5pm" />
+                                    <f:selectItem itemValue="18" itemLabel="6pm" />
+                                    <f:selectItem itemValue="19" itemLabel="7pm" />
+                                    <f:selectItem itemValue="20" itemLabel="8pm" />
+                                    <f:selectItem itemValue="21" itemLabel="9pm" />
+                                    <f:selectItem itemValue="22" itemLabel="10pm" />
+                                    <f:selectItem itemValue="23" itemLabel="11pm" />
+                                    <f:selectItem itemValue="0" itemLabel="12mn" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facClosing" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facImage" value="Facility Image " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="facImage" listener="#{facilitiyManagedBean.handleFileUploadEdit}" multiple="false" update="facTempImage" immediate="true"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facImage" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="facTempImage" value="Facility Image Preview " />
+                            </p:column>
+                            <p:column>
+                                <p:graphicImage id="prevImage" value="#{facilitiyManagedBean.facilityEntityToUpdate.facilityImage.imagePath}"
+                                                rendered="#{facilitiyManagedBean.uploadedFilePath == null}"/>
+                                <p:graphicImage id="facTempImage" alt="#{facilitiyManagedBean.uploadedImage.imageDescription}" 
+                                                value="#{facilitiyManagedBean.uploadedFilePath}" height="100px"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="facTempImage" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="edit existing facility" actionListener="#{facilitiyManagedBean.editExistingFacility}" update="@form formAllFacilities:dataTableAllFacilities" oncomplete="PF('dialogEditFacility').show();" />
                             </p:column>
                         </p:row>
 
