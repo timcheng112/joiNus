@@ -39,6 +39,7 @@ public class CategoryManagedBean implements Serializable {
     private List<CategoryEntity> rootCategories;
     
     private CategoryEntity newCategoryEntity;
+    private CategoryEntity newParentCategory;
     private Long parentCategoryIdNew;
     
     private CategoryEntity selectedCategoryEntityToUpdate;
@@ -52,6 +53,7 @@ public class CategoryManagedBean implements Serializable {
      */
     public CategoryManagedBean() {
         newCategoryEntity = new CategoryEntity();
+        newParentCategory = new CategoryEntity();
     }
     
     @PostConstruct
@@ -75,26 +77,27 @@ public class CategoryManagedBean implements Serializable {
     
     public void createNewCategory(ActionEvent event)
     {        
-        if(getParentCategoryIdNew() == 0)
+        if(getParentCategoryIdNew() == 0 || getParentCategoryIdNew() == null)
         {
             setParentCategoryIdNew(null);
         }                
         
         try
         {
-            CategoryEntity pe = getCategoryEntitySessionBeanLocal().createNewCategoryEntity(getNewCategoryEntity(), getParentCategoryIdNew());
-            getCategoryEntities().add(pe);
+            CategoryEntity newCategory = categoryEntitySessionBeanLocal.createNewCategoryEntity(newCategoryEntity, parentCategoryIdNew);
+            
+            getCategoryEntities().add(newCategory);
             
             if(getFilteredCategoryEntities() != null)
             {
-                getFilteredCategoryEntities().add(pe);
+                getFilteredCategoryEntities().add(newCategory);
             }
             
             setNewCategoryEntity(new CategoryEntity());
-            setParentCategoryIdNew(null);
+            parentCategoryIdNew = null;
             
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category created successfully (Category ID: " + pe.getCategoryId() + ")", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category created successfully (Category ID: " + newCategory.getCategoryId() + ")", null));
         }
         catch(InputDataValidationException | CreateNewCategoryException ex)
         {
@@ -199,7 +202,11 @@ public class CategoryManagedBean implements Serializable {
     }
 
     public void setParentCategoryIdNew(Long parentCategoryIdNew) {
+        
+        
         this.parentCategoryIdNew = parentCategoryIdNew;
+        
+        
     }
 
     public CategoryEntity getSelectedCategoryEntityToUpdate() {
@@ -248,6 +255,26 @@ public class CategoryManagedBean implements Serializable {
 
     public void setRootCategories(List<CategoryEntity> rootCategories) {
         this.rootCategories = rootCategories;
+    }
+
+    /**
+     * @return the newParentCategory
+     */
+    public CategoryEntity getNewParentCategory() {
+        return newParentCategory;
+    }
+
+    /**
+     * @param newParentCategory the newParentCategory to set
+     */
+    public void setNewParentCategory(CategoryEntity newParentCategory) {
+        if (newParentCategory == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Category not found: ", null));
+            this.newParentCategory = null;
+        } else {
+            this.newParentCategory = newParentCategory;
+        }
+        
     }
     
     
