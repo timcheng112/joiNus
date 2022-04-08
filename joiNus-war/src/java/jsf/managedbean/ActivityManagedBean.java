@@ -119,17 +119,17 @@ public class ActivityManagedBean implements Serializable {
     }
 
     public void retrieveTimeslots(ActionEvent event) {
-        List<TimeSlotEntity> timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate(), activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
+        List<TimeSlotEntity> retrievedTimeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate(), activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
         List<TimeSlotEntity> availTimeSlots = new ArrayList<>();
-        if (timeSlots != null) {
-            for (TimeSlotEntity timeSlot : timeSlots) {
+        if (retrievedTimeSlots != null) {
+            for (TimeSlotEntity timeSlot : retrievedTimeSlots) {
                 System.out.println(timeSlot.getStatus());
                 if (timeSlot.getStatus() == SlotStatusEnum.AVAILABLE) {
                     availTimeSlots.add(timeSlot);
                 }
             }
-            setTimeSlots(availTimeSlots);
         }
+        setTimeSlots(availTimeSlots);
         System.out.println(availTimeSlots);
     }
 
