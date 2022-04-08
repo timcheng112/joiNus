@@ -9,6 +9,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -137,6 +138,13 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
             normalUserEntity.getActivitiesParticipated().remove(activityEntityToRemove);
         }
 
+        Integer tokensToBeRefunded = activityEntityToRemove.getBooking().getTimeSlot().getFacility().getTokenCost();
+        activityEntityToRemove.getActivityOwner().setBookingTokens(activityEntityToRemove.getActivityOwner().getBookingTokens() + tokensToBeRefunded);
+
+        for (NormalUserEntity participant : activityEntityToRemove.getParticipants()) {
+            participant.setBookingTokens(participant.getBookingTokens() + tokensToBeRefunded);
+        }
+
         activityEntityToRemove.getActivityOwner().getActivitiesOwned().remove(activityEntityToRemove);
 
         activityEntityToRemove.getParticipants().clear();
@@ -146,9 +154,9 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         deleteComments(activityEntityToRemove);
         activityEntityToRemove.getComments().clear();
-        
+
         bookingEntitySessionBeanLocal.deleteBooking(activityEntityToRemove.getBooking().getBookingId());
-        
+
         em.remove(activityEntityToRemove);
 
     }

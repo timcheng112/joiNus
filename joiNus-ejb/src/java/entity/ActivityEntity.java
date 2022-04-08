@@ -34,23 +34,25 @@ public class ActivityEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activityId;
-    
+
     @Column(nullable = false, length = 32)
     private String activityName;
-    
+
     @Column(nullable = false)
     private String activityDescription;
-    
+
     @Column(nullable = false, length = 2)
     private Integer maxParticipants;
-    
+
     @Column
     private List<String> tags;
-    
+
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date activityCreationDate;
-    
+
+    @Column(nullable = false, length = 2)
+    private Integer numberOfParticipants;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -68,7 +70,7 @@ public class ActivityEntity implements Serializable {
 
     @OneToMany
     private List<CommentEntity> comments;
-    
+
     @OneToMany
     private List<ImageEntity> gallery;
 
@@ -77,6 +79,7 @@ public class ActivityEntity implements Serializable {
         this.participants = new ArrayList<>();
         this.gallery = new ArrayList<>();
         this.participants = new ArrayList<>();
+        this.numberOfParticipants = 1;
     }
 
     public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, List<NormalUserEntity> participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
@@ -263,14 +266,14 @@ public class ActivityEntity implements Serializable {
     public void setParticipants(List<NormalUserEntity> participants) {
         this.participants = participants;
     }
-    
+
     /**
      * @param user add a user to set
      */
     public void addParticipant(NormalUserEntity user) {
         this.participants.add(user);
     }
-    
+
     /**
      * @return the activityCreationDate
      */
@@ -290,6 +293,20 @@ public class ActivityEntity implements Serializable {
      */
     public void setGallery(List<ImageEntity> gallery) {
         this.gallery = gallery;
+    }
+
+    /**
+     * @return the numberOfParticipants
+     */
+    public Integer getNumberOfParticipants() {
+        return numberOfParticipants;
+    }
+
+    /**
+     * @param numberOfParticipants the numberOfParticipants to set
+     */
+    public void setNumberOfParticipants(Integer numberOfParticipants) {
+        this.numberOfParticipants = numberOfParticipants;
     }
 
 }

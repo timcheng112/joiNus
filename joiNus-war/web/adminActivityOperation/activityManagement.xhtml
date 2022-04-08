@@ -16,29 +16,39 @@
             <h3>Activity Management</h3>
 
             <h:form id="formAllActivities">
-
                 <p:messages id="messages" redisplay="false" closable="true" />
 
                 <p:dataTable id="dataTableAllActivities" widgetVar="dataTableMain" value="#{activityManagedBean.activityEntities}" var="activityEntity" rowKey="#{activityEntity.activityId}" rowIndexVar="row"                             
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-                    <p:column headerText="Activity Name" sortBy="#{activityEntity.activityName}">
-                        <h:outputText value="#{activityEntity.activityName}" />
-                    </p:column>
-
-                    <p:column headerText="Activity ID" sortBy="#{activityEntity.activityId}">
+                    <p:column headerText="Activity ID" sortBy="#{activityEntity.activityId}" filterBy="#{activityEntity.activityId}" filterMatchMode="contains">
                         <h:outputText value="#{activityEntity.activityId}" />
                     </p:column>
 
-                    <p:column headerText="Date" sortBy="#{activityEntity.booking.creationDate}">
-                        <h:outputText value="#{activityEntity.booking.creationDate}" />
+                    <p:column headerText="Activity Name" sortBy="#{activityEntity.activityName}" filterBy="#{activityEntity.activityName}" filterMatchMode="contains">
+                        <h:outputText value="#{activityEntity.activityName}" />
+                    </p:column>
+
+                    <p:column headerText="Date" sortBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterMatchMode="contains">
+                        <h:outputText value="#{activityEntity.booking.timeSlot.timeSlotTime}" />
+                    </p:column>
+
+                    <p:column headerText="No. of Participants" sortBy="#{activityEntity.numberOfParticipants}" filterBy="#{activityEntity.numberOfParticipants}" filterMatchMode="contains">
+                        <h:outputText value="#{activityEntity.numberOfParticipants}/#{activityEntity.maxParticipants}" />
+                    </p:column>
+
+                    <p:column headerText="Category" sortBy="#{activityEntity.category.categoryName}" filterBy="#{activityEntity.category.categoryName}" filterMatchMode="contains">
+                        <h:outputText value="#{activityEntity.category.categoryName}" />
                     </p:column>
 
                     <p:column headerText="Action" >
-                        <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View">
+                        <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View" >
                             <f:setPropertyActionListener value="#{activityEntity}" target="#{activityManagedBean.activityEntityToView}" />
                         </p:commandButton>
-                        <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages">
+                        <p:commandButton update="formEditActivity" oncomplete="PF('dialogEditActivity').show()" icon="ui-icon-pencil" title="Edit" >
+                            <f:setPropertyActionListener value="#{activityEntity}" target="#{activityManagedBean.activityEntityToView}" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages" title="Delete">
                             <f:attribute name="activityEntityToDelete" value="#{activityEntity}" />
                             <p:confirm header="Confirmation" message="Are you sure you want to delete #{activityEntity.activityName} (Activity ID: #{activityEntity.activityId})?" icon="ui-icon-alert" />
                         </p:commandButton>
@@ -76,7 +86,7 @@
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.activityId}" />
                             </p:column>
                         </p:row>
-                        
+
                         <p:row>
                             <p:column>
                                 <h:outputLabel value="Description: " />
@@ -94,8 +104,8 @@
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.booking.creationDate}" />
                             </p:column>
                         </p:row>
-                        
-                         <p:row>
+
+                        <p:row>
                             <p:column>
                                 <h:outputLabel value="Activity Date: " />
                             </p:column>
@@ -103,7 +113,7 @@
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.booking.timeSlot.timeSlotTime}" />
                             </p:column>
                         </p:row>
-                        
+
                         <p:row>
                             <p:column>
                                 <h:outputLabel value="Category: " />
@@ -112,13 +122,84 @@
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.category.categoryName}" />
                             </p:column>
                         </p:row>
-                        
+
                         <p:row>
                             <p:column>
                                 <h:outputLabel value="Tag(s): " />
                             </p:column>
                             <p:column>
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.tags}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Comment(s): " />
+                            </p:column>
+                            <p:column>
+                                <p:repeat value="#{activityManagedBean.activityEntityToView.comments}" var="comment">
+                                    <div>
+                                        <h:outputText value="#{comment.text}" />
+                                        <h:outputText value="by #{comment.commentOwner.name}" />
+                                        <h:outputText value="on #{comment.commentDate}" />
+                                    </div>
+                                </p:repeat>
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+
+            <h:form id="formEditActivity">
+
+                <p:dialog id="dialogEditActivity" widgetVar="dialogEditActivity" header="Update Activity Date and Time" closable="true">
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Activity Date and Time: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.timeSlot.timeSlotTime}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="updateDate" value="Update to (Date): " />
+                            </p:column>
+                            <p:column>
+                                <p:datePicker id="updateDate" value="#{activityManagedBean.editedActivityDate}" inline="true" required="true">
+                                    <p:ajax event="dateSelect" listener="#{activityManagedBean.retrieveTimeslots(event)}" update="updateTimeslot"/>
+                                </p:datePicker>
+                            </p:column>
+                            <p:column>
+                                <p:message for="updateDate" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="updateTimeslot" value="Available Timeslots: " />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="updateTimeslot" value="#{activityManagedBean.selectedTimeSlotId}" required="true">
+                                    <f:selectItem itemLabel="[Select]" itemValue="null" noSelectionOption="true"/>
+                                    <f:selectItems value="#{activityManagedBean.timeSlots}" var="timeslot" itemValue="#{timeslot.timeSlotId}" itemLabel="#{timeslot.timeSlotTime.getHours()}00H"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="updateTimeslot" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:commandButton update="@form formAllActivities" value="Update Changes" actionListener="#{activityManagedBean.updateActivityTimeSlot}" oncomplete="PF('dialogEditActivity').show();"/>
                             </p:column>
                         </p:row>
 

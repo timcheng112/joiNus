@@ -5,8 +5,10 @@
  */
 package ejb.session.stateless;
 
+import ejb.enums.SlotStatusEnum;
 import entity.ActivityEntity;
 import entity.BookingEntity;
+import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -20,6 +22,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -86,7 +89,7 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
         if (bookingEntity != null) {
             return bookingEntity;
         } else {
-            throw new BookingNotFoundException("Activity ID " + bookingId + " does not exist!");
+            throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist!");
         }
     }
 
@@ -109,11 +112,30 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
             bookingEntityToRemove.getTimeSlot().setBooking(null);
             bookingEntityToRemove.setTimeSlot(null);
         }
-        
+
         bookingEntityToRemove.getActivity().setBooking(null);
         bookingEntityToRemove.setActivity(null);
 
         em.remove(bookingEntityToRemove);
+    }
+
+    @Override
+    public void updateBookingTiming(Long bookingToBeUpdatedId, Long newTimeSlotId) throws BookingNotFoundException, TimeSlotNotFoundException {
+        BookingEntity bookingToBeUpdated = em.find(BookingEntity.class, bookingToBeUpdatedId);
+        TimeSlotEntity newTimeSlot = em.find(TimeSlotEntity.class, newTimeSlotId);
+        if (bookingToBeUpdated == null) {
+            throw new BookingNotFoundException("Booking ID " + bookingToBeUpdatedId + " does not exist!");
+        } else if (newTimeSlot == null) {
+            throw new TimeSlotNotFoundException("TimeSlot ID " + newTimeSlotId + " does not exist!");
+        } else {
+            TimeSlotEntity oldTimeSlot = bookingToBeUpdated.getTimeSlot();
+            bookingToBeUpdated.setTimeSlot(newTimeSlot);
+            newTimeSlot.setBooking(bookingToBeUpdated);
+            oldTimeSlot.setBooking(null);
+            oldTimeSlot.setStatus(SlotStatusEnum.AVAILABLE);
+            newTimeSlot.setStatus(SlotStatusEnum.UNAVAILABLE);
+
+        }
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<BookingEntity>> constraintViolations) {

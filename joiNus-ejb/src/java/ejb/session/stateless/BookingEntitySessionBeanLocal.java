@@ -6,10 +6,12 @@
 package ejb.session.stateless;
 
 import entity.BookingEntity;
+import entity.TimeSlotEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -26,5 +28,7 @@ public interface BookingEntitySessionBeanLocal {
     public void associateBookingWithActivity(Long bookingId, Long activityId);
 
     public void deleteBooking(Long bookingId) throws BookingNotFoundException;
-    
+
+    public void updateBookingTiming(Long bookingToBeUpdatedId, Long newTimeSlotId) throws BookingNotFoundException, TimeSlotNotFoundException;
+
 }

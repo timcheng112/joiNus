@@ -106,7 +106,7 @@ public class DataInitSessionBean {
             c.set(Calendar.HOUR_OF_DAY, 12);
             Date date = c.getTime();
 
-            TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
+            TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
                         
             // create booking
