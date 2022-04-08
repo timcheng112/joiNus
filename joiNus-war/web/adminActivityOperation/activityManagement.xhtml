@@ -15,6 +15,12 @@
 
             <h3>Activity Management</h3>
 
+            <h:form id="formActivityRecordReport">
+                <p:panel header="Activity Record Report">
+                    <p:commandButton value="Generate Report" actionListener="#{activityRecordReportManagedBean.generateReport}" ajax="false"/>
+                </p:panel>
+            </h:form>
+
             <h:form id="formAllActivities">
                 <p:messages id="messages" redisplay="false" closable="true" />
 
