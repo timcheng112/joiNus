@@ -115,6 +115,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         c.set(Calendar.HOUR_OF_DAY, 0);
         
         Query query = entityManager.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
+        c.add(Calendar.SECOND, -1);
         query.setParameter("inStart", c.getTime(), TemporalType.DATE);
         System.out.println("Starting date of check is " + c.getTime());
         c.add(Calendar.DATE, 1);

@@ -66,6 +66,9 @@
                         <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formEditFacility" oncomplete="PF('dialogEditFacility').show()">
                             <f:setPropertyActionListener value="#{facilityEntity}" target="#{facilitiyManagedBean.facilityEntityToUpdate}"/>
                         </p:commandButton>
+                        <p:commandButton value="View" icon="pi pi-eye" title="View" action="timeSlotManagement.xhtml">
+                            <f:param name="currFacilityId" value="#{facilityEntity.facilityId}" />
+                        </p:commandButton>   
                     </p:column>
 
                 </p:dataTable>

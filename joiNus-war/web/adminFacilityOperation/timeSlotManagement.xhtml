@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form>
+            <div class="card">
+                <h1 style="margin-top:0">Facility Details</h1>
+                <p:graphicImage rendered="#{timeSlotManagedBean.currentFacility.facilityImage != null}" value="#{timeSlotManagedBean.currentFacility.facilityImage.imagePath}" height="150px" />
+                <p:panelGrid columns="7">
+
+                    <h:outputText value="ID"/>
+                    <h:outputText value="Name"/>
+                    <h:outputText value="Club"/>
+                    <h:outputText value="Token Cost"/>
+                    <h:outputText value="Capacity"/>
+                    <h:outputText value="Address"/>
+                    <h:outputText value="Opening Hours"/>
+
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.facilityId}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.facilityName}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.club}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.tokenCost}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.capacity}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.address}" />
+                    <h:outputText value="#{timeSlotManagedBean.currentFacility.openingHour}00 - #{timeSlotManagedBean.currentFacility.closingHour}00" />
+
+                </p:panelGrid>
+            </div>
+        </h:form>
+
+        <h:form id="datePicker" style="float: left">
+            <h3>Select Date To View Timeslots</h3>
+            <p:calendar id="inline" mode="inline" value="#{timeSlotManagedBean.selectedDate}"/>
+            <p:commandButton value="View Date" title="View Date" icon="pi pi-eye" update="@form formSelectedTimeslots:dataTableSelectedTimeslots" actionListener="#{timeSlotManagedBean.setDatesTimeslots}"/>
+            <p:commandButton value="Create Time Slots" icon="pi pi-pencil" title="CreateTimeSlots" oncomplete="PF('dialogAddNewTimeSlots').show()">
+            </p:commandButton>
+        </h:form>
+
+        <h:form id="formAddNewTimeSlots">
+            <p:dialog id="dialogAddNewTimeSlots" widgetVar="dialogAddNewTimeSlots" header="Create New Timeslots" closable="true" width="220px">
+                <h3>Create Time Slots</h3>
+                <p:selectManyMenu value="#{timeSlotManagedBean.timeSlotsToAdd}" showCheckbox="true">
+                    <f:selectItems value="#{timeSlotManagedBean.possibleTimeSlots}" var="possibleTimeSlot" itemLabel="#{possibleTimeSlot}00" itemValue="#{possibleTimeSlot}" />
+                </p:selectManyMenu>
+                <p:commandButton value="Create Time Slots" action="#{timeSlotManagedBean.addTimeSlots()}" title="CreateTimeSlots" update="@form formSelectedTimeslots:dataTableSelectedTimeslots" oncomplete="PF('dialogAddNewTimeSlots').show()">     
+                </p:commandButton>
+            </p:dialog>
+
+
+        </h:form>
+
+        <h:form id="formSelectedTimeslots" style="float: left">
+
+            <p:messages id="messages" redisplay="false" closable="true" />
+            <p:dataTable id="dataTableSelectedTimeslots" widgetVar="dataTableSelectedTimeslots" value="#{timeSlotManagedBean.currTimeslots}" var="timeslotEntity" rowKey="#{timeslotEntity.timeSlotId}" rowIndexVar="row"                             
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                <p:column headerText="ID" sortBy="#{timeslotEntity.timeSlotId}">
+                    <h:outputText value="#{timeslotEntity.timeSlotId}" />
+                </p:column>
+
+                <p:column headerText="Status" sortBy="#{timeslotEntity.status}">
+                    <h:outputText value="#{timeslotEntity.status}" />
+                </p:column>
+
+                <p:column headerText="Starting Time" sortBy="#{timeslotEntity.timeSlotTime}">
+                    <h:outputText value="#{timeslotEntity.timeSlotTime}" />
+                </p:column>
+
+                <p:column headerText="Functions" style="text-align: center" >
+                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formEditFacility" oncomplete="PF('dialogEditFacility').show()">
+                        <f:setPropertyActionListener value="#{facilityEntity}" target="#{facilitiyManagedBean.facilityEntityToUpdate}"/>
+                    </p:commandButton>
+                    <p:commandButton value="View" icon="pi pi-eye" title="View" action="timeSlotManagement.xhtml">
+                        <f:param name="currFacilityId" value="#{facilityEntity.facilityId}" />
+                    </p:commandButton>   
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>
