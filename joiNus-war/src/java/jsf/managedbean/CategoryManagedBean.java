@@ -7,6 +7,7 @@ package jsf.managedbean;
 
 import ejb.session.stateless.CategoryEntitySessionBean;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
+import entity.ActivityEntity;
 import entity.CategoryEntity;
 import java.io.IOException;
 import javax.inject.Named;
@@ -44,6 +45,7 @@ public class CategoryManagedBean implements Serializable {
     private Long parentCategoryIdNew;
     
     private CategoryEntity categoryUpdate;
+    private boolean categoryUpdateHasActivities;
     private Long categoryIdUpdate;
     private String categoryNameUpdate;
     private Long parentCategoryIdUpdate;
@@ -164,7 +166,7 @@ public class CategoryManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-
+    
     //GETTERS & SETTERS
     
     public CategoryEntitySessionBeanLocal getCategoryEntitySessionBeanLocal() {
@@ -217,6 +219,7 @@ public class CategoryManagedBean implements Serializable {
 
     public void setCategoryUpdate(CategoryEntity categoryUpdate) {
         categoryIdUpdate = categoryUpdate.getCategoryId();
+        categoryUpdateHasActivities = !categoryUpdate.getActivities().isEmpty();
         this.categoryUpdate = categoryUpdate;
     }
 
@@ -292,6 +295,20 @@ public class CategoryManagedBean implements Serializable {
      */
     public void setCategoryIdUpdate(Long categoryIdUpdate) {
         this.categoryIdUpdate = categoryIdUpdate;
+    }
+
+    /**
+     * @return the categoryUpdateHasActivities
+     */
+    public boolean isCategoryUpdateHasActivities() {
+        return categoryUpdateHasActivities;
+    }
+
+    /**
+     * @param categoryUpdateHasActivities the categoryUpdateHasActivities to set
+     */
+    public void setCategoryUpdateHasActivities(boolean categoryUpdateHasActivities) {
+        this.categoryUpdateHasActivities = categoryUpdateHasActivities;
     }
     
     

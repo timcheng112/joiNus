@@ -5,7 +5,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/template/defaultTemplate.xhtml"
                 xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
 
@@ -74,7 +75,7 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton update="formEditCategoryName" oncomplete="PF('dialogEditCategoryName').show()" icon="ui-icon-pencil" title="View" >
+                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="View" >
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />
                         </p:commandButton>
 
@@ -136,12 +137,16 @@
 
 
 
-        <h:form id="formEditCategoryName">
+        <h:form id="formEditCategory">
 
-            <p:dialog id="dialogEditCategoryName" widgetVar="dialogEditCategoryName" header="Update Category Name" closable="true">
+            <p:dialog id="dialogEditCategory" widgetVar="dialogEditCategory" header="Update Category" closable="true">
 
                 <p:messages />
 
+                <c:if test="#{categoryManagedBean.categoryUpdateHasActivities}">
+                    <h:outputText value="Note: Activities may be affected if Category Name is changed" />
+                </c:if>
+                
                 <p:panelGrid>
 
                     <p:row>
@@ -167,7 +172,7 @@
 
                     <p:row>
                         <p:column colspan="2">
-                            <p:commandButton update="@form formAllCategories" value="Update Categories" actionListener="#{categoryManagedBean.updateCategory}" oncomplete="PF('dialogEditCategoryName').show();"/>
+                            <p:commandButton update="@form formAllCategories" value="Update Categories" actionListener="#{categoryManagedBean.updateCategory}" oncomplete="PF('dialogEditCategory').show();"/>
                         </p:column>
                     </p:row>
 
