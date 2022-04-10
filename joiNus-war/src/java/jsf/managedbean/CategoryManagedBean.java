@@ -5,7 +5,9 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.CategoryEntitySessionBean;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
+import entity.ActivityEntity;
 import entity.CategoryEntity;
 import java.io.IOException;
 import javax.inject.Named;
@@ -42,7 +44,9 @@ public class CategoryManagedBean implements Serializable {
     private CategoryEntity newParentCategory;
     private Long parentCategoryIdNew;
     
-    private CategoryEntity selectedCategoryEntityToUpdate;
+    private CategoryEntity categoryUpdate;
+    private boolean categoryUpdateHasActivities;
+    private Long categoryIdUpdate;
     private String categoryNameUpdate;
     private Long parentCategoryIdUpdate;
     
@@ -114,13 +118,13 @@ public class CategoryManagedBean implements Serializable {
         
         try
         {
-            getCategoryEntitySessionBeanLocal().updateCategory(getSelectedCategoryEntityToUpdate(), getParentCategoryIdUpdate());
-                        
+            categoryEntitySessionBeanLocal.updateCategoryById(categoryIdUpdate, categoryNameUpdate, parentCategoryIdUpdate);
+            
             for(CategoryEntity ce:getCategoryEntities())
             {
                 if(ce.getCategoryId().equals(getParentCategoryIdUpdate()))
                 {
-                    getSelectedCategoryEntityToUpdate().setParentCategory(ce);
+                    getCategoryUpdate().setParentCategory(ce);
                     break;
                 }                
             }
@@ -162,7 +166,7 @@ public class CategoryManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-
+    
     //GETTERS & SETTERS
     
     public CategoryEntitySessionBeanLocal getCategoryEntitySessionBeanLocal() {
@@ -209,12 +213,14 @@ public class CategoryManagedBean implements Serializable {
         
     }
 
-    public CategoryEntity getSelectedCategoryEntityToUpdate() {
-        return selectedCategoryEntityToUpdate;
+    public CategoryEntity getCategoryUpdate() {
+        return categoryUpdate;
     }
 
-    public void setSelectedCategoryEntityToUpdate(CategoryEntity selectedCategoryEntityToUpdate) {
-        this.selectedCategoryEntityToUpdate = selectedCategoryEntityToUpdate;
+    public void setCategoryUpdate(CategoryEntity categoryUpdate) {
+        categoryIdUpdate = categoryUpdate.getCategoryId();
+        categoryUpdateHasActivities = !categoryUpdate.getActivities().isEmpty();
+        this.categoryUpdate = categoryUpdate;
     }
 
     public String getCategoryNameUpdate() {
@@ -275,6 +281,34 @@ public class CategoryManagedBean implements Serializable {
             this.newParentCategory = newParentCategory;
         }
         
+    }
+
+    /**
+     * @return the categoryIdUpdate
+     */
+    public Long getCategoryIdUpdate() {
+        return categoryIdUpdate;
+    }
+
+    /**
+     * @param categoryIdUpdate the categoryIdUpdate to set
+     */
+    public void setCategoryIdUpdate(Long categoryIdUpdate) {
+        this.categoryIdUpdate = categoryIdUpdate;
+    }
+
+    /**
+     * @return the categoryUpdateHasActivities
+     */
+    public boolean isCategoryUpdateHasActivities() {
+        return categoryUpdateHasActivities;
+    }
+
+    /**
+     * @param categoryUpdateHasActivities the categoryUpdateHasActivities to set
+     */
+    public void setCategoryUpdateHasActivities(boolean categoryUpdateHasActivities) {
+        this.categoryUpdateHasActivities = categoryUpdateHasActivities;
     }
     
     

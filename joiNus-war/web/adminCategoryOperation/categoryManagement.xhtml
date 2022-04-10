@@ -5,7 +5,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/template/defaultTemplate.xhtml"
                 xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
 
@@ -74,12 +75,8 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton value="View" icon="pi pi-search" title="View">
-
-                        </p:commandButton>
-
-                        <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit">
-
+                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="View" >
+                            <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />
                         </p:commandButton>
 
                     </p:column>
@@ -136,6 +133,53 @@
                 </p:panelGrid>
 
             </p:dialog>
+        </h:form>
+
+
+
+        <h:form id="formEditCategory">
+
+            <p:dialog id="dialogEditCategory" widgetVar="dialogEditCategory" header="Update Category" closable="true">
+
+                <p:messages />
+
+                <c:if test="#{categoryManagedBean.categoryUpdateHasActivities}">
+                    <h:outputText value="Note: Activities may be affected if Category Name is changed" />
+                </c:if>
+                
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Update Category Name " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{categoryManagedBean.categoryNameUpdate}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Update Parent Category " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="parentCategory" value="#{categoryManagedBean.parentCategoryIdUpdate}" required="false">
+                                <f:selectItem itemValue="0" itemLabel="[No Parent Category]" noSelectionOption="false" />
+                                <f:selectItems value="#{categoryManagedBean.categoryEntities}" var="category" itemValue="#{category.categoryId}" itemLabel="#{category.categoryName}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton update="@form formAllCategories" value="Update Categories" actionListener="#{categoryManagedBean.updateCategory}" oncomplete="PF('dialogEditCategory').show();"/>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
         </h:form>
 
     </ui:define>

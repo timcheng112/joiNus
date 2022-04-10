@@ -135,7 +135,39 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
+    
+    @Override
+    public void updateCategoryById(Long categoryId, String categoryName, Long parentCategoryId) throws InputDataValidationException, CategoryNotFoundException, UpdateCategoryException {
 
+        if (categoryId != null) {
+                CategoryEntity categoryEntityToUpdate = retrieveCategoryByCategoryId(categoryId);
+
+                Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.categoryName = :inName AND c.categoryId <> :inCategoryId");
+                query.setParameter("inName", categoryName);
+                query.setParameter("inCategoryId", parentCategoryId);
+
+                if (!query.getResultList().isEmpty()) {
+                    throw new UpdateCategoryException("The name of the category to be updated is duplicated");
+                }
+
+                categoryEntityToUpdate.setCategoryName(categoryName);
+
+                if (parentCategoryId != null) {
+                    if (categoryEntityToUpdate.getCategoryId().equals(parentCategoryId)) {
+                        throw new UpdateCategoryException("Category cannot be its own parent");
+                    } else if (categoryEntityToUpdate.getParentCategory() == null || (!categoryEntityToUpdate.getParentCategory().getCategoryId().equals(parentCategoryId))) {
+                        CategoryEntity parentCategoryEntityToUpdate = retrieveCategoryByCategoryId(parentCategoryId);
+
+                        categoryEntityToUpdate.setParentCategory(parentCategoryEntityToUpdate);
+                    }
+                } else {
+                    categoryEntityToUpdate.setParentCategory(null);
+                }
+            } else {
+                throw new CategoryNotFoundException("Category ID not provided for category to be updated");
+            }
+    }
+    
     @Override
     public void deleteCategory(Long categoryId) throws CategoryNotFoundException, DeleteCategoryException {
         CategoryEntity categoryEntityToRemove = retrieveCategoryByCategoryId(categoryId);
