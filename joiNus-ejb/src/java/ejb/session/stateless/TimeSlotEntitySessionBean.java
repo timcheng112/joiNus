@@ -124,8 +124,8 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
 
         List<TimeSlotEntity> timeSlots = query.getResultList();
         System.out.println(timeSlots);
-
         if (!timeSlots.isEmpty()) {
+
             return timeSlots;
         } else {
             return null;

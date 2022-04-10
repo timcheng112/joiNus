@@ -112,7 +112,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
             f.getTimeSlots().size();
         }
         
-        return query.getResultList();
+        return facilityEntitys;
     }
     
     

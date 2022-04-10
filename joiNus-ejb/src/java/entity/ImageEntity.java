@@ -24,17 +24,21 @@ import javax.persistence.TemporalType;
 public class ImageEntity implements Serializable {
     //attributes
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long imageId;
 
     @Column(nullable = false)
     private String imagePath;
-    
+
     @Column(nullable = true)
     private String imageDescription;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date datePosted;
-    
+
     //relationship
     @OneToOne(optional = false)
     private UserEntity postedBy;
@@ -48,11 +52,6 @@ public class ImageEntity implements Serializable {
         this.datePosted = datePosted;
         this.postedBy = postedBy;
     }
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long imageId;
 
     public String getImagePath() {
         return imagePath;

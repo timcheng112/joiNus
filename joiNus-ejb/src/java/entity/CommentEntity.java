@@ -105,5 +105,12 @@ public class CommentEntity implements Serializable {
         return commentDate;
     }
 
+    /**
+     * @param commentOwner the commentOwner to set
+     */
+    public void setCommentOwner(NormalUserEntity commentOwner) {
+        this.commentOwner = commentOwner;
+    }
+
     
 }
