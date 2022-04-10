@@ -9,7 +9,6 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
-import entity.TimeSlotEntity;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -79,6 +78,16 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         return query.getResultList();
     }
+    
+    @Override
+    public List<ActivityEntity> retrieveMyActivities(Long userId) {
+        NormalUserEntity user = em.find(NormalUserEntity.class, userId);
+        List<ActivityEntity> activities = user.getActivitiesOwned();
+        for (ActivityEntity activity : user.getActivitiesParticipated()) {
+            activities.add(activity);
+        }
+        return activities;
+    }
 
     @Override
     public ActivityEntity retrieveActivityByActivityId(Long activityId) throws ActivityNotFoundException {
@@ -140,7 +149,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         Integer tokensToBeRefunded = activityEntityToRemove.getBooking().getTimeSlot().getFacility().getTokenCost();
         activityEntityToRemove.getActivityOwner().setBookingTokens(activityEntityToRemove.getActivityOwner().getBookingTokens() + tokensToBeRefunded);
-
+        tokensToBeRefunded = Math.floorDiv(tokensToBeRefunded, 2);
         for (NormalUserEntity participant : activityEntityToRemove.getParticipants()) {
             participant.setBookingTokens(participant.getBookingTokens() + tokensToBeRefunded);
         }

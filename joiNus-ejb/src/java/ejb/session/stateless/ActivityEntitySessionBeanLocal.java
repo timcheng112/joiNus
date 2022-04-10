@@ -36,4 +36,6 @@ public interface ActivityEntitySessionBeanLocal {
 
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity) throws UnknownPersistenceException, InputDataValidationException;
 
+    public List<ActivityEntity> retrieveMyActivities(Long userId);
+
 }

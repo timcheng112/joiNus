@@ -90,6 +90,51 @@ public class ActivityResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    
+    @Path("retrieveMyActivities")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveMyActivities(Long userId) {
+        try {
+            List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveMyActivities(userId);
+
+            for (ActivityEntity activity : activityEntities) {
+
+                activity.getActivityOwner().setInterests(null);
+                activity.getActivityOwner().setActivitiesParticipated(null);
+                activity.getActivityOwner().setActivitiesOwned(null);
+
+                for (NormalUserEntity participant : activity.getParticipants()) {
+                    participant.setInterests(null);
+                    participant.setActivitiesParticipated(null);
+                    participant.setActivitiesOwned(null);
+                }
+
+                activity.getCategory().setSubCategories(null);
+                activity.getCategory().setParentCategory(null);
+                activity.getCategory().setActivities(null);
+
+                activity.getBooking().setActivity(null);
+                activity.getBooking().setTimeSlot(null);
+
+                for (CommentEntity comment : activity.getComments()) {
+                    comment.setCommentOwner(null);
+                }
+
+                for (ImageEntity image : activity.getGallery()) {
+                    image.setPostedBy(null);
+                }
+
+            }
+
+            GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
