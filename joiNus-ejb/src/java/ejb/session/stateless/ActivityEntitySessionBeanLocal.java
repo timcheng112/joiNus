@@ -45,4 +45,6 @@ public interface ActivityEntitySessionBeanLocal {
 
     public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException;
 
+    public Long addComment(CommentEntity commentEntity, Long activityId) throws ActivityNotFoundException;
+
 }

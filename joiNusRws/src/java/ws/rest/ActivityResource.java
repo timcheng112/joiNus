@@ -100,8 +100,6 @@ public class ActivityResource {
                 for (ImageEntity image : activity.getGallery()) {
                     image.setPostedBy(null);
                 }
-                
-                System.out.println(activityEntities);
 
             }
 
