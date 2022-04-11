@@ -9,6 +9,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -24,6 +25,8 @@ import javax.validation.ValidatorFactory;
 import util.exception.ActivityNotFoundException;
 import util.exception.BookingNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.NormalUserAlreadySignedUpException;
+import util.exception.NormalUserNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -32,6 +35,9 @@ import util.exception.UnknownPersistenceException;
  */
 @Stateless
 public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal {
+
+    @EJB(name = "NormalUserEntitySessionBeanLocal")
+    private NormalUserEntitySessionBeanLocal normalUserEntitySessionBeanLocal;
 
     @EJB(name = "BookingEntitySessionBeanLocal")
     private BookingEntitySessionBeanLocal bookingEntitySessionBeanLocal;
@@ -78,9 +84,10 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         return query.getResultList();
     }
-    
+
     @Override
     public List<ActivityEntity> retrieveMyActivities(Long userId) {
+        System.out.println("ejb.session.stateless.ActivityEntitySessionBean.retrieveMyActivities()");
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         List<ActivityEntity> activities = user.getActivitiesOwned();
         for (ActivityEntity activity : user.getActivitiesParticipated()) {
@@ -196,5 +203,50 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         }
 
         return msg;
+    }
+
+    @Override
+    public void absentPunishment(Long activityId, List<Long> absenteeIds) {
+        System.out.println("ejb.session.stateless.ActivityEntitySessionBean.absentPunishment()");
+        System.out.println("ActivityId: " + activityId);
+        System.out.println("absenteeIds: " + absenteeIds.toString());
+        ActivityEntity activity = em.find(ActivityEntity.class, activityId);
+
+        if (activity != null) {
+            List<Long> existingIds = activity.getAbsentIds();
+            List<Long> existingIds2 = activity.getAbsentIds();
+
+            System.out.println("activity not null");
+
+            for (Long aId : absenteeIds) { // punish user
+                if (!existingIds2.contains(aId)) {
+                    normalUserEntitySessionBeanLocal.punishUser(aId);
+                }
+            }
+
+            for (Long aId : absenteeIds) { // add them to the list
+                if (!existingIds2.contains(aId)) {
+                    existingIds.add(aId);
+                }
+            }
+            activity.setAbsentIds(existingIds);
+        }
+
+        System.out.println("absentPunishment method end");
+    }
+
+    @Override
+    public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException {
+        System.out.println("ejb.session.stateless.ActivityEntitySessionBean.signUpForActivity()");
+        ActivityEntity activity = em.find(ActivityEntity.class, activityId);
+        NormalUserEntity user = normalUserEntitySessionBeanLocal.retrieveNormalUserByUserId(userId);
+
+        List<NormalUserEntity> participants = activity.getParticipants();
+        if (participants.contains(user)) {
+            throw new NormalUserAlreadySignedUpException("User ID error");
+        }
+        
+        participants.add(user);
+        activity.setParticipants(participants);
     }
 }

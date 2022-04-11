@@ -146,6 +146,16 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         }
     }
 
+    @Override
+    public void punishUser(Long userId) {
+        NormalUserEntity user = em.find(NormalUserEntity.class, userId);
+
+        int credit = user.getSocialCredits();
+        credit = credit - 55;
+        user.setSocialCredits(credit);
+        System.out.println("User " + user.getUsername() + " punished, - 25 net social credit points");
+    }
+
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<NormalUserEntity>> constraintViolations) {
         String msg = "Input data validation error!:";
 

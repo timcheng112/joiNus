@@ -32,4 +32,5 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public NormalUserEntity createNewNormalUser(NormalUserEntity newNormalUser) throws UnknownPersistenceException, InputDataValidationException, NormalUserNameExistException;
     
+    public void punishUser(Long userId);
 }

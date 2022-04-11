@@ -70,12 +70,22 @@ public class ActivityEntity implements Serializable {
 
     @OneToMany
     private List<ImageEntity> gallery;
+    
+    private List<Long> absentIds;
+    private List<Long> commenterIds;
+    private List<Long> imagePosterIds;
+    
+    private Boolean activityOver;
 
     public ActivityEntity() {
         this.comments = new ArrayList<>();
         this.participants = new ArrayList<>();
         this.gallery = new ArrayList<>();
         this.participants = new ArrayList<>();
+        this.absentIds = new ArrayList<>();
+        this.commenterIds = new ArrayList<>();
+        this.imagePosterIds = new ArrayList<>();
+        this.activityOver = false;
     }
 
     public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, List<NormalUserEntity> participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
@@ -297,4 +307,37 @@ public class ActivityEntity implements Serializable {
     public Integer getNumberOfParticipants() {
         return 1 + participants.size();
     }
+
+    public List<Long> getAbsentIds() {
+        return absentIds;
+    }
+
+    public void setAbsentIds(List<Long> absentIds) {
+        this.absentIds = absentIds;
+    }
+
+    public List<Long> getCommenterIds() {
+        return commenterIds;
+    }
+
+    public void setCommenterIds(List<Long> commenterIds) {
+        this.commenterIds = commenterIds;
+    }
+
+    public List<Long> getImagePosterIds() {
+        return imagePosterIds;
+    }
+
+    public void setImagePosterIds(List<Long> imagePosterIds) {
+        this.imagePosterIds = imagePosterIds;
+    }
+
+    public Boolean getActivityOver() {
+        return activityOver;
+    }
+
+    public void setActivityOver(Boolean activityOver) {
+        this.activityOver = activityOver;
+    }
+    
 }
