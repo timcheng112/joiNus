@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.DeleteNormalUserException;
 import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.NormalUserNameExistException;
 import util.exception.NormalUserNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -33,4 +34,8 @@ public interface NormalUserEntitySessionBeanLocal {
     public NormalUserEntity createNewNormalUser(NormalUserEntity newNormalUser) throws UnknownPersistenceException, InputDataValidationException, NormalUserNameExistException;
     
     public void punishUser(Long userId);
+
+    public NormalUserEntity retrieveNormalUserByUsername(String username) throws NormalUserNotFoundException;
+
+    public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException;
 }
