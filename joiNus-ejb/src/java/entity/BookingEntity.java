@@ -53,7 +53,7 @@ public class BookingEntity implements Serializable {
         this.timeSlot = timeSlot;
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public Long getBookingId() {
         return bookingId;
     }
@@ -90,7 +90,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the bookingStatus
      */
-    @JsonbTransient
+//    @JsonbTransient
     public SlotStatusEnum getBookingStatus() {
         return bookingStatus;
     }
@@ -105,7 +105,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the creationDate
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Date getCreationDate() {
         return creationDate;
     }
@@ -120,7 +120,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the activity
      */
-    @JsonbTransient
+//    @JsonbTransient
     public ActivityEntity getActivity() {
         return activity;
     }
@@ -135,7 +135,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the timeSlot
      */
-    @JsonbTransient
+//    @JsonbTransient
     public TimeSlotEntity getTimeSlot() {
         return timeSlot;
     }

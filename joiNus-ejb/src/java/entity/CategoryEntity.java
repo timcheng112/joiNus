@@ -53,7 +53,7 @@ public class CategoryEntity implements Serializable {
         this.categoryName = categoryName;
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public Long getCategoryId() {
         return categoryId;
     }
@@ -90,7 +90,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the categoryName
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getCategoryName() {
         return categoryName;
     }
@@ -105,7 +105,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the parentCategory
      */
-    @JsonbTransient
+//    @JsonbTransient
     public CategoryEntity getParentCategory() {
         return parentCategory;
     }
@@ -132,7 +132,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the subCategories
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<CategoryEntity> getSubCategories() {
         return subCategories;
     }
@@ -154,7 +154,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the activities
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<ActivityEntity> getActivities() {
         return activities;
     }

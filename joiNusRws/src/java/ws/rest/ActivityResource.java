@@ -57,10 +57,14 @@ public class ActivityResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveAllActivities() {
+
         try {
             List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveAllActivities();
 
             for (ActivityEntity activity : activityEntities) {
+                System.out.println(activity.getActivityId());
+                System.out.println(activity.getActivityName());
+                System.out.println(activity.getActivityDescription());
 
                 activity.getActivityOwner().setInterests(null);
                 activity.getActivityOwner().setActivitiesParticipated(null);
@@ -77,20 +81,10 @@ public class ActivityResource {
                 activity.getCategory().setActivities(null);
 
                 activity.getBooking().setActivity(null);
-//                activity.getBooking().setTimeSlot(null);
 
                 if (activity.getBooking().getTimeSlot() != null) {
-//                    activity.getBooking().getTimeSlot().setFacility(null);
                     activity.getBooking().getTimeSlot().setBooking(null);
-
                     activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
-
-                    System.out.println("ws.rest.ActivityResource.retrieveAllActivities()");
-
-//                    if (activity.getBooking().getTimeSlot().getFacility().getFacilityImage() != null) {
-//                        activity.getBooking().getTimeSlot().getFacility().getFacilityImage().setPostedBy(null);
-//                        System.out.println(activity.getBooking().getTimeSlot().getFacility().getFacilityImage().getDatePosted());
-//                    }
                 }
 
                 for (CommentEntity comment : activity.getComments()) {
@@ -102,70 +96,23 @@ public class ActivityResource {
                 }
 
             }
-
+            
             GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
             };
-
+            
+            System.out.println(genericEntity.getEntity());
             return Response.status(Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
 
-//    @Path("retrieveMyActivities")
-//    @GET
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response retrieveMyActivities(@QueryParam("userId") Long userId) {
-//        System.out.println("ws.rest.ActivityResource.retrieveMyActivities()");
-//        System.out.println(userId);
-////        try {
-////            List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveMyActivities(userId);
-////
-////            for (ActivityEntity activity : activityEntities) {
-////
-////                activity.getActivityOwner().setInterests(null);
-////                activity.getActivityOwner().setActivitiesParticipated(null);
-////                activity.getActivityOwner().setActivitiesOwned(null);
-////
-////                for (NormalUserEntity participant : activity.getParticipants()) {
-////                    participant.setInterests(null);
-////                    participant.setActivitiesParticipated(null);
-////                    participant.setActivitiesOwned(null);
-////                }
-////
-////                activity.getCategory().setSubCategories(null);
-////                activity.getCategory().setParentCategory(null);
-////                activity.getCategory().setActivities(null);
-////
-////                activity.getBooking().setActivity(null);
-////                activity.getBooking().setTimeSlot(null);
-////
-////                for (CommentEntity comment : activity.getComments()) {
-////                    comment.setCommentOwner(null);
-////                }
-////
-////                for (ImageEntity image : activity.getGallery()) {
-////                    image.setPostedBy(null);
-////                }
-////
-////            }
-////
-////            GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
-////            };
-////
-////            return Response.status(Status.OK).entity(genericEntity).build();
-////        } catch (Exception ex) {
-////            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-////        }
-//        return Response.status(Response.Status.OK).entity(userId).build();
-//
-//    }
     @Path("createNewActivity")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewActivity(ActivityEntity newActivity) {
+    public Response createNewActivity(ActivityEntity newActivity
+    ) {
         if (newActivity != null) {
             try {
                 Long newActivityId = activityEntitySessionBeanLocal.createNewActivity(newActivity).getActivityId();
@@ -183,7 +130,9 @@ public class ActivityResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response punishUsers(@QueryParam("activityId") Long activityId, @QueryParam("absenteeIds") List<Long> absenteeIds) {
+    public Response punishUsers(@QueryParam("activityId") Long activityId,
+            @QueryParam("absenteeIds") List<Long> absenteeIds
+    ) {
         System.out.println("ws.rest.ActivityResource.punishUsers()");
         System.out.println("ActivityId: " + activityId);
         System.out.println("absenteeIds: " + absenteeIds.toString());

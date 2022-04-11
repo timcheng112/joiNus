@@ -101,7 +101,7 @@ public class ActivityEntity implements Serializable {
         this.activityCreationDate = activityCreationDate;
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public Long getActivityId() {
         return activityId;
     }
@@ -138,7 +138,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityName
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getActivityName() {
         return activityName;
     }
@@ -153,7 +153,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityDescription
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getActivityDescription() {
         return activityDescription;
     }
@@ -168,7 +168,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the maxParticipants
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Integer getMaxParticipants() {
         return maxParticipants;
     }
@@ -183,7 +183,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the tags
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<String> getTags() {
         return tags;
     }
@@ -205,7 +205,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityOwner
      */
-    @JsonbTransient
+//    @JsonbTransient
     public NormalUserEntity getActivityOwner() {
         return activityOwner;
     }
@@ -220,7 +220,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the category
      */
-    @JsonbTransient
+//    @JsonbTransient
     public CategoryEntity getCategory() {
         return category;
     }
@@ -235,7 +235,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the booking
      */
-    @JsonbTransient
+//    @JsonbTransient
     public BookingEntity getBooking() {
         return booking;
     }
@@ -250,7 +250,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the comments
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<CommentEntity> getComments() {
         return comments;
     }
@@ -272,7 +272,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the participants
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<NormalUserEntity> getParticipants() {
         return participants;
     }
@@ -294,7 +294,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityCreationDate
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Date getActivityCreationDate() {
         return activityCreationDate;
     }
@@ -302,7 +302,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the gallery
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<ImageEntity> getGallery() {
         return gallery;
     }
@@ -317,11 +317,12 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the numberOfParticipants
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Integer getNumberOfParticipants() {
         return 1 + participants.size();
     }
 
+//    @JsonbTransient
     public List<Long> getAbsentIds() {
         return absentIds;
     }
@@ -330,6 +331,7 @@ public class ActivityEntity implements Serializable {
         this.absentIds = absentIds;
     }
 
+//    @JsonbTransient
     public List<Long> getCommenterIds() {
         return commenterIds;
     }
@@ -338,6 +340,7 @@ public class ActivityEntity implements Serializable {
         this.commenterIds = commenterIds;
     }
 
+//    @JsonbTransient
     public List<Long> getImagePosterIds() {
         return imagePosterIds;
     }
@@ -346,6 +349,7 @@ public class ActivityEntity implements Serializable {
         this.imagePosterIds = imagePosterIds;
     }
 
+//    @JsonbTransient
     public Boolean getActivityOver() {
         return activityOver;
     }

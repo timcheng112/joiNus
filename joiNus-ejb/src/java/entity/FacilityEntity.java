@@ -226,7 +226,7 @@ public class FacilityEntity implements Serializable {
         this.closingHour = closingHour;
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public ImageEntity getFacilityImage() {
         return facilityImage;
     }

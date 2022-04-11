@@ -104,7 +104,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the email
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getEmail() {
         return email;
     }
@@ -119,7 +119,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the name
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getName() {
         return name;
     }
@@ -134,7 +134,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the socialCredits
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Integer getSocialCredits() {
         return socialCredits;
     }
@@ -149,7 +149,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the bookingTokens
      */
-    @JsonbTransient
+//    @JsonbTransient
     public Integer getBookingTokens() {
         return bookingTokens;
     }
@@ -164,7 +164,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the interests
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<CategoryEntity> getInterests() {
         return interests;
     }
@@ -186,7 +186,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the activitiesParticipated
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<ActivityEntity> getActivitiesParticipated() {
         return activitiesParticipated;
     }
@@ -208,7 +208,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the activitiesOwned
      */
-    @JsonbTransient
+//    @JsonbTransient
     public List<ActivityEntity> getActivitiesOwned() {
         return activitiesOwned;
     }

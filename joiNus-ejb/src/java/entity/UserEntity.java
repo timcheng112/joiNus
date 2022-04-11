@@ -54,7 +54,7 @@ public abstract class UserEntity implements Serializable {
         setPassword(password);
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public Long getUserId() {
         return userId;
     }
@@ -91,7 +91,7 @@ public abstract class UserEntity implements Serializable {
     /**
      * @return the username
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getUsername() {
         return username;
     }
@@ -106,7 +106,7 @@ public abstract class UserEntity implements Serializable {
     /**
      * @return the password
      */
-    @JsonbTransient
+//    @JsonbTransient
     public String getPassword() {
         return password;
     }
@@ -122,7 +122,7 @@ public abstract class UserEntity implements Serializable {
         }
     }
 
-    @JsonbTransient
+//    @JsonbTransient
     public String getSalt() {
         return salt;
     }
