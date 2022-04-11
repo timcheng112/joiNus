@@ -36,20 +36,20 @@
 
         <h:form id="datePicker" style="float: left">
             <h3>Select Date To View Timeslots</h3>
+
             <p:calendar id="inline" mode="inline" value="#{timeSlotManagedBean.selectedDate}"/>
             <p:commandButton value="View Date" title="View Date" icon="pi pi-eye" update="@form formSelectedTimeslots:dataTableSelectedTimeslots" actionListener="#{timeSlotManagedBean.setDatesTimeslots}"/>
-            <p:commandButton value="Create Time Slots" icon="pi pi-pencil" title="CreateTimeSlots" oncomplete="PF('dialogAddNewTimeSlots').show()">
-            </p:commandButton>
+            <p:commandButton value="Create Time Slots" icon="pi pi-pencil" title="CreateTimeSlots" oncomplete="PF('dialogAddNewTimeSlots').show()"/>
         </h:form>
 
         <h:form id="formAddNewTimeSlots">
+            <p:messages id="messages" redisplay="false" closable="true" />
             <p:dialog id="dialogAddNewTimeSlots" widgetVar="dialogAddNewTimeSlots" header="Create New Timeslots" closable="true" width="220px">
                 <h3>Create Time Slots</h3>
                 <p:selectManyMenu value="#{timeSlotManagedBean.timeSlotsToAdd}" showCheckbox="true">
                     <f:selectItems value="#{timeSlotManagedBean.possibleTimeSlots}" var="possibleTimeSlot" itemLabel="#{possibleTimeSlot}00" itemValue="#{possibleTimeSlot}" />
                 </p:selectManyMenu>
-                <p:commandButton value="Create Time Slots" action="#{timeSlotManagedBean.addTimeSlots()}" title="CreateTimeSlots" update="@form formSelectedTimeslots:dataTableSelectedTimeslots" oncomplete="PF('dialogAddNewTimeSlots').show()">     
-                </p:commandButton>
+                <p:commandButton value="Create Time Slots" action="#{timeSlotManagedBean.addTimeSlots()}" title="CreateTimeSlots" update="@form formSelectedTimeslots:dataTableSelectedTimeslots"/>     
             </p:dialog>
 
 
@@ -74,17 +74,55 @@
                 </p:column>
 
                 <p:column headerText="Functions" style="text-align: center" >
-                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formEditFacility" oncomplete="PF('dialogEditFacility').show()">
-                        <f:setPropertyActionListener value="#{facilityEntity}" target="#{facilitiyManagedBean.facilityEntityToUpdate}"/>
+                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formSelectedTimeslots formEditTimeSlot" onclick="PF('dialogEditTimeSlot').show();">
+                        <f:setPropertyActionListener value="#{timeslotEntity}" target="#{timeSlotManagedBean.timeSlotToEdit}"/>
                     </p:commandButton>
-                    <p:commandButton value="View" icon="pi pi-eye" title="View" action="timeSlotManagement.xhtml">
-                        <f:param name="currFacilityId" value="#{facilityEntity.facilityId}" />
-                    </p:commandButton>   
                 </p:column>
 
             </p:dataTable>
-
         </h:form>
+        
+        <h:form id="formEditTimeSlot">
+
+            <p:dialog id="dialogEditTimeSlot" widgetVar="dialogEditTimeSlot" header="Edit Time Slot" closable="true">
+
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Time Slot Status:" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{timeSlotManagedBean.timeSlotToEdit.status}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="updateTimeslotStatus" value="Change Status To:" />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="updateTimeslotStatus" value="#{timeSlotManagedBean.timeSlotToEdit.status}" required="true" requiredMessage="This field is required!">
+                                <f:selectItem itemLabel="[Select]" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{timeSlotManagedBean.enums}" var="status" itemValue="#{status}" itemLabel="#{status}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="updateTimeslotStatus"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton update="@form formSelectedTimeslots" value="Update Status" actionListener="#{timeSlotManagedBean.editTimeSlotStatus()}" oncomplete="PF('dialogEditActivity').show();"/>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
     </ui:define>
 
 </ui:composition>

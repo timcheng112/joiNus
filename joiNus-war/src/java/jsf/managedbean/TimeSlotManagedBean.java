@@ -29,6 +29,8 @@ import javax.faces.event.ActionEvent;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.TimeSlotNotFoundException;
+import util.exception.UpdateTimeSlotException;
 
 /**
  *
@@ -48,15 +50,19 @@ public class TimeSlotManagedBean implements Serializable {
     private Long currFacilityId;
     private List<Integer> possibleTimeSlots;
     private Date selectedDate;
-    private int startTime;
-    private int endTime;
     private List<TimeSlotEntity> currTimeslots;
     private List<Integer> timeSlotsToAdd;
+    private TimeSlotEntity timeSlotToEdit;
+    private List<SlotStatusEnum> enums;
 
     /**
      * Creates a new instance of TimeSlotManagedBean
      */
     public TimeSlotManagedBean() {
+        enums = new ArrayList<>();
+        enums.add(SlotStatusEnum.AVAILABLE);
+        enums.add(SlotStatusEnum.CANCELLED);
+        enums.add(SlotStatusEnum.UNAVAILABLE);
         currentFacility = null;
         possibleTimeSlots = new ArrayList<>();
         currTimeslots = new ArrayList<>();
@@ -93,6 +99,9 @@ public class TimeSlotManagedBean implements Serializable {
                     }
                 }
             }
+            if (alreadyExists){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Timeslot Already Exists for " + i + "00", null));
+            }
             if (!alreadyExists) {
                 System.out.println("Selected Date:" + selectedDate);
                 selectedDate.setHours(i);
@@ -107,19 +116,36 @@ public class TimeSlotManagedBean implements Serializable {
         }
         setDatesTimeslots();
     }
+    
+    public void editTimeSlotStatus() {
+        try {
+            timeSlotEntitySessionBeanLocal.updateTimeSlot(timeSlotToEdit);
+        } catch (TimeSlotNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
+        } catch (InputDataValidationException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
+        } catch (UpdateTimeSlotException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
+        }
+    }
 
     public void setDatesTimeslots() {
         //fill the currTimeslots array with the ones selected by datepicker, display the table.
         //retrieveTimeSlotsByDate(int year, int month, int date, Long facilityId)
-        int day = selectedDate.getDate();
+        int day = selectedDate.getDate() +1 ; //xd wtf
+        System.out.println("day = " + day);
         int month = selectedDate.getMonth();
-        int year = selectedDate.getYear();
+        int year = selectedDate.getYear() + 1900;
         System.out.println("selected date" + selectedDate);
+        
         List<TimeSlotEntity> temp = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(year, month, day, currFacilityId);
         if (temp == null){
             setCurrTimeslots(new ArrayList<>());
         } else {
             setCurrTimeslots(temp);
+        }
+        for (TimeSlotEntity t: currTimeslots){
+            System.out.println("timeslot time = " + t.getTimeSlotTime());
         }
         System.out.println("SetDatesTImeslots" + currTimeslots);
     }
@@ -144,34 +170,6 @@ public class TimeSlotManagedBean implements Serializable {
      */
     public void setPossibleTimeSlots(List<Integer> possibleTimeSlots) {
         this.possibleTimeSlots = possibleTimeSlots;
-    }
-
-    /**
-     * @return the startTime
-     */
-    public int getStartTime() {
-        return startTime;
-    }
-
-    /**
-     * @param startTime the startTime to set
-     */
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
-
-    /**
-     * @return the endTime
-     */
-    public int getEndTime() {
-        return endTime;
-    }
-
-    /**
-     * @param endTime the endTime to set
-     */
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
     }
 
     /**
@@ -214,5 +212,27 @@ public class TimeSlotManagedBean implements Serializable {
      */
     public void setTimeSlotsToAdd(List<Integer> timeSlotsToAdd) {
         this.timeSlotsToAdd = timeSlotsToAdd;
+    }
+
+    public List<SlotStatusEnum> getEnums() {
+        return enums;
+    }
+
+    public void setEnums(List<SlotStatusEnum> enums) {
+        this.enums = enums;
+    }
+
+    /**
+     * @return the timeSlotToEdit
+     */
+    public TimeSlotEntity getTimeSlotToEdit() {
+        return timeSlotToEdit;
+    }
+
+    /**
+     * @param timeSlotToEdit the timeSlotToEdit to set
+     */
+    public void setTimeSlotToEdit(TimeSlotEntity timeSlotToEdit) {
+        this.timeSlotToEdit = timeSlotToEdit;
     }
 }

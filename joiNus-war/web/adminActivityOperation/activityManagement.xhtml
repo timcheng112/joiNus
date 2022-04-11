@@ -46,6 +46,10 @@
                     <p:column headerText="Category" sortBy="#{activityEntity.category.categoryName}" filterBy="#{activityEntity.category.categoryName}" filterMatchMode="contains">
                         <h:outputText value="#{activityEntity.category.categoryName}" />
                     </p:column>
+                    
+                    <p:column headerText="Facility" sortBy="#{activityEntity.booking.timeSlot.facility.facilityName}" filterBy="#{activityEntity.booking.timeSlot.facility.facilityName}" filterMatchMode="contains">
+                        <h:outputText value="#{activityEntity.booking.timeSlot.facility.facilityName}" />
+                    </p:column>
 
                     <p:column headerText="Action" >
                         <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View" >
@@ -126,6 +130,15 @@
                             </p:column>
                             <p:column>
                                 <h:outputText value="#{activityManagedBean.activityEntityToView.category.categoryName}" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Facility: " />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{activityEntity.booking.timeSlot.facility.facilityName}" />
                             </p:column>
                         </p:row>
 
