@@ -97,15 +97,12 @@ public class DataInitSessionBean {
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "USC, 2 Sports Drive, Singapore 117288", 10, 18));
 
-            // create 1 timeslot for 6 Apr 12pm
-            Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-            c.set(Calendar.DATE, 6);
-            c.set(Calendar.MONTH, 3); // month - 1
-            c.set(Calendar.HOUR_OF_DAY, 12);
-            Date date = c.getTime();
+            Date date = new Date();
+            date.setMinutes(0);
+            date.setHours(12);
+            date.setSeconds(0);
+            date.setDate(6);
+            date.setMonth(3);
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
@@ -113,8 +110,7 @@ public class DataInitSessionBean {
             // create booking
             BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
 
-            c.set(Calendar.HOUR_OF_DAY, 13);
-            date = c.getTime();
+            date.setHours(13);
             TimeSlotEntity ts2 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts2, fac.getFacilityId());
                                         

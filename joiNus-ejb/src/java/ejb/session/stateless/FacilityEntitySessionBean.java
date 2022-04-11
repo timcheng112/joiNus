@@ -112,7 +112,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
             f.getTimeSlots().size();
         }
         
-        return facilityEntitys;
+        return query.getResultList();
     }
     
     
@@ -171,6 +171,8 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                     facilityEntityToUpdate.setTokenCost(facilityEntity.getTokenCost());
                     facilityEntityToUpdate.setCapacity(facilityEntity.getCapacity());
                     facilityEntityToUpdate.setAddress(facilityEntity.getAddress());
+                    facilityEntityToUpdate.setOpeningHour(facilityEntity.getOpeningHour());
+                    facilityEntityToUpdate.setClosingHour(facilityEntity.getClosingHour());
                     facilityEntityToUpdate.setTimeSlots(facilityEntity.getTimeSlots());
                 }
                 else

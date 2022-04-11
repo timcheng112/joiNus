@@ -21,6 +21,8 @@ import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -28,8 +30,10 @@ import javax.faces.context.FacesContext;
 import org.primefaces.event.FileUploadEvent;
 import util.exception.CreateNewFacilityException;
 import util.exception.FacilityNameExistException;
+import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateFacilityException;
 
 /**
  *
@@ -100,6 +104,16 @@ public class FacilitiyManagedBean implements Serializable {
     }
 
     public void editExistingFacility() {
+        try {
+            facilityEntitySessionBeanLocal.updateFacility(facilityEntityToUpdate);
+            System.out.println("Updated Facility: " + facilityEntityToUpdate.getFacilityId());
+        } catch (FacilityNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing facility FacilityNotFoundException", null));
+        } catch (UpdateFacilityException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing facility UpdateFacilityException", null));
+        } catch (InputDataValidationException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing facility InputDataValidationException", null));
+        }
         facilityEntityToUpdate = new FacilityEntity();
         uploadedFilePath = "";
         uploadedImage = new ImageEntity();

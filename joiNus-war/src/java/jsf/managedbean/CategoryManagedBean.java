@@ -50,6 +50,11 @@ public class CategoryManagedBean implements Serializable {
     private String categoryNameUpdate;
     private Long parentCategoryIdUpdate;
     
+    private CategoryEntity categoryDelete;
+    private boolean categoryDeleteHasActivities;
+    private Long categoryIdDelete;
+    private String categoryNameDelete;
+    
     private CategoryEntity categoryEntityToView;
     
     /**
@@ -145,7 +150,7 @@ public class CategoryManagedBean implements Serializable {
     {
         try
         {
-            CategoryEntity categoryEntityToDelete = (CategoryEntity)event.getComponent().getAttributes().get("categoryEntityToDelete");
+            CategoryEntity categoryEntityToDelete = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(getCategoryIdDelete());
             getCategoryEntitySessionBeanLocal().deleteCategory(categoryEntityToDelete.getCategoryId());
             
             getCategoryEntities().remove(categoryEntityToDelete);
@@ -309,6 +314,65 @@ public class CategoryManagedBean implements Serializable {
      */
     public void setCategoryUpdateHasActivities(boolean categoryUpdateHasActivities) {
         this.categoryUpdateHasActivities = categoryUpdateHasActivities;
+    }
+
+    /**
+     * @return the categoryDelete
+     */
+    public CategoryEntity getCategoryDelete() {
+        return categoryDelete;
+    }
+
+    /**
+     * @param categoryDelete the categoryDelete to set
+     */
+    public void setCategoryDelete(CategoryEntity categoryDelete) {
+        categoryIdDelete = categoryDelete.getCategoryId();
+        setCategoryNameDelete(categoryDelete.getCategoryName());
+        categoryDeleteHasActivities = !categoryDelete.getActivities().isEmpty();
+        this.categoryDelete = categoryDelete;
+    }
+
+    /**
+     * @return the categoryDeleteHasActivities
+     */
+    public boolean isCategoryDeleteHasActivities() {
+        return categoryDeleteHasActivities;
+    }
+
+    /**
+     * @param categoryDeleteHasActivities the categoryDeleteHasActivities to set
+     */
+    public void setCategoryDeleteHasActivities(boolean categoryDeleteHasActivities) {
+        this.categoryDeleteHasActivities = categoryDeleteHasActivities;
+    }
+
+    /**
+     * @return the categoryIdDelete
+     */
+    public Long getCategoryIdDelete() {
+        return categoryIdDelete;
+    }
+
+    /**
+     * @param categoryIdDelete the categoryIdDelete to set
+     */
+    public void setCategoryIdDelete(Long categoryIdDelete) {
+        this.categoryIdDelete = categoryIdDelete;
+    }
+
+    /**
+     * @return the categoryNameDelete
+     */
+    public String getCategoryNameDelete() {
+        return categoryNameDelete;
+    }
+
+    /**
+     * @param categoryNameDelete the categoryNameDelete to set
+     */
+    public void setCategoryNameDelete(String categoryNameDelete) {
+        this.categoryNameDelete = categoryNameDelete;
     }
     
     

@@ -10,6 +10,7 @@ import entity.FacilityEntity;
 import entity.TimeSlotEntity;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -105,7 +106,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
 
     @Override
     public List<TimeSlotEntity> retrieveTimeSlotsByDate(int year, int month, int date, Long facilityId) {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
+        Calendar c = Calendar.getInstance();
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
@@ -113,20 +114,23 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DATE, date);
         c.set(Calendar.HOUR_OF_DAY, 0);
+        Date dateXD = c.getTime();
         
         Query query = entityManager.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
         c.add(Calendar.SECOND, -1);
-        query.setParameter("inStart", c.getTime(), TemporalType.DATE);
-        System.out.println("Starting date of check is " + c.getTime());
+        dateXD = c.getTime();
+        query.setParameter("inStart", dateXD, TemporalType.DATE);
+        System.out.println("Starting date of check is " + dateXD);
         c.add(Calendar.DATE, 1);
-        query.setParameter("inEnd", c.getTime(), TemporalType.DATE);
-        System.out.println("End date of check is " + c.getTime());
+        dateXD = c.getTime();
+        query.setParameter("inEnd",dateXD, TemporalType.DATE);
+        System.out.println("End date of check is " + dateXD);
         query.setParameter("inFacility", facilityId);
 
         List<TimeSlotEntity> timeSlots = query.getResultList();
         System.out.println(timeSlots);
-        if (!timeSlots.isEmpty()) {
 
+        if (!timeSlots.isEmpty()) {
             return timeSlots;
         } else {
             return null;
