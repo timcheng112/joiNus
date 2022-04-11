@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ import util.security.CryptographicHelper;
  * @author User
  */
 @Entity
-@Inheritance(strategy= InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,7 +37,7 @@ public abstract class UserEntity implements Serializable {
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     @NotNull
     protected String password;
-    
+
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
 
@@ -46,13 +47,14 @@ public abstract class UserEntity implements Serializable {
 
     public UserEntity(String username, String password) {
         this();
-        
+
         this.username = username;
         this.password = password;
-        
+
         setPassword(password);
     }
-    
+
+    @JsonbTransient
     public Long getUserId() {
         return userId;
     }
@@ -89,6 +91,7 @@ public abstract class UserEntity implements Serializable {
     /**
      * @return the username
      */
+    @JsonbTransient
     public String getUsername() {
         return username;
     }
@@ -103,6 +106,7 @@ public abstract class UserEntity implements Serializable {
     /**
      * @return the password
      */
+    @JsonbTransient
     public String getPassword() {
         return password;
     }
@@ -110,18 +114,15 @@ public abstract class UserEntity implements Serializable {
     /**
      * @param password the password to set
      */
-    public void setPassword(String password)
-    {
-        if(password != null)
-        {
+    public void setPassword(String password) {
+        if (password != null) {
             this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
-        }
-        else
-        {
+        } else {
             this.password = null;
         }
     }
-    
+
+    @JsonbTransient
     public String getSalt() {
         return salt;
     }

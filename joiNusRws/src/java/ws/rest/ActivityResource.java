@@ -10,6 +10,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,10 +71,12 @@ public class ActivityResource {
                 activity.getCategory().setActivities(null);
 
                 activity.getBooking().setActivity(null);
-                activity.getBooking().setTimeSlot(null);
-
+                activity.getBooking().getTimeSlot().getFacility();
+//                activity.getBooking().setTimeSlot(null);
+                activity.getBooking().getTimeSlot().getFacility().setTimeSlots(null);
+                
                 for (CommentEntity comment : activity.getComments()) {
-                    comment.setCommentOwner(null);
+                    comment.getCommentOwner();
                 }
 
                 for (ImageEntity image : activity.getGallery()) {
@@ -90,7 +93,7 @@ public class ActivityResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("retrieveMyActivities")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -115,7 +118,6 @@ public class ActivityResource {
                 activity.getCategory().setActivities(null);
 
                 activity.getBooking().setActivity(null);
-                activity.getBooking().setTimeSlot(null);
 
                 for (CommentEntity comment : activity.getComments()) {
                     comment.setCommentOwner(null);
@@ -124,6 +126,8 @@ public class ActivityResource {
                 for (ImageEntity image : activity.getGallery()) {
                     image.setPostedBy(null);
                 }
+                
+                System.out.println(activityEntities);
 
             }
 
@@ -152,6 +156,24 @@ public class ActivityResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new record request").build();
         }
     }
+
+//    @PUT
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response addComment(String comment, NormalUserEntity commentOwner, Date commentDate) {
+//        CommentEntity newComment = new CommentEntity(comment, commentOwner, commentDate);
+//        if (newComment != null) {
+//            try {
+//                Long newCommentId = activityEntitySessionBeanLocal.addComment(newComment);
+//
+//                return Response.status(Response.Status.OK).entity(newCommentId).build();
+//            } catch (Exception ex) {
+//                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+//            }
+//        } else {
+//            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid add new comment request").build();
+//        }
+//    }
 
     private ActivityEntitySessionBeanLocal lookupActivityEntitySessionBeanLocal() {
         try {

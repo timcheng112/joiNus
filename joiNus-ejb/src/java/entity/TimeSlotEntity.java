@@ -8,6 +8,7 @@ package entity;
 import ejb.enums.SlotStatusEnum;
 import java.io.Serializable;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -33,18 +34,18 @@ public class TimeSlotEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long timeSlotId;
-    
+
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date timeSlotTime;
-    
+
     @Enumerated(EnumType.STRING)
-    private SlotStatusEnum status; 
-    
+    private SlotStatusEnum status;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FacilityEntity facility;
-    
+
     @OneToOne(optional = true)
     @JoinColumn(nullable = true)
     private BookingEntity booking;
@@ -52,12 +53,13 @@ public class TimeSlotEntity implements Serializable {
     public TimeSlotEntity() {
     }
 
-    public TimeSlotEntity(Date time, SlotStatusEnum status,FacilityEntity facility) {
+    public TimeSlotEntity(Date time, SlotStatusEnum status, FacilityEntity facility) {
         this.timeSlotTime = time;
         this.status = status;
         this.facility = facility;
     }
 
+    @JsonbTransient
     public Long getTimeSlotId() {
         return timeSlotId;
     }
@@ -94,6 +96,7 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the timeSlotTime
      */
+    @JsonbTransient
     public Date getTimeSlotTime() {
         return timeSlotTime;
     }
@@ -108,6 +111,7 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the facility
      */
+    @JsonbTransient
     public FacilityEntity getFacility() {
         return facility;
     }
@@ -122,6 +126,7 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the status
      */
+    @JsonbTransient
     public SlotStatusEnum getStatus() {
         return status;
     }
@@ -132,10 +137,11 @@ public class TimeSlotEntity implements Serializable {
     public void setStatus(SlotStatusEnum status) {
         this.status = status;
     }
-    
-        /**
+
+    /**
      * @return the booking
      */
+    @JsonbTransient
     public BookingEntity getBooking() {
         return booking;
     }
@@ -147,5 +153,4 @@ public class TimeSlotEntity implements Serializable {
         this.booking = booking;
     }
 
-    
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -90,6 +91,7 @@ public class ActivityEntity implements Serializable {
         this.activityCreationDate = activityCreationDate;
     }
 
+    @JsonbTransient
     public Long getActivityId() {
         return activityId;
     }
@@ -126,6 +128,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityName
      */
+    @JsonbTransient
     public String getActivityName() {
         return activityName;
     }
@@ -140,6 +143,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityDescription
      */
+    @JsonbTransient
     public String getActivityDescription() {
         return activityDescription;
     }
@@ -154,6 +158,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the maxParticipants
      */
+    @JsonbTransient
     public Integer getMaxParticipants() {
         return maxParticipants;
     }
@@ -168,6 +173,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the tags
      */
+    @JsonbTransient
     public List<String> getTags() {
         return tags;
     }
@@ -189,6 +195,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityOwner
      */
+    @JsonbTransient
     public NormalUserEntity getActivityOwner() {
         return activityOwner;
     }
@@ -203,6 +210,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the category
      */
+    @JsonbTransient
     public CategoryEntity getCategory() {
         return category;
     }
@@ -217,6 +225,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the booking
      */
+    @JsonbTransient
     public BookingEntity getBooking() {
         return booking;
     }
@@ -231,6 +240,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the comments
      */
+    @JsonbTransient
     public List<CommentEntity> getComments() {
         return comments;
     }
@@ -252,6 +262,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the participants
      */
+    @JsonbTransient
     public List<NormalUserEntity> getParticipants() {
         return participants;
     }
@@ -273,6 +284,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the activityCreationDate
      */
+    @JsonbTransient
     public Date getActivityCreationDate() {
         return activityCreationDate;
     }
@@ -280,6 +292,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the gallery
      */
+    @JsonbTransient
     public List<ImageEntity> getGallery() {
         return gallery;
     }
@@ -294,6 +307,7 @@ public class ActivityEntity implements Serializable {
     /**
      * @return the numberOfParticipants
      */
+    @JsonbTransient
     public Integer getNumberOfParticipants() {
         return 1 + participants.size();
     }

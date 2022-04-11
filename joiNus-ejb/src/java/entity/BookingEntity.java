@@ -8,6 +8,7 @@ package entity;
 import ejb.enums.SlotStatusEnum;
 import java.io.Serializable;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,6 +53,7 @@ public class BookingEntity implements Serializable {
         this.timeSlot = timeSlot;
     }
 
+    @JsonbTransient
     public Long getBookingId() {
         return bookingId;
     }
@@ -88,6 +90,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the bookingStatus
      */
+    @JsonbTransient
     public SlotStatusEnum getBookingStatus() {
         return bookingStatus;
     }
@@ -102,6 +105,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the creationDate
      */
+    @JsonbTransient
     public Date getCreationDate() {
         return creationDate;
     }
@@ -116,6 +120,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the activity
      */
+    @JsonbTransient
     public ActivityEntity getActivity() {
         return activity;
     }
@@ -130,6 +135,7 @@ public class BookingEntity implements Serializable {
     /**
      * @return the timeSlot
      */
+    @JsonbTransient
     public TimeSlotEntity getTimeSlot() {
         return timeSlot;
     }
