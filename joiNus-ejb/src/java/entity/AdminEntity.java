@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -65,6 +66,7 @@ public class AdminEntity extends UserEntity implements Serializable {
     /**
      * @return the club
      */
+    @JsonbTransient
     public String getClub() {
         return club;
     }
@@ -79,6 +81,7 @@ public class AdminEntity extends UserEntity implements Serializable {
     /**
      * @return the isSuperAdmin
      */
+    @JsonbTransient
     public Boolean getIsSuperAdmin() {
         return isSuperAdmin;
     }

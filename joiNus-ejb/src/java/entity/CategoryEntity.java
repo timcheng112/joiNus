@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,10 +33,10 @@ public class CategoryEntity implements Serializable {
 
     @Column(nullable = false, length = 24)
     private String categoryName;
-    
+
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
     private List<CategoryEntity> subCategories;
-    
+
     @ManyToOne
     private CategoryEntity parentCategory;
 
@@ -52,6 +53,7 @@ public class CategoryEntity implements Serializable {
         this.categoryName = categoryName;
     }
 
+    @JsonbTransient
     public Long getCategoryId() {
         return categoryId;
     }
@@ -88,6 +90,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the categoryName
      */
+    @JsonbTransient
     public String getCategoryName() {
         return categoryName;
     }
@@ -102,6 +105,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the parentCategory
      */
+    @JsonbTransient
     public CategoryEntity getParentCategory() {
         return parentCategory;
     }
@@ -128,6 +132,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the subCategories
      */
+    @JsonbTransient
     public List<CategoryEntity> getSubCategories() {
         return subCategories;
     }
@@ -149,6 +154,7 @@ public class CategoryEntity implements Serializable {
     /**
      * @return the activities
      */
+    @JsonbTransient
     public List<ActivityEntity> getActivities() {
         return activities;
     }

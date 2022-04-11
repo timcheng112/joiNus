@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -73,6 +74,7 @@ public class FacilityEntity implements Serializable {
         this.closingHour = closingHour;
     }
 
+    @JsonbTransient
     public Long getFacilityId() {
         return facilityId;
     }
@@ -109,6 +111,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the facilityName
      */
+    @JsonbTransient
     public String getFacilityName() {
         return facilityName;
     }
@@ -123,6 +126,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the club
      */
+    @JsonbTransient
     public String getClub() {
         return club;
     }
@@ -137,6 +141,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the tokenCost
      */
+    @JsonbTransient
     public Integer getTokenCost() {
         return tokenCost;
     }
@@ -151,6 +156,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the capacity
      */
+    @JsonbTransient
     public Integer getCapacity() {
         return capacity;
     }
@@ -165,6 +171,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the address
      */
+    @JsonbTransient
     public String getAddress() {
         return address;
     }
@@ -179,6 +186,7 @@ public class FacilityEntity implements Serializable {
     /**
      * @return the timeSlots
      */
+    @JsonbTransient
     public List<TimeSlotEntity> getTimeSlots() {
         return timeSlots;
     }
@@ -201,6 +209,7 @@ public class FacilityEntity implements Serializable {
         this.timeSlots.remove(timeSlot);
     }
 
+    @JsonbTransient
     public int getOpeningHour() {
         return openingHour;
     }
@@ -217,6 +226,7 @@ public class FacilityEntity implements Serializable {
         this.closingHour = closingHour;
     }
 
+    @JsonbTransient
     public ImageEntity getFacilityImage() {
         return facilityImage;
     }

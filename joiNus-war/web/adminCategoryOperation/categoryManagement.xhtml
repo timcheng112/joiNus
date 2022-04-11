@@ -53,8 +53,14 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="View" >
+                        <p:commandButton update="formViewCategory" oncomplete="PF('dialogViewCategory').show()" icon="ui-icon-document" title="View" >
+                            <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryEntityToView}" />
+                        </p:commandButton>
+                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="Edit" >
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />
+                        </p:commandButton>
+                        <p:commandButton update="formDeleteCategory" oncomplete="PF('dialogDeleteCategory').show()" icon="ui-icon-trash" title="Delete" >
+                            <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryDelete}" />
                         </p:commandButton>
 
                     </p:column>
@@ -113,7 +119,63 @@
             </p:dialog>
         </h:form>
 
+        <h:form id="formViewCategory">
 
+            <p:dialog id="dialogViewCategory" widgetVar="dialogViewCategory" header="View Category" closable="true">
+
+                <p:messages />
+                
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Name: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{categoryManagedBean.categoryEntityToView.categoryName}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Parent Category: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{categoryManagedBean.categoryEntityToView.parentCategory.categoryName}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Sub Category: " />
+                        </p:column>
+                        <p:column>
+                            <ui:repeat value="#{categoryManagedBean.categoryEntityToView.subCategories}" var="sub">
+                                <li>
+                                    <h:outputText value="#{sub.categoryName}"/>
+                                </li>
+                            </ui:repeat>
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Activities: " />
+                        </p:column>
+                        <p:column>
+                            <ui:repeat value="#{categoryManagedBean.categoryEntityToView.activities}" var="activity">
+                                <li>
+                                    <h:outputText value="#{activity.activityName}"/>
+                                </li>
+                            </ui:repeat>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
 
         <h:form id="formEditCategory">
 
@@ -132,7 +194,7 @@
                             <h:outputLabel value="Update Category Name " />
                         </p:column>
                         <p:column>
-                            <p:inputText value="#{categoryManagedBean.categoryNameUpdate}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
+                            <p:inputText value="#{categoryManagedBean.categoryUpdate.categoryName}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
                         </p:column>
                     </p:row>
 
@@ -151,6 +213,39 @@
                     <p:row>
                         <p:column colspan="2">
                             <p:commandButton update="@form formAllCategories" value="Update Categories" actionListener="#{categoryManagedBean.updateCategory}" oncomplete="PF('dialogEditCategory').show();"/>
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+        
+        <h:form id="formDeleteCategory">
+
+            <p:dialog id="dialogDeleteCategory" widgetVar="dialogDeleteCategory" header="Delete Category" closable="true">
+
+                <p:messages />
+
+                <c:if test="#{categoryManagedBean.categoryDeleteHasActivities}">
+                    <h:outputText value="Category cannot be deleted as there are activities associcated with it" />
+                </c:if>
+
+                <p:panelGrid rendered="#{!categoryManagedBean.categoryDeleteHasActivities}" >
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Category Name " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{categoryManagedBean.categoryNameDelete}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton update="@form formAllCategories" value="Delete Category" actionListener="#{categoryManagedBean.deleteCategory}" />
                         </p:column>
                     </p:row>
 

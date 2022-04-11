@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -103,6 +104,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the email
      */
+    @JsonbTransient
     public String getEmail() {
         return email;
     }
@@ -117,6 +119,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the name
      */
+    @JsonbTransient
     public String getName() {
         return name;
     }
@@ -131,6 +134,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the socialCredits
      */
+    @JsonbTransient
     public Integer getSocialCredits() {
         return socialCredits;
     }
@@ -145,6 +149,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the bookingTokens
      */
+    @JsonbTransient
     public Integer getBookingTokens() {
         return bookingTokens;
     }
@@ -159,6 +164,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the interests
      */
+    @JsonbTransient
     public List<CategoryEntity> getInterests() {
         return interests;
     }
@@ -180,6 +186,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the activitiesParticipated
      */
+    @JsonbTransient
     public List<ActivityEntity> getActivitiesParticipated() {
         return activitiesParticipated;
     }
@@ -201,6 +208,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     /**
      * @return the activitiesOwned
      */
+    @JsonbTransient
     public List<ActivityEntity> getActivitiesOwned() {
         return activitiesOwned;
     }

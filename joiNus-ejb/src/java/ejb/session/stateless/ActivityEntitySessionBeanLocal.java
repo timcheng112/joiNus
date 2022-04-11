@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
+import entity.CommentEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.ActivityNotFoundException;
