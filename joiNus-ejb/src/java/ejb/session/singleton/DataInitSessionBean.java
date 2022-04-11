@@ -17,6 +17,7 @@ import entity.ActivityEntity;
 import entity.AdminEntity;
 import entity.BookingEntity;
 import entity.CategoryEntity;
+import entity.CommentEntity;
 import entity.FacilityEntity;
 import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
@@ -33,6 +34,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exception.ActivityNotFoundException;
 import util.exception.AdminNotFoundException;
 import util.exception.AdminUsernameExistException;
 import util.exception.CreateNewCategoryException;
@@ -41,7 +43,6 @@ import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.NormalUserNameExistException;
-import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -124,9 +125,11 @@ public class DataInitSessionBean {
             // create activity
             ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 5, new ArrayList<>(), normalUser, new ArrayList<>(), cat, null, date));
             bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
-
+            
+            CommentEntity comment = new CommentEntity("Will anyone be bringing any equipment?", normalUser, date);
+            activityEntitySessionBeanLocal.addComment(comment, activity.getActivityId());
             System.out.println("Data Initialization Ended");
-        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException ex) {
+        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException | ActivityNotFoundException ex) {
             ex.printStackTrace();
         }
 

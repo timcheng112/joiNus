@@ -9,6 +9,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -78,11 +79,14 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         return query.getResultList();
     }
-    
+
     @Override
     public List<ActivityEntity> retrieveMyActivities(Long userId) {
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
-        List<ActivityEntity> activities = user.getActivitiesOwned();
+        List<ActivityEntity> activities = new ArrayList<>();
+        for (ActivityEntity activity : user.getActivitiesOwned()) {
+            activities.add(activity);
+        }
         for (ActivityEntity activity : user.getActivitiesParticipated()) {
             activities.add(activity);
         }
@@ -177,6 +181,15 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         for (ImageEntity imageEntity : imageEntities) {
             em.remove(imageEntity);
         }
+    }
+
+    @Override
+    public Long addComment(CommentEntity commentEntity, Long activityId) throws ActivityNotFoundException {
+        ActivityEntity activity = retrieveActivityByActivityId(activityId);
+        activity.getComments().add(commentEntity);
+        em.persist(commentEntity);
+        em.flush();
+        return commentEntity.getCommentId();
     }
 
     @Override

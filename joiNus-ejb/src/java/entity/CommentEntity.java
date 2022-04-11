@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,6 +45,7 @@ public class CommentEntity implements Serializable {
         this.commentDate = commentDate;
     }
 
+    @JsonbTransient
     public Long getCommentId() {
         return commentId;
     }
@@ -80,6 +82,7 @@ public class CommentEntity implements Serializable {
     /**
      * @return the text
      */
+    @JsonbTransient
     public String getText() {
         return text;
     }
@@ -94,6 +97,7 @@ public class CommentEntity implements Serializable {
     /**
      * @return the commentOwner
      */
+    @JsonbTransient
     public NormalUserEntity getCommentOwner() {
         return commentOwner;
     }
@@ -101,6 +105,7 @@ public class CommentEntity implements Serializable {
     /**
      * @return the commentDate
      */
+    @JsonbTransient
     public Date getCommentDate() {
         return commentDate;
     }
@@ -112,5 +117,4 @@ public class CommentEntity implements Serializable {
         this.commentOwner = commentOwner;
     }
 
-    
 }

@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
+import entity.CommentEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.ActivityNotFoundException;
@@ -37,5 +38,7 @@ public interface ActivityEntitySessionBeanLocal {
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity) throws UnknownPersistenceException, InputDataValidationException;
 
     public List<ActivityEntity> retrieveMyActivities(Long userId);
+
+    public Long addComment(CommentEntity commentEntity, Long activityId) throws ActivityNotFoundException;
 
 }
