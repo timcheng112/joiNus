@@ -52,28 +52,6 @@
                         <h:outputText value="#{categoryEntity.parentCategory.categoryName}" />
                     </p:column>
 
-                    <p:column headerText="Sub-Categories" sortBy="#{categoryEntity.subCategories}" field="#{categoryEntity.subCategories}" filterBy="#{categoryEntity.subCategories}" filterMatchMode="contains">
-                        <f:facet name="filter">
-                            <p:selectOneMenu id="selCat" onchange="PF('dataTableAllCategories').filter()">
-                                <f:selectItem itemValue="#{null}" itemLabel="[Select One]" noSelectionOption="true" />
-                                <f:selectItems value="#{categoryManagedBean.leafCategories}" var="cat" itemValue="#{cat.categoryName}" itemLabel="#{cat.categoryName}" />
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <ui:repeat value="#{categoryEntity.subCategories}" var="sub">
-                            <li>
-                                <h:outputText value="#{sub.categoryName}"/>
-                            </li>
-                        </ui:repeat>
-                    </p:column>
-
-                    <p:column headerText="Activities" sortBy="#{categoryEntity.activities}" field="#{categoryEntity.activities}" filterBy="#{categoryEntity.activities}" filterMatchMode="contains">
-                        <ui:repeat value="#{categoryEntity.activities}" var="activity" >
-                            <li>
-                                <h:outputText value="#{activity.activityName}" />
-                            </li>
-                        </ui:repeat>
-                    </p:column>
-
                     <p:column headerText="Functions" style="text-align: center" >
                         <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="View" >
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />

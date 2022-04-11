@@ -53,16 +53,18 @@ public class TimeSlotManagedBean implements Serializable {
     private List<TimeSlotEntity> currTimeslots;
     private List<Integer> timeSlotsToAdd;
     private TimeSlotEntity timeSlotToEdit;
-    private List<SlotStatusEnum> enums;
+    private SlotStatusEnum[] enums;
 
     /**
      * Creates a new instance of TimeSlotManagedBean
      */
     public TimeSlotManagedBean() {
-        enums = new ArrayList<>();
-        enums.add(SlotStatusEnum.AVAILABLE);
-        enums.add(SlotStatusEnum.CANCELLED);
-        enums.add(SlotStatusEnum.UNAVAILABLE);
+        enums = SlotStatusEnum.values();
+        currentFacility = null;
+        possibleTimeSlots = new ArrayList<>();
+        currTimeslots = new ArrayList<>();
+        timeSlotsToAdd = new ArrayList<>();
+        timeSlotToEdit = new TimeSlotEntity();
         currentFacility = null;
         possibleTimeSlots = new ArrayList<>();
         currTimeslots = new ArrayList<>();
@@ -214,14 +216,6 @@ public class TimeSlotManagedBean implements Serializable {
         this.timeSlotsToAdd = timeSlotsToAdd;
     }
 
-    public List<SlotStatusEnum> getEnums() {
-        return enums;
-    }
-
-    public void setEnums(List<SlotStatusEnum> enums) {
-        this.enums = enums;
-    }
-
     /**
      * @return the timeSlotToEdit
      */
@@ -234,5 +228,19 @@ public class TimeSlotManagedBean implements Serializable {
      */
     public void setTimeSlotToEdit(TimeSlotEntity timeSlotToEdit) {
         this.timeSlotToEdit = timeSlotToEdit;
+    }
+
+    /**
+     * @return the enums
+     */
+    public SlotStatusEnum[] getEnums() {
+        return enums;
+    }
+
+    /**
+     * @param enums the enums to set
+     */
+    public void setEnums(SlotStatusEnum[] enums) {
+        this.enums = enums;
     }
 }

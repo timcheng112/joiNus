@@ -104,7 +104,7 @@
                         <p:column>
                             <p:selectOneMenu id="updateTimeslotStatus" value="#{timeSlotManagedBean.timeSlotToEdit.status}" required="true" requiredMessage="This field is required!">
                                 <f:selectItem itemLabel="[Select]" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{timeSlotManagedBean.enums}" var="status" itemValue="#{status}" itemLabel="#{status}"/>
+                                <f:selectItems value="#{timeSlotManagedBean.enums}" var="status" itemLabel="#{status}"/>
                             </p:selectOneMenu>
                         </p:column>
                         <p:column>
