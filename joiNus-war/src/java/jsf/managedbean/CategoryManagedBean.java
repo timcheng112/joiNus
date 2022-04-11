@@ -123,7 +123,7 @@ public class CategoryManagedBean implements Serializable {
         
         try
         {
-            categoryEntitySessionBeanLocal.updateCategoryById(categoryIdUpdate, categoryNameUpdate, parentCategoryIdUpdate);
+            categoryEntitySessionBeanLocal.updateCategoryById(categoryIdUpdate, categoryUpdate.getCategoryName(), parentCategoryIdUpdate);
             
             for(CategoryEntity ce:getCategoryEntities())
             {
