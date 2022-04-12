@@ -231,8 +231,12 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
             System.out.println("activity not null");
 
             for (Long aId : absenteeIds) { // punish user
+
                 if (!existingIds2.contains(aId)) {
+                    System.out.println("need to punish user " + aId);
                     normalUserEntitySessionBeanLocal.punishUser(aId);
+                } else {
+                    System.out.println("no need to punish user " + aId);
                 }
             }
 

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -33,6 +35,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import util.exception.NormalUserAlreadySignedUpException;
 import util.exception.NormalUserNotFoundException;
+import ws.datamodel.PunishReq;
 
 /**
  * REST Web Service
@@ -96,10 +99,10 @@ public class ActivityResource {
                 }
 
             }
-            
+
             GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
             };
-            
+
             System.out.println(genericEntity.getEntity());
             return Response.status(Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
@@ -116,7 +119,7 @@ public class ActivityResource {
         if (newActivity != null) {
             try {
                 Long newActivityId = activityEntitySessionBeanLocal.createNewActivity(newActivity).getActivityId();
-                
+
                 return Response.status(Response.Status.OK).entity(newActivityId).build();
             } catch (Exception ex) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
@@ -130,19 +133,24 @@ public class ActivityResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response punishUsers(@QueryParam("activityId") Long activityId,
-            @QueryParam("absenteeIds") List<Long> absenteeIds
+    public Response punishUsers(PunishReq punishReq
     ) {
         System.out.println("ws.rest.ActivityResource.punishUsers()");
-        System.out.println("ActivityId: " + activityId);
-        System.out.println("absenteeIds: " + absenteeIds.toString());
-        if (activityId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("activityID is empty, can't punish").build();
-        } else if (absenteeIds.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("absenteeIds is empty, no one to punish").build();
+        System.out.println("ActivityId: " + punishReq.getActivityId());
+        System.out.println("absenteeIds: " + punishReq.getAbsenteeIds().toString());
+        if (punishReq.getActivityId() == null) {
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "activityID is empty, can't punish");
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
+        } else if (punishReq.getAbsenteeIds().isEmpty()) {
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "absenteeIds is empty, no one to punish");
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
         } else {
-            activityEntitySessionBeanLocal.absentPunishment(activityId, absenteeIds);
-            return Response.status(Response.Status.OK).entity("Punishment done").build();
+            activityEntitySessionBeanLocal.absentPunishment(punishReq.getActivityId(), punishReq.getAbsenteeIds());
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "Punishment Dealt");
+
+            return Response.status(Response.Status.OK).entity(obj).build();
+
         }
     }
 
@@ -154,17 +162,27 @@ public class ActivityResource {
         System.out.println("ws.rest.ActivityResource.signUpForActivity()");
         System.out.println("activityId is " + activityId);
         if (activityId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("activityID is empty, can't add").build();
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "activityID is empty, can't add");
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
         } else if (userId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("userId is empty, no one to add").build();
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "userId is empty, no one to add");
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
         } else {
             try {
                 activityEntitySessionBeanLocal.signUpForActivity(activityId, userId);
-                return Response.status(Response.Status.OK).entity("signed up").build();
+                JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "signed up");
+
+                return Response.status(Response.Status.OK).entity(obj).build();
             } catch (NormalUserNotFoundException ex) {
-                return Response.status(Response.Status.NOT_FOUND).entity("user can't be found").build();
+                JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "user can't be found");
+
+                return Response.status(Response.Status.NOT_FOUND).entity(obj).build();
             } catch (NormalUserAlreadySignedUpException ex) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("user already signed up").build();
+                JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "user already signed up");
+
+                return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
             }
         }
     }
