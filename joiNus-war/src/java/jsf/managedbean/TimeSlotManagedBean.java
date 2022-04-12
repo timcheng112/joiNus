@@ -51,7 +51,7 @@ public class TimeSlotManagedBean implements Serializable {
     private List<Integer> possibleTimeSlots;
     private Date selectedDate;
     private List<TimeSlotEntity> currTimeslots;
-    private List<Integer> timeSlotsToAdd;
+    private Integer timeSlotToAdd;
     private TimeSlotEntity timeSlotToEdit;
     private SlotStatusEnum[] enums;
 
@@ -63,12 +63,11 @@ public class TimeSlotManagedBean implements Serializable {
         currentFacility = null;
         possibleTimeSlots = new ArrayList<>();
         currTimeslots = new ArrayList<>();
-        timeSlotsToAdd = new ArrayList<>();
+        timeSlotToAdd = -1;
         timeSlotToEdit = new TimeSlotEntity();
         currentFacility = null;
         possibleTimeSlots = new ArrayList<>();
         currTimeslots = new ArrayList<>();
-        timeSlotsToAdd = new ArrayList<>();
     }
 
     @PostConstruct
@@ -90,35 +89,32 @@ public class TimeSlotManagedBean implements Serializable {
     }
 
     public void addTimeSlots() {
-        System.out.println("addTimeSlots: " + timeSlotsToAdd);
-        for (Integer i : timeSlotsToAdd) {
-            Boolean alreadyExists = false;
-            System.err.println("addtimeslots- currentTimeslot = " + currTimeslots);
-            if (!currTimeslots.isEmpty()) {
-                for (TimeSlotEntity j : currTimeslots) {
-                    if (j.getTimeSlotTime().getHours() == i) {
-                        alreadyExists = true;
-                    }
+        Boolean alreadyExists = false;
+        System.err.println("addtimeslots- currentTimeslot = " + currTimeslots);
+        if (!currTimeslots.isEmpty()) {
+            for (TimeSlotEntity j : currTimeslots) {
+                if (j.getTimeSlotTime().getHours() == timeSlotToAdd) {
+                    alreadyExists = true;
                 }
             }
-            if (alreadyExists){
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Timeslot Already Exists for " + i + "00", null));
-            }
-            if (!alreadyExists) {
-                System.out.println("Selected Date:" + selectedDate);
-                selectedDate.setHours(i);
-                try {
-                    timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(new TimeSlotEntity(selectedDate, SlotStatusEnum.AVAILABLE, currentFacility), currFacilityId);
-                } catch (CreateNewTimeSlotException ex) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in creating timeslot", null));
-                } catch (InputDataValidationException ex) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in creating timeslot, bad input", null));
-                }
+        }
+        if (alreadyExists) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Timeslot Already Exists for " + timeSlotToAdd + "00", null));
+        }
+        if (!alreadyExists) {
+            System.out.println("Selected Date:" + selectedDate);
+            selectedDate.setHours(timeSlotToAdd);
+            try {
+                timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(new TimeSlotEntity(selectedDate, SlotStatusEnum.AVAILABLE, currentFacility), currFacilityId);
+            } catch (CreateNewTimeSlotException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in creating timeslot", null));
+            } catch (InputDataValidationException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in creating timeslot, bad input", null));
             }
         }
         setDatesTimeslots();
     }
-    
+
     public void editTimeSlotStatus() {
         try {
             timeSlotEntitySessionBeanLocal.updateTimeSlot(timeSlotToEdit);
@@ -134,19 +130,19 @@ public class TimeSlotManagedBean implements Serializable {
     public void setDatesTimeslots() {
         //fill the currTimeslots array with the ones selected by datepicker, display the table.
         //retrieveTimeSlotsByDate(int year, int month, int date, Long facilityId)
-        int day = selectedDate.getDate() +1 ; //xd wtf
+        int day = selectedDate.getDate() + 1; //xd wtf
         System.out.println("day = " + day);
         int month = selectedDate.getMonth();
         int year = selectedDate.getYear() + 1900;
         System.out.println("selected date" + selectedDate);
-        
+
         List<TimeSlotEntity> temp = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(year, month, day, currFacilityId);
-        if (temp == null){
+        if (temp == null) {
             setCurrTimeslots(new ArrayList<>());
         } else {
             setCurrTimeslots(temp);
         }
-        for (TimeSlotEntity t: currTimeslots){
+        for (TimeSlotEntity t : currTimeslots) {
             System.out.println("timeslot time = " + t.getTimeSlotTime());
         }
         System.out.println("SetDatesTImeslots" + currTimeslots);
@@ -203,20 +199,10 @@ public class TimeSlotManagedBean implements Serializable {
     }
 
     /**
-     * @return the timeSlotsToAdd
-     */
-    public List<Integer> getTimeSlotsToAdd() {
-        return timeSlotsToAdd;
-    }
-
-    /**
-     * @param timeSlotsToAdd the timeSlotsToAdd to set
-     */
-    public void setTimeSlotsToAdd(List<Integer> timeSlotsToAdd) {
-        this.timeSlotsToAdd = timeSlotsToAdd;
-    }
-
-    /**
+     * @return the timeSlotsToAdd *
+     *
+     * /
+     **
      * @return the timeSlotToEdit
      */
     public TimeSlotEntity getTimeSlotToEdit() {
@@ -242,5 +228,19 @@ public class TimeSlotManagedBean implements Serializable {
      */
     public void setEnums(SlotStatusEnum[] enums) {
         this.enums = enums;
+    }
+
+    /**
+     * @return the timeSlotToAdd
+     */
+    public Integer getTimeSlotToAdd() {
+        return timeSlotToAdd;
+    }
+
+    /**
+     * @param timeSlotToAdd the timeSlotToAdd to set
+     */
+    public void setTimeSlotToAdd(Integer timeSlotToAdd) {
+        this.timeSlotToAdd = timeSlotToAdd;
     }
 }

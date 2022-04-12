@@ -46,9 +46,9 @@
             <p:messages id="messages" redisplay="false" closable="true" />
             <p:dialog id="dialogAddNewTimeSlots" widgetVar="dialogAddNewTimeSlots" header="Create New Timeslots" closable="true" width="220px">
                 <h3>Create Time Slots</h3>
-                <p:selectManyMenu value="#{timeSlotManagedBean.timeSlotsToAdd}" showCheckbox="true">
+                <p:selectOneMenu value="#{timeSlotManagedBean.timeSlotToAdd}">
                     <f:selectItems value="#{timeSlotManagedBean.possibleTimeSlots}" var="possibleTimeSlot" itemLabel="#{possibleTimeSlot}00" itemValue="#{possibleTimeSlot}" />
-                </p:selectManyMenu>
+                </p:selectOneMenu>
                 <p:commandButton value="Create Time Slots" action="#{timeSlotManagedBean.addTimeSlots()}" title="CreateTimeSlots" update="@form formSelectedTimeslots:dataTableSelectedTimeslots"/>     
             </p:dialog>
 
