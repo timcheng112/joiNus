@@ -158,14 +158,9 @@ public class NormalUserResource {
     @Path("retrieveNormalUserRank")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveNormalUserRank(@QueryParam("username") String username) {
+    public Response retrieveNormalUserRank(Long normalUserId) {
         try {
-            NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUsername(username);
-
-            normalUserEntity.getActivitiesOwned().clear();
-            normalUserEntity.getActivitiesParticipated().clear();
-            normalUserEntity.getInterests().clear();
-
+            NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUserId(normalUserId);
             Integer rank = normalUserEntitySessionBeanLocal.retrieveLeaderboardRank(normalUserEntity);
             GenericEntity<Integer> genericEntity = new GenericEntity<Integer>(rank) {
             };
