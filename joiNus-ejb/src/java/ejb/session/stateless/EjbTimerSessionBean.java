@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import ejb.enums.SlotStatusEnum;
+import entity.ActivityEntity;
 import entity.FacilityEntity;
 import entity.TimeSlotEntity;
 import java.time.ZoneId;
@@ -28,13 +29,15 @@ import util.exception.InputDataValidationException;
 @Stateless
 public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
 
+    @EJB(name = "ActivityEntitySessionBeanLocal")
+    private ActivityEntitySessionBeanLocal activityEntitySessionBeanLocal;
+
     @EJB
     private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
-
+    
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
 
-    
     @EJB
     private TimeSlotEntitySessionBeanLocal timeSlotEntitySessionBeanLocal;
 
@@ -52,14 +55,14 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
 //                c.set(Calendar.MINUTE, 0);
 //                c.set(Calendar.SECOND, 0);
 //                c.set(Calendar.MILLISECOND, 0);
-                
+
                 Date date = new Date();
                 date.setMinutes(0);
                 date.setSeconds(0);
-                
+
                 int openingHour = facility.getOpeningHour();
                 int closingHour = facility.getClosingHour();
-                
+
                 for (int count = 0; count <= 7; count++) { // today + 7 days
                     System.out.println("day " + count);
                     timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(date.getYear(), date.getMonth(), date.getDate(), facility.getFacilityId());
@@ -79,14 +82,29 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
                     }
 //                    c.set(Calendar.HOUR_OF_DAY, 0);
 //                    c.add(Calendar.DATE, 1);
-                    
+
                     date.setHours(0);
                     date.setDate(date.getDate() + 1);
-                   
+
                 }
 
             }
         } catch (CreateNewTimeSlotException | InputDataValidationException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "0", info = "activityCompleteTimer") // run every hour
+    public void activityCompleteTimer() {
+        System.out.println("ejb.session.stateless.EjbTimerSessionBean.activityCompleteTimer()");
+
+        try {
+            Date date = new Date();
+            date.setMinutes(0);
+            date.setSeconds(0);
+            System.out.println("Date sending in to check is " + date);
+            List<ActivityEntity> activitiesToComplete = activityEntitySessionBeanLocal.retrieveActivitiesByDateForTimer(date);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

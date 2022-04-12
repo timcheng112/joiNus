@@ -124,18 +124,18 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         c.set(Calendar.MILLISECOND, 0);
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
-        c.set(Calendar.DATE, date);
+        c.set(Calendar.DATE, date-1);
         c.set(Calendar.HOUR_OF_DAY, 0);
         Date dateXD = c.getTime();
 
         Query query = entityManager.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
         c.add(Calendar.SECOND, -1);
         dateXD = c.getTime();
-        query.setParameter("inStart", dateXD, TemporalType.DATE);
+        query.setParameter("inStart", dateXD, TemporalType.TIMESTAMP);
         System.out.println("Starting date of check is " + dateXD);
         c.add(Calendar.DATE, 1);
         dateXD = c.getTime();
-        query.setParameter("inEnd", dateXD, TemporalType.DATE);
+        query.setParameter("inEnd", dateXD, TemporalType.TIMESTAMP);
         System.out.println("End date of check is " + dateXD);
         query.setParameter("inFacility", facilityId);
 
