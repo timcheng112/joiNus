@@ -56,8 +56,12 @@ public class NormalUserResource {
             NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(username, password);
             System.out.println("********** NormalUserResource.normalUserLogin(): User " + normalUserEntity.getUsername() + " login remotely via web service");
 
-            normalUserEntity.setPassword(null);
-            normalUserEntity.setSalt(null);
+//            normalUserEntity.setPassword(null);
+//            normalUserEntity.setSalt(null);
+            
+            normalUserEntity.getActivitiesOwned().clear();
+            normalUserEntity.getActivitiesParticipated().clear();
+            normalUserEntity.getInterests().clear();
 
             return Response.status(Status.OK).entity(normalUserEntity).build();
         } catch (InvalidLoginCredentialException ex) {
@@ -75,31 +79,9 @@ public class NormalUserResource {
             List<NormalUserEntity> normalUserEntities = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
 
             for (NormalUserEntity user : normalUserEntities) {
-
-                for (ActivityEntity activity : user.getActivitiesOwned()) {
-                    activity.setParticipants(null);
-                    activity.setActivityOwner(null);
-                    activity.setCategory(null);
-                    activity.setBooking(null);
-                    activity.setComments(null);
-                    activity.setGallery(null);
-                }
-
-                for (ActivityEntity activity : user.getActivitiesParticipated()) {
-                    activity.setParticipants(null);
-                    activity.setActivityOwner(null);
-                    activity.setCategory(null);
-                    activity.setBooking(null);
-                    activity.setComments(null);
-                    activity.setGallery(null);
-                }
-
-                for (CategoryEntity cat : user.getInterests()) {
-                    cat.setActivities(null);
-                    cat.setParentCategory(null);
-                    cat.setSubCategories(null);
-                }
-
+                user.getActivitiesOwned().clear();
+                user.getActivitiesParticipated().clear();
+                user.getInterests().clear();
             }
 
             GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(normalUserEntities) {
@@ -118,29 +100,9 @@ public class NormalUserResource {
         try {
             NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUsername(username);
 
-            for (ActivityEntity activity : normalUserEntity.getActivitiesOwned()) {
-                activity.setParticipants(null);
-                activity.setActivityOwner(null);
-                activity.setCategory(null);
-                activity.setBooking(null);
-                activity.setComments(null);
-                activity.setGallery(null);
-            }
-
-            for (ActivityEntity activity : normalUserEntity.getActivitiesParticipated()) {
-                activity.setParticipants(null);
-                activity.setActivityOwner(null);
-                activity.setCategory(null);
-                activity.setBooking(null);
-                activity.setComments(null);
-                activity.setGallery(null);
-            }
-
-            for (CategoryEntity cat : normalUserEntity.getInterests()) {
-                cat.setActivities(null);
-                cat.setParentCategory(null);
-                cat.setSubCategories(null);
-            }
+            normalUserEntity.getActivitiesOwned().clear();
+            normalUserEntity.getActivitiesParticipated().clear();
+            normalUserEntity.getInterests().clear();
 
             GenericEntity<NormalUserEntity> genericEntity = new GenericEntity<NormalUserEntity>(normalUserEntity) {
             };

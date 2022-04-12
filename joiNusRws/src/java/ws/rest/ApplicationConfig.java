@@ -33,7 +33,6 @@ public class ApplicationConfig extends Application {
         resources.add(ws.rest.CategoryResource.class);
         resources.add(ws.rest.CorsFilter.class);
         resources.add(ws.rest.FacilityResource.class);
-        resources.add(ws.rest.TimeSlotResource.class);
         resources.add(ws.rest.NormalUserResource.class);
     }
     
