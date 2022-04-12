@@ -174,6 +174,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                     facilityEntityToUpdate.setOpeningHour(facilityEntity.getOpeningHour());
                     facilityEntityToUpdate.setClosingHour(facilityEntity.getClosingHour());
                     facilityEntityToUpdate.setTimeSlots(facilityEntity.getTimeSlots());
+                    facilityEntityToUpdate.setFacilityImage(facilityEntity.getFacilityImage());
                 }
                 else
                 {
