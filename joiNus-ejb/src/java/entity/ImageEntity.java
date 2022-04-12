@@ -54,7 +54,6 @@ public class ImageEntity implements Serializable {
         this.postedBy = postedBy;
     }
 
-    @JsonbTransient
     public String getImagePath() {
         return imagePath;
     }
@@ -63,7 +62,6 @@ public class ImageEntity implements Serializable {
         this.imagePath = imagePath;
     }
 
-    @JsonbTransient
     public Long getImageId() {
         return imageId;
     }
@@ -100,7 +98,6 @@ public class ImageEntity implements Serializable {
     /**
      * @return the postedBy
      */
-    @JsonbTransient
     public UserEntity getPostedBy() {
         return postedBy;
     }
@@ -115,7 +112,6 @@ public class ImageEntity implements Serializable {
     /**
      * @return the imageDescription
      */
-    @JsonbTransient
     public String getImageDescription() {
         return imageDescription;
     }
@@ -130,7 +126,6 @@ public class ImageEntity implements Serializable {
     /**
      * @return the datePosted
      */
-    @JsonbTransient
     public Date getDatePosted() {
         return datePosted;
     }

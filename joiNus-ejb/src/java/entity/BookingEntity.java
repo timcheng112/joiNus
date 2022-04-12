@@ -29,20 +29,20 @@ public class BookingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-    
+
     @Column(nullable = false)
     private SlotStatusEnum bookingStatus;
-    
+
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-    
+
     @OneToOne(optional = false)
     private ActivityEntity activity;
-    
+
     @OneToOne(optional = false)
     private TimeSlotEntity timeSlot;
-        
+
     public BookingEntity() {
     }
 
@@ -53,7 +53,6 @@ public class BookingEntity implements Serializable {
         this.timeSlot = timeSlot;
     }
 
-    @JsonbTransient
     public Long getBookingId() {
         return bookingId;
     }
@@ -90,7 +89,6 @@ public class BookingEntity implements Serializable {
     /**
      * @return the bookingStatus
      */
-    @JsonbTransient
     public SlotStatusEnum getBookingStatus() {
         return bookingStatus;
     }
@@ -105,7 +103,6 @@ public class BookingEntity implements Serializable {
     /**
      * @return the creationDate
      */
-    @JsonbTransient
     public Date getCreationDate() {
         return creationDate;
     }
@@ -120,7 +117,6 @@ public class BookingEntity implements Serializable {
     /**
      * @return the activity
      */
-    @JsonbTransient
     public ActivityEntity getActivity() {
         return activity;
     }
@@ -135,7 +131,6 @@ public class BookingEntity implements Serializable {
     /**
      * @return the timeSlot
      */
-    @JsonbTransient
     public TimeSlotEntity getTimeSlot() {
         return timeSlot;
     }
@@ -146,5 +141,5 @@ public class BookingEntity implements Serializable {
     public void setTimeSlot(TimeSlotEntity timeSlot) {
         this.timeSlot = timeSlot;
     }
-    
+
 }

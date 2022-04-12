@@ -45,7 +45,6 @@ public class CommentEntity implements Serializable {
         this.commentDate = commentDate;
     }
 
-    @JsonbTransient
     public Long getCommentId() {
         return commentId;
     }
@@ -82,7 +81,6 @@ public class CommentEntity implements Serializable {
     /**
      * @return the text
      */
-    @JsonbTransient
     public String getText() {
         return text;
     }
@@ -97,7 +95,6 @@ public class CommentEntity implements Serializable {
     /**
      * @return the commentOwner
      */
-    @JsonbTransient
     public NormalUserEntity getCommentOwner() {
         return commentOwner;
     }
@@ -105,7 +102,6 @@ public class CommentEntity implements Serializable {
     /**
      * @return the commentDate
      */
-    @JsonbTransient
     public Date getCommentDate() {
         return commentDate;
     }

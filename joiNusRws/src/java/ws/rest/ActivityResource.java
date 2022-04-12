@@ -147,7 +147,7 @@ public class ActivityResource {
         if (newActivity != null) {
             try {
                 Long newActivityId = activityEntitySessionBeanLocal.createNewActivity(newActivity).getActivityId();
-
+                
                 return Response.status(Response.Status.OK).entity(newActivityId).build();
             } catch (Exception ex) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();

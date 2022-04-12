@@ -59,7 +59,6 @@ public class TimeSlotEntity implements Serializable {
         this.facility = facility;
     }
 
-    @JsonbTransient
     public Long getTimeSlotId() {
         return timeSlotId;
     }
@@ -96,7 +95,6 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the timeSlotTime
      */
-    @JsonbTransient
     public Date getTimeSlotTime() {
         return timeSlotTime;
     }
@@ -111,7 +109,6 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the facility
      */
-    @JsonbTransient
     public FacilityEntity getFacility() {
         return facility;
     }
@@ -126,7 +123,6 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the status
      */
-    @JsonbTransient
     public SlotStatusEnum getStatus() {
         return status;
     }
@@ -141,7 +137,6 @@ public class TimeSlotEntity implements Serializable {
     /**
      * @return the booking
      */
-    @JsonbTransient
     public BookingEntity getBooking() {
         return booking;
     }
