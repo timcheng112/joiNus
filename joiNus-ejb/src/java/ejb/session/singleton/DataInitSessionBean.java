@@ -115,7 +115,7 @@ public class DataInitSessionBean {
             date.setMinutes(0);
             date.setHours(12);
             date.setSeconds(0);
-            date.setDate(12);
+            date.setDate(15);
             date.setMonth(3);
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);

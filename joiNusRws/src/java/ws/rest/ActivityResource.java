@@ -285,7 +285,7 @@ public class ActivityResource {
                 } catch (MaxParticipantsExceededException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "no space for anymore participants");
                     return Response.status(Response.Status.BAD_REQUEST).entity("user already signed up").build();
-                }catch (InsufficientBookingTokensException ex) {
+                } catch (InsufficientBookingTokensException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "insufficient tokens");
                     return Response.status(Response.Status.BAD_REQUEST).entity("insufficient tokens!").build();
                 }
