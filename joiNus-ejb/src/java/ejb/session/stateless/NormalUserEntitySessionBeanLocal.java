@@ -39,7 +39,7 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException;
 
-    public List<NormalUserEntity> getLeaderBoard();
+    public List<NormalUserEntity> retrieveLeaderboard();
 
     public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException;
 }

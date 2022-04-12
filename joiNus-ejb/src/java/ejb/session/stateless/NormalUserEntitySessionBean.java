@@ -97,7 +97,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
     }
     
     @Override
-    public List<NormalUserEntity> getLeaderBoard() {
+    public List<NormalUserEntity> retrieveLeaderboard() {
         Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC").setMaxResults(10);
         List<NormalUserEntity> leaderboard = query.getResultList();
         

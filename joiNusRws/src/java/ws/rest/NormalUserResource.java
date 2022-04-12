@@ -92,7 +92,27 @@ public class NormalUserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    @Path("retrieveLeaderboard")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveLeaderboard() {
+        try {
+            List<NormalUserEntity> leaderboard = normalUserEntitySessionBeanLocal.retrieveLeaderboard();
 
+            for (NormalUserEntity user : leaderboard) {
+                user.getActivitiesOwned().clear();
+                user.getActivitiesParticipated().clear();
+                user.getInterests().clear();
+            }
+
+            GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(leaderboard) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
     @Path("retrieveNormalUsersByName")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
