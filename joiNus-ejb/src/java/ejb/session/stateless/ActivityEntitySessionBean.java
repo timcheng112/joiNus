@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import ejb.enums.SlotStatusEnum;
 import entity.ActivityEntity;
 import entity.BookingEntity;
 import entity.CategoryEntity;
@@ -13,6 +14,8 @@ import entity.ImageEntity;
 import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -21,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -302,5 +306,72 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         normalUserEntitySessionBeanLocal.deductTokens(Boolean.FALSE, user);
         participants.add(user);
         activity.setParticipants(participants);
+    }
+
+    @Override
+    public List<ActivityEntity> retrieveActivitiesByDateForTimer(Date date) {
+        System.out.println("ejb.session.stateless.ActivityEntitySessionBean.retrieveActivitiesByDate()");
+        Calendar c = Calendar.getInstance();
+
+        Date nowDate = new Date();
+        int month = nowDate.getMonth();
+        int year = nowDate.getYear() + 1900;
+        int day = 6;
+        int hour = nowDate.getHours();
+
+        Date dateXD;
+
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DATE, day);
+        c.set(Calendar.HOUR_OF_DAY, hour);
+
+        List<ActivityEntity> allActivities = retrieveAllActivities();
+
+        for (ActivityEntity activity : allActivities) {
+            System.out.println("Activity facility id is " + activity.getBooking().getTimeSlot().getFacility().getFacilityId());
+            System.out.println("Activity facility timeslot id is " + activity.getBooking().getTimeSlot().getTimeSlotId());
+
+            Query query = em.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
+            c.add(Calendar.SECOND, -1);
+            dateXD = c.getTime();
+            query.setParameter("inStart", dateXD, TemporalType.TIMESTAMP);
+            System.out.println("Starting date of check is " + dateXD);
+            c.add(Calendar.MINUTE, 1);
+            dateXD = c.getTime();
+            query.setParameter("inEnd", dateXD, TemporalType.TIMESTAMP);
+            System.out.println("End date of check is " + dateXD);
+            query.setParameter("inFacility", activity.getBooking().getTimeSlot().getFacility().getFacilityId());
+
+            List<TimeSlotEntity> timeSlots = query.getResultList();
+            System.out.println(timeSlots);
+
+            if (!timeSlots.isEmpty()) {
+                System.out.println("Timeslots found");
+                for (TimeSlotEntity ts : timeSlots) {
+                    System.out.println("Timeslot ID is " + ts.getTimeSlotId());
+                    System.out.println("Timeslot Time is " + ts.getTimeSlotTime());
+                    
+                    activity.setActivityOver(Boolean.TRUE);
+                    
+                    for (NormalUserEntity user : activity.getParticipants()) {
+                        user.setSocialCredits(user.getSocialCredits()+30); // add social credits +30
+                    }
+                    activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits()+40); // add social credit to owner +40
+                    
+                    activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
+                }
+
+            } else {
+                System.out.println("No timeslots");
+            }
+
+        }
+
+        System.out.println("End of method");
+        return null;
     }
 }

@@ -161,8 +161,11 @@ public class NormalUserResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveNormalUserRank(@PathParam("userId") Long normalUserId) {
+//        System.out.println("ws.rest.NormalUserResource.retrieveNormalUserRank()");
+//        System.out.println("Normal user id sent in is : " + normalUserId);
         try {
             NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUserId(normalUserId);
+//            System.out.println(normalUserEntity.getUserId());
             Integer rank = normalUserEntitySessionBeanLocal.retrieveLeaderboardRank(normalUserEntity);
             GenericEntity<Integer> genericEntity = new GenericEntity<Integer>(rank) {
             };

@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.ActivityEntity;
 import entity.CommentEntity;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.ActivityNotFoundException;
@@ -48,6 +49,7 @@ public interface ActivityEntitySessionBeanLocal {
 
     public Long addComment(CommentEntity commentEntity, Long activityId) throws ActivityNotFoundException;
 
+    public List<ActivityEntity> retrieveActivitiesByDateForTimer(Date date);
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException;
 
     public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException, InsufficientBookingTokensException, MaxParticipantsExceededException;
