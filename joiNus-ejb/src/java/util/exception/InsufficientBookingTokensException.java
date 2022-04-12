@@ -7,20 +7,20 @@ package util.exception;
 
 /**
  *
- * @author wongs
+ * @author User
  */
-public class InsufficientBookingTokensException extends Exception{
+public class InsufficientBookingTokensException extends Exception {
 
     /**
-     * Creates a new instance of <code>CreateNewTimeSlotException</code> without
-     * detail message.
+     * Creates a new instance of <code>InsufficientBookingTokensException</code>
+     * without detail message.
      */
     public InsufficientBookingTokensException() {
     }
 
     /**
-     * Constructs an instance of <code>CreateNewTimeSlotException</code> with
-     * the specified detail message.
+     * Constructs an instance of <code>InsufficientBookingTokensException</code>
+     * with the specified detail message.
      *
      * @param msg the detail message.
      */
