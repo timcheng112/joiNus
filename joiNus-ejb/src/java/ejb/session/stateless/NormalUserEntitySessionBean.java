@@ -95,6 +95,20 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
         return query.getResultList();
     }
+    
+    @Override
+    public List<NormalUserEntity> getLeaderBoard() {
+        Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC").setMaxResults(10);
+        List<NormalUserEntity> leaderboard = query.getResultList();
+        
+        for (NormalUserEntity f : leaderboard) {
+            f.getActivitiesOwned().size();
+            f.getActivitiesParticipated().size();
+            f.getInterests().size();
+        }
+        
+        return query.getResultList();
+    }
 
     @Override
     public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException {
