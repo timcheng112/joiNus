@@ -136,6 +136,8 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     @Override
     public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException {
+        
+        System.out.println("IN SESSION BEAN: USER ID: " + normalUserId);
         NormalUserEntity normalUserEntity = em.find(NormalUserEntity.class, normalUserId);
 
         if (normalUserEntity != null) {

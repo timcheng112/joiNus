@@ -92,8 +92,18 @@ public class DataInitSessionBean {
             adminEntitySessionBeanLocal.createNewAdmin(new AdminEntity("superadmin1", "password", null, Boolean.TRUE));
 
             // create normal user
-            NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "name", 420, 420, "user", "password"));
-
+            NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "MR CODER JEREMY", 420, 420, "user", "password"));
+            NormalUserEntity normalUser2 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email1@email.com", "Sir Elpton John", 200, 420, "user1", "password"));
+            NormalUserEntity normalUser3 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("JohnWong@gmail.com", "Prof Tan Wee Kek", 6969, 420, "user2", "password"));
+            NormalUserEntity normalUser4 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email3@email.com", "Hedgehog", 421, 420, "user3", "password"));
+            NormalUserEntity normalUser5 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email4@email.com", "Pro Lu Wei Quian", -99, 420, "user4", "password"));
+            NormalUserEntity normalUser6 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email5@email.com", "Joe Biden", 46, 420, "user5", "password"));
+            NormalUserEntity normalUser7 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email6@email.com", "Joe Mama", 902, 420, "user6", "password"));
+            NormalUserEntity normalUser8 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email7@email.com", "Mrs Ligma", 1738, 420, "user7", "password"));
+            NormalUserEntity normalUser9 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email8@email.com", "Prof Chong Ket Fa", 3000, 420, "user8", "password"));
+            NormalUserEntity normalUser10 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email9@email.com", "Prof Zhou Li Feng", 3001, 420, "user9", "password"));
+            NormalUserEntity normalUser11 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email10@email.com", "He Who Must Not Be Named", 777, 420, "user10", "password"));
+            
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "USC, 2 Sports Drive, Singapore 117288", 10, 18));
 

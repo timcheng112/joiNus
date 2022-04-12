@@ -39,7 +39,7 @@ public class NormalUserEntity extends UserEntity implements Serializable {
     @Size(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
     @Column(nullable = false)
-    @Min(value = 0, message = "Social Credits should not be less than 0")
+    @Min(value = -1000, message = "Social Credits should not be less than -1000")
     @Max(value = 99999, message = "Social Credits should not be greater than 99999")
     private Integer socialCredits;
     @Column(nullable = false)
