@@ -97,6 +97,7 @@ public class NormalUserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveLeaderboard() {
         try {
+            System.out.println("ws.rest.NormalUserResource.retrieveLeaderboard()");
             List<NormalUserEntity> leaderboard = normalUserEntitySessionBeanLocal.retrieveLeaderboard();
 
             for (NormalUserEntity user : leaderboard) {
