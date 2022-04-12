@@ -93,10 +93,31 @@ public class NormalUserResource {
         }
     }
 
+    @Path("retrieveNormalUsersByName")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveNormalUsersByName(@QueryParam("name") String name) {
+        try {
+            List<NormalUserEntity> normalUserEntities = normalUserEntitySessionBeanLocal.retrieveNormalUsersByName(name);
+
+            for (NormalUserEntity user : normalUserEntities) {
+                user.getActivitiesOwned().clear();
+                user.getActivitiesParticipated().clear();
+                user.getInterests().clear();
+            }
+            GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(normalUserEntities) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("retrieveNormalUserByUsername")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveNormalUserByUsername(String username) {
+    public Response retrieveNormalUserByUsername(@QueryParam("username") String username) {
         try {
             NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUsername(username);
 
@@ -112,7 +133,8 @@ public class NormalUserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-
+    
+    @Path("createNewNormalUser")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

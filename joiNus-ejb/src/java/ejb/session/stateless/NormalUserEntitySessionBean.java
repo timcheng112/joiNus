@@ -139,6 +139,16 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             throw new NormalUserNotFoundException("Username " + username + " does not exist!");
         }
     }
+    
+    @Override
+    public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException
+    {
+        Query query = em.createQuery("SELECT u FROM NormalUserEntity u WHERE u.name LIKE '%:inName%' OR u.username LIKE '%:inName2%'");
+        query.setParameter("inName", name);
+        query.setParameter("inName2", name);
+        
+        return query.getResultList();
+    }
 
     @Override
     public void updateNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException {
