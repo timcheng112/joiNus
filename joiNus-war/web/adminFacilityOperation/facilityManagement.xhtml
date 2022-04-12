@@ -35,7 +35,7 @@
                     </p:column>
 
                     <p:column headerText="Facility Image" >
-                        <p:graphicImage rendered="#{facilityEntity.facilityImage != null}" value="#{facilityEntity.facilityImage.imagePath}" height="100px" />
+                        <p:graphicImage rendered="#{facilityEntity.facilityImage != null}" value="#{facilityEntity.facilityImage.imagePath}" style="width: 150px; align-items: center" />
                     </p:column>
 
                     <p:column headerText="Facility Name" sortBy="#{facilityEntity.facilityName}">
