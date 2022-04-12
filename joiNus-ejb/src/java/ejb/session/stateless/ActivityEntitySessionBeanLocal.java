@@ -52,9 +52,8 @@ public interface ActivityEntitySessionBeanLocal {
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException;
 
     public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException, InsufficientBookingTokensException, MaxParticipantsExceededException;
+    
     public List<ActivityEntity> retrieveActivitiesByDateForTimer(Date date);
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException;
 
-    public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException, InsufficientBookingTokensException, MaxParticipantsExceededException;
 
 }
