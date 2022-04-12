@@ -106,6 +106,7 @@ public class DataInitSessionBean {
             
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "USC", 5, 30, "USC, 2 Sports Drive, Singapore 117288", 10, 18));
+            FacilityEntity imaginary = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("Non-NUS Facility", "Nil", 5, 100, "Nil", 0, 23));
 
             Date date = new Date();
             date.setMinutes(0);
