@@ -48,10 +48,14 @@ public class CategoryResource {
     public Response retrieveAllCategories() {
         try {
             List<CategoryEntity> categoryEntities = categoryEntitySessionBeanLocal.retrieveAllCategories();
-            
+
             for (CategoryEntity categoryEntity : categoryEntities) {
-                categoryEntity.getActivities().size();
-                categoryEntity.getSubCategories().size();
+                categoryEntity.getActivities().clear();
+                categoryEntity.getSubCategories().clear();
+                if (categoryEntity.getParentCategory() != null) {
+                    categoryEntity.getParentCategory().getSubCategories().clear();
+                }
+                categoryEntity.setParentCategory(null);
             }
 //            for (CategoryEntity categoryEntity : categoryEntities) {
 //                for (ActivityEntity activity : categoryEntity.getActivities()) {

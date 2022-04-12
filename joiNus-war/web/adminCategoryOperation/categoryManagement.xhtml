@@ -141,7 +141,7 @@
                             <h:outputLabel value="Parent Category: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{categoryManagedBean.categoryEntityToView.parentCategory}" />
+                            <h:outputText value="#{categoryManagedBean.categoryEntityToView.parentCategory.categoryName}" />
                         </p:column>
                     </p:row>
                     
@@ -194,7 +194,7 @@
                             <h:outputLabel value="Update Category Name " />
                         </p:column>
                         <p:column>
-                            <p:inputText value="#{categoryManagedBean.categoryNameUpdate}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
+                            <p:inputText value="#{categoryManagedBean.categoryUpdate.categoryName}" placeholder="#{categoryManagedBean.categoryUpdate.categoryName}" />
                         </p:column>
                     </p:row>
 

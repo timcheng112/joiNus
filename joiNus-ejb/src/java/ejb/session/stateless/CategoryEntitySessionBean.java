@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -47,6 +48,12 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 
         if (constraintViolations.isEmpty()) {
             try {
+                Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.categoryName = :inName");
+                query.setParameter("inName", newCategoryEntity.getCategoryName());
+                if (!query.getResultList().isEmpty()) {
+                    throw new UpdateCategoryException("The name of the category to be updated is duplicated");
+                }
+
                 if (parentCategoryId != null) {
                     CategoryEntity parentCategoryEntity = retrieveCategoryByCategoryId(parentCategoryId);
 
@@ -101,6 +108,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 
     @Override
     public void updateCategory(CategoryEntity categoryEntity, Long parentCategoryId) throws InputDataValidationException, CategoryNotFoundException, UpdateCategoryException {
+        //Not in use!
         Set<ConstraintViolation<CategoryEntity>> constraintViolations = validator.validate(categoryEntity);
 
         if (constraintViolations.isEmpty()) {
@@ -135,39 +143,50 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
-    
+
     @Override
     public void updateCategoryById(Long categoryId, String categoryName, Long parentCategoryId) throws InputDataValidationException, CategoryNotFoundException, UpdateCategoryException {
+        if (categoryName == null || categoryName.equals("")) {
+            throw new UpdateCategoryException("Category name cannot be blank");
+        }
 
         if (categoryId != null) {
-                CategoryEntity categoryEntityToUpdate = retrieveCategoryByCategoryId(categoryId);
+            CategoryEntity categoryEntityToUpdate = retrieveCategoryByCategoryId(categoryId);
 
-                Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.categoryName = :inName AND c.categoryId <> :inCategoryId");
-                query.setParameter("inName", categoryName);
-                query.setParameter("inCategoryId", parentCategoryId);
+            Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.categoryName = :inName");
+            query.setParameter("inName", categoryName);
 
-                if (!query.getResultList().isEmpty()) {
+            if (!query.getResultList().isEmpty()) {
+                try {
+                    CategoryEntity result = (CategoryEntity) query.getSingleResult();
+                    if (!result.getCategoryId().equals(categoryEntityToUpdate.getCategoryId())) {
+                        System.out.println(result.getCategoryId() + " " + categoryEntityToUpdate.getCategoryId());
+                        throw new UpdateCategoryException("The name of the category to be updated is duplicated");
+                    }
+                } catch (NonUniqueResultException ex) {
                     throw new UpdateCategoryException("The name of the category to be updated is duplicated");
                 }
 
-                categoryEntityToUpdate.setCategoryName(categoryName);
+            }
 
-                if (parentCategoryId != null) {
-                    if (categoryEntityToUpdate.getCategoryId().equals(parentCategoryId)) {
-                        throw new UpdateCategoryException("Category cannot be its own parent");
-                    } else if (categoryEntityToUpdate.getParentCategory() == null || (!categoryEntityToUpdate.getParentCategory().getCategoryId().equals(parentCategoryId))) {
-                        CategoryEntity parentCategoryEntityToUpdate = retrieveCategoryByCategoryId(parentCategoryId);
+            categoryEntityToUpdate.setCategoryName(categoryName);
 
-                        categoryEntityToUpdate.setParentCategory(parentCategoryEntityToUpdate);
-                    }
-                } else {
-                    categoryEntityToUpdate.setParentCategory(null);
+            if (parentCategoryId != null) {
+                if (categoryEntityToUpdate.getCategoryId().equals(parentCategoryId)) {
+                    throw new UpdateCategoryException("Category cannot be its own parent");
+                } else if (categoryEntityToUpdate.getParentCategory() == null || (!categoryEntityToUpdate.getParentCategory().getCategoryId().equals(parentCategoryId))) {
+                    CategoryEntity parentCategoryEntityToUpdate = retrieveCategoryByCategoryId(parentCategoryId);
+
+                    categoryEntityToUpdate.setParentCategory(parentCategoryEntityToUpdate);
                 }
             } else {
-                throw new CategoryNotFoundException("Category ID not provided for category to be updated");
+                categoryEntityToUpdate.setParentCategory(null);
             }
+        } else {
+            throw new CategoryNotFoundException("Category ID not provided for category to be updated");
+        }
     }
-    
+
     @Override
     public void deleteCategory(Long categoryId) throws CategoryNotFoundException, DeleteCategoryException {
         CategoryEntity categoryEntityToRemove = retrieveCategoryByCategoryId(categoryId);
@@ -192,42 +211,36 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 
         return msg;
     }
-    
+
     @Override
-    public List<CategoryEntity> retrieveAllLeafCategories()
-    {
+    public List<CategoryEntity> retrieveAllLeafCategories() {
         Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.subCategories IS EMPTY ORDER BY c.categoryName ASC");
         List<CategoryEntity> leafCategoryEntities = query.getResultList();
-        
-        for(CategoryEntity leafCategoryEntity:leafCategoryEntities)
-        {
+
+        for (CategoryEntity leafCategoryEntity : leafCategoryEntities) {
             leafCategoryEntity.getParentCategory();
             leafCategoryEntity.getActivities().size();
         }
-        
+
         return leafCategoryEntities;
     }
-    
+
     @Override
-    public List<CategoryEntity> retrieveAllRootCategories()
-    {
+    public List<CategoryEntity> retrieveAllRootCategories() {
         Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c WHERE c.parentCategory IS NULL ORDER BY c.categoryName ASC");
         List<CategoryEntity> rootCategoryEntities = query.getResultList();
-        
-        for(CategoryEntity rootCategoryEntity:rootCategoryEntities)
-        {            
+
+        for (CategoryEntity rootCategoryEntity : rootCategoryEntities) {
             lazilyLoadSubCategories(rootCategoryEntity);
-            
+
             rootCategoryEntity.getActivities().size();
         }
-        
+
         return rootCategoryEntities;
     }
-    
-    private void lazilyLoadSubCategories(CategoryEntity categoryEntity)
-    {
-        for(CategoryEntity ce:categoryEntity.getSubCategories())
-        {
+
+    private void lazilyLoadSubCategories(CategoryEntity categoryEntity) {
+        for (CategoryEntity ce : categoryEntity.getSubCategories()) {
             lazilyLoadSubCategories(ce);
         }
     }

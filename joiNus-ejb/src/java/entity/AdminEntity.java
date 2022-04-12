@@ -66,7 +66,6 @@ public class AdminEntity extends UserEntity implements Serializable {
     /**
      * @return the club
      */
-    @JsonbTransient
     public String getClub() {
         return club;
     }
@@ -81,7 +80,6 @@ public class AdminEntity extends UserEntity implements Serializable {
     /**
      * @return the isSuperAdmin
      */
-    @JsonbTransient
     public Boolean getIsSuperAdmin() {
         return isSuperAdmin;
     }
@@ -92,5 +90,5 @@ public class AdminEntity extends UserEntity implements Serializable {
     public void setIsSuperAdmin(Boolean isSuperAdmin) {
         this.isSuperAdmin = isSuperAdmin;
     }
-    
+
 }

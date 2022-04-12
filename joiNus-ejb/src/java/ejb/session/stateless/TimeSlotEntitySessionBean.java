@@ -8,12 +8,11 @@ package ejb.session.stateless;
 import ejb.enums.SlotStatusEnum;
 import entity.FacilityEntity;
 import entity.TimeSlotEntity;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -93,6 +92,19 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
     }
 
     @Override
+    public List<TimeSlotEntity> retrieveAllAvailableTimeSlots() {
+        List<TimeSlotEntity> timeSlotEntities = retrieveAllTimeSlots();
+        List<TimeSlotEntity> availTimeSlots = new ArrayList<>();
+
+        for (TimeSlotEntity timeSlotEntity : timeSlotEntities) {
+            if (timeSlotEntity.getStatus() == SlotStatusEnum.AVAILABLE) {
+                availTimeSlots.add(timeSlotEntity);
+            }
+        }
+        return availTimeSlots;
+    }
+
+    @Override
     //nothing wrong here
     public TimeSlotEntity retrieveTimeSlotById(Long timeSlotId) throws TimeSlotNotFoundException {
         TimeSlotEntity timeSlotEntity = entityManager.find(TimeSlotEntity.class, timeSlotId);
@@ -115,7 +127,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         c.set(Calendar.DATE, date);
         c.set(Calendar.HOUR_OF_DAY, 0);
         Date dateXD = c.getTime();
-        
+
         Query query = entityManager.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
         c.add(Calendar.SECOND, -1);
         dateXD = c.getTime();
@@ -123,7 +135,7 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
         System.out.println("Starting date of check is " + dateXD);
         c.add(Calendar.DATE, 1);
         dateXD = c.getTime();
-        query.setParameter("inEnd",dateXD, TemporalType.DATE);
+        query.setParameter("inEnd", dateXD, TemporalType.DATE);
         System.out.println("End date of check is " + dateXD);
         query.setParameter("inFacility", facilityId);
 

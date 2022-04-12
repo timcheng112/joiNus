@@ -37,5 +37,7 @@ public interface TimeSlotEntitySessionBeanLocal {
     //public List<TimeSlotEntity> retrieveAvailableTimeSlotsByFacility(Long facilityId) throws FacilityNotFoundException;
 
     public List<TimeSlotEntity> retrieveTimeSlotsByDate(int year, int month, int date, Long facilityId) ;
+
+    public List<TimeSlotEntity> retrieveAllAvailableTimeSlots();
     
 }
