@@ -42,4 +42,6 @@ public interface NormalUserEntitySessionBeanLocal {
     public List<NormalUserEntity> retrieveLeaderboard();
 
     public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException;
+
+    public int retrieveLeaderboardRank(NormalUserEntity currUser);
 }

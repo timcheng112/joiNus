@@ -155,6 +155,27 @@ public class NormalUserResource {
         }
     }
     
+    @Path("retrieveNormalUserRank")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveNormalUserRank(@QueryParam("username") String username) {
+        try {
+            NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.retrieveNormalUserByUsername(username);
+
+            normalUserEntity.getActivitiesOwned().clear();
+            normalUserEntity.getActivitiesParticipated().clear();
+            normalUserEntity.getInterests().clear();
+
+            Integer rank = normalUserEntitySessionBeanLocal.retrieveLeaderboardRank(normalUserEntity);
+            GenericEntity<Integer> genericEntity = new GenericEntity<Integer>(rank) {
+            };
+
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("createNewNormalUser")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.NormalUserEntity;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -108,6 +109,29 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         }
         
         return query.getResultList();
+    }
+    
+    @Override
+    public int retrieveLeaderboardRank(NormalUserEntity currUser) {
+        Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC");
+        List<NormalUserEntity> leaderboard = query.getResultList();
+        int rank = 0;
+        boolean found = false;
+        for (NormalUserEntity f : leaderboard) {
+            rank ++;
+            f.getActivitiesOwned().size();
+            f.getActivitiesParticipated().size();
+            f.getInterests().size();
+            if (Objects.equals(currUser.getUserId(), f.getUserId())) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            return rank;
+        } else {
+            return -1;
+        }
     }
 
     @Override
