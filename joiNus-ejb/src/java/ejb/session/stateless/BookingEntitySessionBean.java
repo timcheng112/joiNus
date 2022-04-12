@@ -51,6 +51,7 @@ public class BookingEntitySessionBean implements BookingEntitySessionBeanLocal {
 
         if (constraintViolations.isEmpty()) {
             try {
+                newBookingEntity.setBookingStatus(SlotStatusEnum.UNAVAILABLE);
                 em.persist(newBookingEntity);
                 //set linkages
                 em.flush();

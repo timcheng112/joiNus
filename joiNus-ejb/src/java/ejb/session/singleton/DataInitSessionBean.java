@@ -37,12 +37,15 @@ import javax.persistence.PersistenceContext;
 import util.exception.ActivityNotFoundException;
 import util.exception.AdminNotFoundException;
 import util.exception.AdminUsernameExistException;
+import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewCategoryException;
 import util.exception.CreateNewFacilityException;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.InsufficientBookingTokensException;
 import util.exception.NormalUserNameExistException;
+import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -101,31 +104,31 @@ public class DataInitSessionBean {
             date.setMinutes(0);
             date.setHours(12);
             date.setSeconds(0);
-            date.setDate(6);
+            date.setDate(12);
             date.setMonth(3);
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
-                        
+
             // create booking
             BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
 
             date.setHours(13);
             TimeSlotEntity ts2 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts2, fac.getFacilityId());
-                                        
+
             // create category
             CategoryEntity cat = categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Sports"), null);
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Bouldering"), cat.getCategoryId());
 
             // create activity
-            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 5, new ArrayList<>(), normalUser, new ArrayList<>(), cat, null, date));
+            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 5, new ArrayList<>(), normalUser, new ArrayList<>(), cat, null, date), cat.getCategoryId(), ts.getTimeSlotId());
             bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
-            
+
             CommentEntity comment = new CommentEntity("Will anyone be bringing any equipment?", normalUser, date);
             activityEntitySessionBeanLocal.addComment(comment, activity.getActivityId());
             System.out.println("Data Initialization Ended");
-        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException | ActivityNotFoundException ex) {
+        } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException | ActivityNotFoundException | CategoryNotFoundException | TimeSlotNotFoundException | InsufficientBookingTokensException ex) {
             ex.printStackTrace();
         }
 

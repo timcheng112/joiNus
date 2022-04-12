@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.DeleteNormalUserException;
 import util.exception.InputDataValidationException;
+import util.exception.InsufficientBookingTokensException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NormalUserNameExistException;
 import util.exception.NormalUserNotFoundException;
@@ -38,4 +39,7 @@ public interface NormalUserEntitySessionBeanLocal {
     public NormalUserEntity retrieveNormalUserByUsername(String username) throws NormalUserNotFoundException;
 
     public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException;
+
 }

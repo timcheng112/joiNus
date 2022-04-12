@@ -44,6 +44,7 @@ public class BookingEntity implements Serializable {
     private TimeSlotEntity timeSlot;
 
     public BookingEntity() {
+        this.creationDate = new Date();
     }
 
     public BookingEntity(SlotStatusEnum bookingStatus, Date creationDate, ActivityEntity activity, TimeSlotEntity timeSlot) {

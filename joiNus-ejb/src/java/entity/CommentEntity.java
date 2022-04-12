@@ -37,6 +37,7 @@ public class CommentEntity implements Serializable {
     private Date commentDate;
 
     public CommentEntity() {
+        commentDate = new Date();
     }
 
     public CommentEntity(String text, NormalUserEntity commentOwner, Date commentDate) {

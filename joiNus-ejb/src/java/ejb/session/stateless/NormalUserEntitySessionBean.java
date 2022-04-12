@@ -21,6 +21,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteNormalUserException;
 import util.exception.InputDataValidationException;
+import util.exception.InsufficientBookingTokensException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NormalUserNameExistException;
 import util.exception.NormalUserNotFoundException;
@@ -109,19 +110,15 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             throw new NormalUserNotFoundException("User ID =  " + normalUserId + " does not exist!");
         }
     }
-    
+
     @Override
-    public NormalUserEntity retrieveNormalUserByUsername(String username) throws NormalUserNotFoundException
-    {
+    public NormalUserEntity retrieveNormalUserByUsername(String username) throws NormalUserNotFoundException {
         Query query = em.createQuery("SELECT nu FROM NormalUserEntity nu WHERE nu.username = :inUsername");
         query.setParameter("inUsername", username);
-        
-        try
-        {
-            return (NormalUserEntity)query.getSingleResult();
-        }
-        catch(NoResultException | NonUniqueResultException ex)
-        {
+
+        try {
+            return (NormalUserEntity) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new NormalUserNotFoundException("Username " + username + " does not exist!");
         }
     }
@@ -165,26 +162,19 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             throw new DeleteNormalUserException("User ID " + normalUserId + " cannot be deleted!");
         }
     }
-    
+
     @Override
-    public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException
-    {
-        try
-        {
+    public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException {
+        try {
             NormalUserEntity normalUserEntity = retrieveNormalUserByUsername(username);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + normalUserEntity.getSalt()));
-            
-            if(normalUserEntity.getPassword().equals(passwordHash))
-            {             
+
+            if (normalUserEntity.getPassword().equals(passwordHash)) {
                 return normalUserEntity;
-            }
-            else
-            {
+            } else {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
             }
-        }
-        catch(NormalUserNotFoundException ex)
-        {
+        } catch (NormalUserNotFoundException ex) {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
     }
@@ -197,6 +187,17 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         credit = credit - 55;
         user.setSocialCredits(credit);
         System.out.println("User " + user.getUsername() + " punished, - 25 net social credit points");
+    }
+
+    @Override
+    public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException {
+        if (isHosting && !((user.getBookingTokens() - 5) < 0)) {
+            user.setBookingTokens(user.getBookingTokens() - 5);
+        } else if (!isHosting && !((user.getBookingTokens() - 2) < 0)) {
+            user.setBookingTokens(user.getBookingTokens() - 2);
+        } else {
+            throw new InsufficientBookingTokensException("Insufficient Tokens!");
+        }
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<NormalUserEntity>> constraintViolations) {

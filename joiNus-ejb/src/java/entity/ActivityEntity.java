@@ -86,6 +86,7 @@ public class ActivityEntity implements Serializable {
         this.commenterIds = new ArrayList<>();
         this.imagePosterIds = new ArrayList<>();
         this.activityOver = false;
+        this.activityCreationDate = new Date();
     }
 
     public ActivityEntity(String activityName, String activityDescription, Integer maxParticipants, List<String> tags, NormalUserEntity activityOwner, List<NormalUserEntity> participants, CategoryEntity category, BookingEntity booking, Date activityCreationDate) {
@@ -342,6 +343,13 @@ public class ActivityEntity implements Serializable {
 
     public void setActivityOver(Boolean activityOver) {
         this.activityOver = activityOver;
+    }
+
+    /**
+     * @param activityCreationDate the activityCreationDate to set
+     */
+    public void setActivityCreationDate(Date activityCreationDate) {
+        this.activityCreationDate = activityCreationDate;
     }
     
 }

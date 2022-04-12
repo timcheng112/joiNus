@@ -6,9 +6,12 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
+import entity.BookingEntity;
+import entity.CategoryEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import entity.TimeSlotEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +27,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.ActivityNotFoundException;
 import util.exception.BookingNotFoundException;
+import util.exception.CategoryNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.InsufficientBookingTokensException;
+import util.exception.MaxParticipantsExceededException;
 import util.exception.NormalUserAlreadySignedUpException;
 import util.exception.NormalUserNotFoundException;
+import util.exception.TimeSlotNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -35,6 +42,15 @@ import util.exception.UnknownPersistenceException;
  */
 @Stateless
 public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal {
+
+    @EJB(name = "TimeSlotEntitySessionBeanLocal")
+    private TimeSlotEntitySessionBeanLocal timeSlotEntitySessionBeanLocal;
+
+    @EJB(name = "FacilityEntitySessionBeanLocal")
+    private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
+
+    @EJB(name = "CategoryEntitySessionBeanLocal")
+    private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
 
     @EJB(name = "NormalUserEntitySessionBeanLocal")
     private NormalUserEntitySessionBeanLocal normalUserEntitySessionBeanLocal;
@@ -56,13 +72,26 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity) throws UnknownPersistenceException, InputDataValidationException {
+    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException {
         Set<ConstraintViolation<ActivityEntity>> constraintViolations = validator.validate(newActivityEntity);
+
+        CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
 
         if (constraintViolations.isEmpty()) {
             try {
-                em.persist(newActivityEntity);
+                if (timeSlotId != null) {
+                    TimeSlotEntity timeSlotEntity = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(timeSlotId);
+                    BookingEntity newBookingEntity = new BookingEntity();
+                    newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
+                    newBookingEntity.setActivity(newActivityEntity);
+                    newBookingEntity.setTimeSlot(timeSlotEntity);
+                    timeSlotEntity.setBooking(newBookingEntity);
+                    newActivityEntity.setBooking(newBookingEntity);
+                    normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner());
+                }
                 //set linkages
+                newActivityEntity.setCategory(categoryEntity);
+                em.persist(newActivityEntity);
                 em.flush();
 
                 return newActivityEntity;
@@ -86,7 +115,8 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public List<ActivityEntity> retrieveMyActivities(Long userId) {
+    public List<ActivityEntity> retrieveMyActivities(Long userId
+    ) {
         System.out.println("ejb.session.stateless.ActivityEntitySessionBean.retrieveMyActivities()");
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         List<ActivityEntity> activities = new ArrayList<>();
@@ -111,7 +141,8 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public List<ActivityEntity> retrieveActivitiesByActivityName(String activityName) {
+    public List<ActivityEntity> retrieveActivitiesByActivityName(String activityName
+    ) {
         Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityName = :activityName");
         query.setParameter("activityName", activityName);
         List<ActivityEntity> activityEntities = query.getResultList();
@@ -129,7 +160,8 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public List<ActivityEntity> filterActivitiesByCategory(String categoryName) {
+    public List<ActivityEntity> filterActivitiesByCategory(String categoryName
+    ) {
         Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.category.categoryName = :categoryName");
         query.setParameter("categoryName", categoryName);
         List<ActivityEntity> activityEntities = query.getResultList();
@@ -181,7 +213,8 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void deleteImages(ActivityEntity activityEntityToRemove) {
+    public void deleteImages(ActivityEntity activityEntityToRemove
+    ) {
         List<ImageEntity> imageEntities = activityEntityToRemove.getGallery();
 
         for (ImageEntity imageEntity : imageEntities) {
@@ -199,7 +232,8 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void deleteComments(ActivityEntity activityEntityToRemove) {
+    public void deleteComments(ActivityEntity activityEntityToRemove
+    ) {
         List<CommentEntity> commentEntities = activityEntityToRemove.getComments();
 
         for (CommentEntity commentEntity : commentEntities) {
@@ -248,16 +282,20 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException {
+    public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException, InsufficientBookingTokensException, MaxParticipantsExceededException {
         System.out.println("ejb.session.stateless.ActivityEntitySessionBean.signUpForActivity()");
         ActivityEntity activity = em.find(ActivityEntity.class, activityId);
         NormalUserEntity user = normalUserEntitySessionBeanLocal.retrieveNormalUserByUserId(userId);
 
         List<NormalUserEntity> participants = activity.getParticipants();
-        if (participants.contains(user)) {
+        if (participants.contains(user) || activity.getActivityOwner() == user) {
             throw new NormalUserAlreadySignedUpException("User ID error");
         }
-        
+        if (activity.getNumberOfParticipants() >= activity.getMaxParticipants()) {
+            throw new MaxParticipantsExceededException("No space for anymore participants!");
+        }
+
+        normalUserEntitySessionBeanLocal.deductTokens(Boolean.FALSE, user);
         participants.add(user);
         activity.setParticipants(participants);
     }
