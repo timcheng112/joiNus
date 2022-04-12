@@ -43,6 +43,7 @@ import util.exception.TimeSlotNotFoundException;
 import ws.datamodel.AddCommentReq;
 import ws.datamodel.CreateActivityReq;
 import ws.datamodel.SignUpForActivityReq;
+import ws.datamodel.PunishReq;
 
 /**
  * REST Web Service
@@ -234,18 +235,24 @@ public class ActivityResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response punishUsers(@QueryParam("activityId") Long activityId,
-            @QueryParam("absenteeIds") List<Long> absenteeIds) {
+    public Response punishUsers(PunishReq punishReq
+    ) {
         System.out.println("ws.rest.ActivityResource.punishUsers()");
-        System.out.println("ActivityId: " + activityId);
-        System.out.println("absenteeIds: " + absenteeIds.toString());
-        if (activityId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("activityID is empty, can't punish").build();
-        } else if (absenteeIds.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("absenteeIds is empty, no one to punish").build();
+        System.out.println("ActivityId: " + punishReq.getActivityId());
+        System.out.println("absenteeIds: " + punishReq.getAbsenteeIds().toString());
+        if (punishReq.getActivityId() == null) {
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "activityID is empty, can't punish");
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
+        } else if (punishReq.getAbsenteeIds().isEmpty()) {
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "absenteeIds is empty, no one to punish");
+            return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
         } else {
-            activityEntitySessionBeanLocal.absentPunishment(activityId, absenteeIds);
-            return Response.status(Response.Status.OK).entity("Punishment done").build();
+            activityEntitySessionBeanLocal.absentPunishment(punishReq.getActivityId(), punishReq.getAbsenteeIds());
+            JsonObjectBuilder obj = Json.createObjectBuilder().add("message", "Punishment Dealt");
+
+            return Response.status(Response.Status.OK).entity(obj).build();
+
         }
     }
 

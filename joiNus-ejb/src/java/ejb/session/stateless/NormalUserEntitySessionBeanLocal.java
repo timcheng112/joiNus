@@ -40,6 +40,11 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public NormalUserEntity normalUserLogin(String username, String password) throws InvalidLoginCredentialException;
 
+    public List<NormalUserEntity> retrieveLeaderboard();
+
+    public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException;
+
+    public int retrieveLeaderboardRank(NormalUserEntity currUser);
     public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException;
 
 }

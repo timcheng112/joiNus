@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.NormalUserEntity;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -96,9 +97,48 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
         return query.getResultList();
     }
+    
+    @Override
+    public List<NormalUserEntity> retrieveLeaderboard() {
+        Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC").setMaxResults(10);
+        List<NormalUserEntity> leaderboard = query.getResultList();
+        
+        for (NormalUserEntity f : leaderboard) {
+            f.getActivitiesOwned().size();
+            f.getActivitiesParticipated().size();
+            f.getInterests().size();
+        }
+        
+        return query.getResultList();
+    }
+    
+    @Override
+    public int retrieveLeaderboardRank(NormalUserEntity currUser) {
+        Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC");
+        List<NormalUserEntity> leaderboard = query.getResultList();
+        int rank = 0;
+        boolean found = false;
+        for (NormalUserEntity f : leaderboard) {
+            rank ++;
+            f.getActivitiesOwned().size();
+            f.getActivitiesParticipated().size();
+            f.getInterests().size();
+            if (Objects.equals(currUser.getUserId(), f.getUserId())) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            return rank;
+        } else {
+            return -1;
+        }
+    }
 
     @Override
     public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException {
+        
+        System.out.println("IN SESSION BEAN: USER ID: " + normalUserId);
         NormalUserEntity normalUserEntity = em.find(NormalUserEntity.class, normalUserId);
 
         if (normalUserEntity != null) {
@@ -121,6 +161,16 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new NormalUserNotFoundException("Username " + username + " does not exist!");
         }
+    }
+    
+    @Override
+    public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException
+    {
+        Query query = em.createQuery("SELECT u FROM NormalUserEntity u WHERE u.name LIKE '%:inName%' OR u.username LIKE '%:inName2%'");
+        query.setParameter("inName", name);
+        query.setParameter("inName2", name);
+        
+        return query.getResultList();
     }
 
     @Override
