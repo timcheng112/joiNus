@@ -171,7 +171,7 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                     for (TimeSlotEntity ts : timeslots) {
                         if (ts.getTimeSlotTime().getHours() < facilityEntity.getOpeningHour()) {
                             throw new UpdateFacilityException("Opening Hour cannot be set, bookings exist before that time");
-                        } else if (ts.getTimeSlotTime().getHours() >= facilityEntity.getClosingHour()) {
+                        } else if (ts.getTimeSlotTime().getHours() > facilityEntity.getClosingHour()) {
                             throw new UpdateFacilityException("Closing Hour cannot be set, bookings exist after that time");
                         }
                     }
