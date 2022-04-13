@@ -13,6 +13,7 @@ import javax.ejb.Local;
 import util.exception.ActivityNotFoundException;
 import util.exception.BookingNotFoundException;
 import util.exception.CategoryNotFoundException;
+import util.exception.CreateNewTimeSlotException;
 import util.exception.FacilityNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InsufficientBookingTokensException;
@@ -49,11 +50,11 @@ public interface ActivityEntitySessionBeanLocal {
 
     public Long addComment(CommentEntity commentEntity, Long activityId) throws ActivityNotFoundException;
 
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException;
-
     public void signUpForActivity(Long activityId, Long userId) throws NormalUserNotFoundException, NormalUserAlreadySignedUpException, InsufficientBookingTokensException, MaxParticipantsExceededException;
-    
+
     public List<ActivityEntity> retrieveActivitiesByDateForTimer(Date date);
+
+    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId, Date activityDate) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException, CreateNewTimeSlotException;
 
 
 }

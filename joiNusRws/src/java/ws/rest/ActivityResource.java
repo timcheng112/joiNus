@@ -11,6 +11,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ import util.exception.NormalUserNotFoundException;
 import util.exception.TimeSlotNotFoundException;
 import ws.datamodel.AddCommentReq;
 import ws.datamodel.CreateActivityReq;
+import ws.datamodel.CreateNewNoFacilityActivityReq;
 import ws.datamodel.SignUpForActivityReq;
 import ws.datamodel.PunishReq;
 
@@ -178,7 +180,6 @@ public class ActivityResource {
             try {
                 NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(createActivityReq.getUsername(), createActivityReq.getPassword());
                 System.out.println("********** ActivityResource.createActivity(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
-
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setActivityName(createActivityReq.getActivityName());
                 activityEntity.setActivityDescription(createActivityReq.getActivityDescription());
@@ -186,7 +187,40 @@ public class ActivityResource {
                 activityEntity.setTags(createActivityReq.getTags());
                 activityEntity.setActivityOwner(normalUserEntity);
 
-                activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createActivityReq.getCategoryId(), createActivityReq.getTimeSlotId());
+                activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createActivityReq.getCategoryId(), createActivityReq.getTimeSlotId(), null);
+
+                return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
+            } catch (CategoryNotFoundException | InputDataValidationException | TimeSlotNotFoundException ex) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            } catch (InvalidLoginCredentialException ex) {
+                return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            } catch (Exception ex) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new activity request").build();
+        }
+    }
+
+    @Path("createNewNoFacilityActivity")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewNoFacilityActivity(CreateNewNoFacilityActivityReq createNewNoFacilityActivityReq) {
+        if (createNewNoFacilityActivityReq != null) {
+            try {
+                NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(createNewNoFacilityActivityReq.getUsername(), createNewNoFacilityActivityReq.getPassword());
+                System.out.println("********** ActivityResource.createActivity(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
+                ActivityEntity activityEntity = new ActivityEntity();
+                activityEntity.setActivityName(createNewNoFacilityActivityReq.getActivityName());
+                activityEntity.setActivityDescription(createNewNoFacilityActivityReq.getActivityDescription());
+                activityEntity.setMaxParticipants(createNewNoFacilityActivityReq.getActivityMaxParticipants());
+                activityEntity.setTags(createNewNoFacilityActivityReq.getTags());
+                activityEntity.setActivityOwner(normalUserEntity);
+
+                Date activityDate = new Date(createNewNoFacilityActivityReq.getActivityYear() - 1900, createNewNoFacilityActivityReq.getActivityMonth() - 1, createNewNoFacilityActivityReq.getActivityDay(), createNewNoFacilityActivityReq.getActivityHour(), createNewNoFacilityActivityReq.getActivityMinute());
+                System.out.println("test");
+                activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createNewNoFacilityActivityReq.getCategoryId(), null, activityDate);
 
                 return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
             } catch (CategoryNotFoundException | InputDataValidationException | TimeSlotNotFoundException ex) {

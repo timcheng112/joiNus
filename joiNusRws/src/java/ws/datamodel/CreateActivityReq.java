@@ -5,6 +5,7 @@
  */
 package ws.datamodel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +38,6 @@ public class CreateActivityReq {
         this.timeSlotId = timeSlotId;
     }
 
-
 //    public CreateActivityReq(String username, String password, ActivityEntity newActivity, Long categoryId, Long timeSlotId) {
 //        this.username = username;
 //        this.password = password;
@@ -45,7 +45,6 @@ public class CreateActivityReq {
 //        this.categoryId = categoryId;
 //        this.timeSlotId = timeSlotId;
 //    }
-
     /**
      * @return the username
      */
@@ -87,7 +86,6 @@ public class CreateActivityReq {
 //    public void setNewActivity(ActivityEntity newActivity) {
 //        this.newActivity = newActivity;
 //    }
-
     /**
      * @return the categoryId
      */
@@ -171,4 +169,5 @@ public class CreateActivityReq {
     public void setActivityMaxParticipants(Integer activityMaxParticipants) {
         this.activityMaxParticipants = activityMaxParticipants;
     }
+
 }

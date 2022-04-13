@@ -10,6 +10,7 @@ import entity.ActivityEntity;
 import entity.BookingEntity;
 import entity.CategoryEntity;
 import entity.CommentEntity;
+import entity.FacilityEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
@@ -32,6 +33,7 @@ import javax.validation.ValidatorFactory;
 import util.exception.ActivityNotFoundException;
 import util.exception.BookingNotFoundException;
 import util.exception.CategoryNotFoundException;
+import util.exception.CreateNewTimeSlotException;
 import util.exception.InputDataValidationException;
 import util.exception.InsufficientBookingTokensException;
 import util.exception.MaxParticipantsExceededException;
@@ -76,30 +78,55 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException {
+    public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId, Date activityDate) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException, CreateNewTimeSlotException {
         Set<ConstraintViolation<ActivityEntity>> constraintViolations = validator.validate(newActivityEntity);
 
         CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
-
+        System.out.println("going in");
         if (constraintViolations.isEmpty()) {
             try {
+                TimeSlotEntity timeSlotEntity = new TimeSlotEntity();
                 if (timeSlotId != null) {
-                    TimeSlotEntity timeSlotEntity = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(timeSlotId);
-                    BookingEntity newBookingEntity = new BookingEntity();
-                    newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
-                    newBookingEntity.setActivity(newActivityEntity);
-                    newBookingEntity.setTimeSlot(timeSlotEntity);
-                    timeSlotEntity.setBooking(newBookingEntity);
-                    newActivityEntity.setBooking(newBookingEntity);
-                    normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner());
+                    System.out.println("have timeslotid");
+                    timeSlotEntity = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(timeSlotId);
+                } else {
+                    System.out.println("dont have timeslotid");
+                    Query query = em.createQuery("SELECT f FROM FacilityEntity f WHERE f.facilityName='Non-NUS Facility'");
+                    FacilityEntity facility = (FacilityEntity) query.getSingleResult();
+                    System.out.println(facility);
+                    timeSlotEntity = new TimeSlotEntity(activityDate, SlotStatusEnum.AVAILABLE, facility);
+                    timeSlotEntity = timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(timeSlotEntity, facility.getFacilityId());
                 }
                 //set linkages
+                System.out.println("1");
+                BookingEntity newBookingEntity = new BookingEntity();
+                System.out.println("2");
+                newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
+                System.out.println("3");
+                newBookingEntity.setActivity(newActivityEntity);
+                newBookingEntity.setTimeSlot(timeSlotEntity);
+                System.out.println("4");
+
+                timeSlotEntity.setBooking(newBookingEntity);
+                System.out.println("5");
+
+                newActivityEntity.setBooking(newBookingEntity);
+                System.out.println("6");
+
+                normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner());
+                System.out.println("7");
+
                 newActivityEntity.setCategory(categoryEntity);
+                System.out.println("8");
+
                 em.persist(newActivityEntity);
+                System.out.println("9");
                 em.flush();
+                System.out.println("10");
 
                 return newActivityEntity;
             } catch (PersistenceException ex) {
+                System.out.println("oof");
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     throw new UnknownPersistenceException(ex.getMessage());
                 } else {
@@ -107,6 +134,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
                 }
             }
         } else {
+            System.out.println("dafuq");
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
@@ -354,14 +382,14 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
                 for (TimeSlotEntity ts : timeSlots) {
                     System.out.println("Timeslot ID is " + ts.getTimeSlotId());
                     System.out.println("Timeslot Time is " + ts.getTimeSlotTime());
-                    
+
                     activity.setActivityOver(Boolean.TRUE);
-                    
+
                     for (NormalUserEntity user : activity.getParticipants()) {
-                        user.setSocialCredits(user.getSocialCredits()+30); // add social credits +30
+                        user.setSocialCredits(user.getSocialCredits() + 30); // add social credits +30
                     }
-                    activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits()+40); // add social credit to owner +40
-                    
+                    activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits() + 40); // add social credit to owner +40
+
                     activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
                 }
 

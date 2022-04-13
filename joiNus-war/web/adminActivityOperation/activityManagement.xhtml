@@ -35,7 +35,7 @@
                         <h:outputText value="#{activityEntity.activityName}" />
                     </p:column>
 
-                    <p:column headerText="Date" sortBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterMatchMode="contains">
+                    <p:column headerText="Date of Activity" sortBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterBy="#{activityEntity.booking.timeSlot.timeSlotTime}" filterMatchMode="contains">
                         <h:outputText value="#{activityEntity.booking.timeSlot.timeSlotTime}" />
                     </p:column>
 

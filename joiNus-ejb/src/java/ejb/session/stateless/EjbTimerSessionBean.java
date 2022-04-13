@@ -63,12 +63,12 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
                 int openingHour = facility.getOpeningHour();
                 int closingHour = facility.getClosingHour();
 
-                for (int count = 0; count <= 7; count++) { // today + 7 days
+                for (int count = 0; count <= 14; count++) { // today + 7 days
                     System.out.println("day " + count);
                     timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(date.getYear(), date.getMonth(), date.getDate(), facility.getFacilityId());
 
                     if (timeSlots == null || timeSlots.isEmpty()) {
-                        System.out.println("****** Timeslot exist for " + date.getDate() + "/" + date.getMonth() + " for " + facility.getFacilityName() + " ******");
+                        System.out.println("****** Timeslot does not exist for " + date.getDate() + "/" + date.getMonth() + " for " + facility.getFacilityName() + " ******");
 
                         for (int i = openingHour; i < closingHour; i++) {
                             date.setHours(i);
