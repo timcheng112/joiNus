@@ -43,5 +43,7 @@ public interface FacilityEntitySessionBeanLocal {
 
     public ImageEntity persistImage(ImageEntity img);
 
+    public void updateFacilityNew(FacilityEntity facilityEntity, int newOpening, int newClosing) throws FacilityNotFoundException, UpdateFacilityException, InputDataValidationException;
+
     
 }

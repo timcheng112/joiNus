@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import util.exception.InvalidLoginCredentialException;
+import ws.datamodel.CreateNormalUserReq;
 
 /**
  * REST Web Service
@@ -199,10 +200,12 @@ public class NormalUserResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewNormalUser(NormalUserEntity normalUser) {
-        if (normalUser != null) {
+    public Response createNewNormalUser(CreateNormalUserReq req) {
+        System.out.println("ws.rest.NormalUserResource.createNewNormalUser()");
+        System.out.println(req);
+        if (req != null) {
             try {
-                Long newNormalUserId = normalUserEntitySessionBeanLocal.createNewNormalUser(normalUser).getUserId();
+                Long newNormalUserId = normalUserEntitySessionBeanLocal.createNewNormalUser(req.getNormalUser()).getUserId();
 
                 return Response.status(Response.Status.OK).entity(newNormalUserId).build();
             } catch (Exception ex) {

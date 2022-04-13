@@ -166,6 +166,16 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
 
                 if(facilityEntityToUpdate.getFacilityId().equals(facilityEntity.getFacilityId()))
                 {
+                    List<TimeSlotEntity> timeslots = facilityEntityToUpdate.getTimeSlots();
+                    
+                    for (TimeSlotEntity ts : timeslots) {
+                        if (ts.getTimeSlotTime().getHours() < facilityEntity.getOpeningHour()) {
+                            throw new UpdateFacilityException("Opening Hour cannot be set, bookings exist before that time");
+                        } else if (ts.getTimeSlotTime().getHours() >= facilityEntity.getClosingHour()) {
+                            throw new UpdateFacilityException("Closing Hour cannot be set, bookings exist after that time");
+                        }
+                    }
+                    
                     facilityEntityToUpdate.setFacilityName(facilityEntity.getFacilityName());
                     facilityEntityToUpdate.setClub(facilityEntity.getClub());
                     facilityEntityToUpdate.setTokenCost(facilityEntity.getTokenCost());
@@ -173,6 +183,55 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
                     facilityEntityToUpdate.setAddress(facilityEntity.getAddress());
                     facilityEntityToUpdate.setOpeningHour(facilityEntity.getOpeningHour());
                     facilityEntityToUpdate.setClosingHour(facilityEntity.getClosingHour());
+                    facilityEntityToUpdate.setTimeSlots(facilityEntity.getTimeSlots());
+                    facilityEntityToUpdate.setFacilityImage(facilityEntity.getFacilityImage());
+                }
+                else
+                {
+                    throw new UpdateFacilityException("Facility ID error");
+                }
+            }
+            else
+            {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        }
+        else
+        {
+            throw new FacilityNotFoundException("Facility ID not provided for facility to be updated");
+        }
+    }
+    
+    @Override
+    public void updateFacilityNew(FacilityEntity facilityEntity, int newOpening, int newClosing) throws FacilityNotFoundException, UpdateFacilityException, InputDataValidationException
+    {
+        if(facilityEntity != null && facilityEntity.getFacilityId()!= null)
+        {
+            Set<ConstraintViolation<FacilityEntity>>constraintViolations = validator.validate(facilityEntity);
+        
+            if(constraintViolations.isEmpty())
+            {
+                FacilityEntity facilityEntityToUpdate = retrieveFacilityByFacilityId(facilityEntity.getFacilityId());
+
+                if(facilityEntityToUpdate.getFacilityId().equals(facilityEntity.getFacilityId()))
+                {
+                    List<TimeSlotEntity> timeslots = facilityEntityToUpdate.getTimeSlots();
+                    
+                    for (TimeSlotEntity ts : timeslots) {
+                        if (ts.getTimeSlotTime().getHours() < newOpening) {
+                            throw new UpdateFacilityException("Opening Hour cannot be set, bookings exist before that time");
+                        } else if (ts.getTimeSlotTime().getHours() >= newClosing) {
+                            throw new UpdateFacilityException("Closing Hour cannot be set, bookings exist after that time");
+                        }
+                    }
+                    
+                    facilityEntityToUpdate.setFacilityName(facilityEntity.getFacilityName());
+                    facilityEntityToUpdate.setClub(facilityEntity.getClub());
+                    facilityEntityToUpdate.setTokenCost(facilityEntity.getTokenCost());
+                    facilityEntityToUpdate.setCapacity(facilityEntity.getCapacity());
+                    facilityEntityToUpdate.setAddress(facilityEntity.getAddress());
+                    facilityEntityToUpdate.setOpeningHour(newOpening);
+                    facilityEntityToUpdate.setClosingHour(newClosing);
                     facilityEntityToUpdate.setTimeSlots(facilityEntity.getTimeSlots());
                     facilityEntityToUpdate.setFacilityImage(facilityEntity.getFacilityImage());
                 }

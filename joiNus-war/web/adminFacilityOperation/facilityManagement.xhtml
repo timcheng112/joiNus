@@ -320,7 +320,7 @@
                                 <p:outputLabel for="facOpening" value="Opening Hour (24-hours) " style="font-weight: bold;" />
                             </p:column>
                             <p:column>
-                                <p:selectOneMenu id="facOpening" value="#{facilitiyManagedBean.facilityEntityToUpdate.openingHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.openingHour}">
+                                <p:selectOneMenu id="facOpening" value="#{facilitiyManagedBean.newOpeningHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.openingHour}">
                                     <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
                                     <f:selectItem itemValue="6" itemLabel="6am" />
                                     <f:selectItem itemValue="7" itemLabel="7am" />
@@ -353,7 +353,7 @@
                                 <p:outputLabel for="facClosing" value="Closing Hour (24-hours) " style="font-weight: bold;" />
                             </p:column>
                             <p:column>
-                                <p:selectOneMenu id="facClosing" value="#{facilitiyManagedBean.facilityEntityToUpdate.closingHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.closingHour}">
+                                <p:selectOneMenu id="facClosing" value="#{facilitiyManagedBean.newClosingHour}" required="true" placeholder="#{facilitiyManagedBean.facilityEntityToUpdate.closingHour}">
                                     <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />                                
                                     <f:selectItem itemValue="6" itemLabel="6am" />
                                     <f:selectItem itemValue="7" itemLabel="7am" />
@@ -399,7 +399,7 @@
                             </p:column>
                             <p:column>
                                 <p:graphicImage id="prevImage" value="#{facilitiyManagedBean.facilityEntityToUpdate.facilityImage.imagePath}"
-                                                rendered="#{facilitiyManagedBean.uploadedFilePath == null}"/>
+                                                rendered="#{facilitiyManagedBean.uploadedFilePath == null}" height="100px"/>
                                 <p:graphicImage id="facTempImage" alt="#{facilitiyManagedBean.uploadedImage.imageDescription}" 
                                                 value="#{facilitiyManagedBean.uploadedFilePath}" height="100px"/>
                             </p:column>
@@ -410,7 +410,7 @@
 
                         <p:row>
                             <p:column colspan="3">
-                                <p:commandButton value="edit existing facility" actionListener="#{facilitiyManagedBean.editExistingFacility}" update="@form formAllFacilities:dataTableAllFacilities" oncomplete="PF('dialogEditFacility').show();" />
+                                <p:commandButton value="edit existing facility" actionListener="#{facilitiyManagedBean.editExistingFacility}" update="@form formAllFacilities" oncomplete="PF('dialogEditFacility').show();" />
                             </p:column>
                         </p:row>
 

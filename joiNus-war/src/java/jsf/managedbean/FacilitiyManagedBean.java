@@ -53,6 +53,24 @@ public class FacilitiyManagedBean implements Serializable {
     private String uploadedFilePath;
     private ImageEntity uploadedImage;
     private boolean showImage;
+    private int newOpeningHour;
+    private int newClosingHour;
+
+    public int getNewClosingHour() {
+        return newClosingHour;
+    }
+
+    public void setNewClosingHour(int newClosingHour) {
+        this.newClosingHour = newClosingHour;
+    }
+
+    public int getNewOpeningHour() {
+        return newOpeningHour;
+    }
+
+    public void setNewOpeningHour(int newOpeningHour) {
+        this.newOpeningHour = newOpeningHour;
+    }
 
     /**
      * Creates a new instance of FacilitiyManagedBean
@@ -78,6 +96,10 @@ public class FacilitiyManagedBean implements Serializable {
 
     }
 
+    public void initialiseState() {
+        setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilities());
+    }
+    
     public void createNewFacility() {
         try {
             System.out.println("jsf.managedbean.FacilitiyManagedBean.createNewFacility()");
@@ -89,7 +111,7 @@ public class FacilitiyManagedBean implements Serializable {
             uploadedFilePath = "";
             uploadedImage = new ImageEntity();
             showImage = false;
-
+            
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Facility created successfully (Facility ID: " + facility.getFacilityId() + ", Facility Name: " + facility.getFacilityName() + ")", null));
 
         } catch (UnknownPersistenceException ex) {
@@ -105,8 +127,23 @@ public class FacilitiyManagedBean implements Serializable {
 
     public void editExistingFacility() {
         try {
-            facilityEntitySessionBeanLocal.updateFacility(facilityEntityToUpdate);
+            facilityEntitySessionBeanLocal.updateFacilityNew(facilityEntityToUpdate, newOpeningHour, newClosingHour);
+            
             System.out.println("Updated Facility: " + facilityEntityToUpdate.getFacilityId());
+
+            if (facilityEntityToUpdate.getFacilityImage() == null) {
+                uploadedFilePath = "";
+                uploadedImage = new ImageEntity();
+                showImage = false;
+            } else {
+                uploadedFilePath = facilityEntityToUpdate.getFacilityImage().getImagePath();
+                uploadedImage = facilityEntityToUpdate.getFacilityImage();
+                showImage = true;
+            }
+            initialiseState();
+            facilityEntityToUpdate = new FacilityEntity();
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucessfully edited facility", null));
         } catch (FacilityNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing facility FacilityNotFoundException", null));
         } catch (UpdateFacilityException ex) {
@@ -114,11 +151,7 @@ public class FacilitiyManagedBean implements Serializable {
         } catch (InputDataValidationException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing facility InputDataValidationException", null));
         }
-        facilityEntityToUpdate = new FacilityEntity();
-        uploadedFilePath = "";
-        uploadedImage = new ImageEntity();
-        showImage = false;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucessfully edited facility", null));
+
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -300,6 +333,8 @@ public class FacilitiyManagedBean implements Serializable {
      */
     public void setFacilityEntityToUpdate(FacilityEntity facilityEntityToUpdate) {
         this.facilityEntityToUpdate = facilityEntityToUpdate;
+        this.newOpeningHour = facilityEntityToUpdate.getOpeningHour();
+        this.newClosingHour = facilityEntityToUpdate.getClosingHour();
     }
 
 }

@@ -89,7 +89,7 @@ public class ActivityManagedBean implements Serializable {
     }
 
     public void editActivityDate(ActionEvent event) throws IOException {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
+        Calendar c = Calendar.getInstance();
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
@@ -119,7 +119,9 @@ public class ActivityManagedBean implements Serializable {
     }
 
     public void retrieveTimeslots(ActionEvent event) {
-        List<TimeSlotEntity> retrievedTimeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate(), activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
+        System.out.println("edited activity date is");
+        System.out.println(editedActivityDate.getDate());
+        List<TimeSlotEntity> retrievedTimeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate()+1, activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
         List<TimeSlotEntity> availTimeSlots = new ArrayList<>();
         if (retrievedTimeSlots != null) {
             for (TimeSlotEntity timeSlot : retrievedTimeSlots) {

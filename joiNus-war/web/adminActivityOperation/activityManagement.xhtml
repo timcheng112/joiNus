@@ -138,18 +138,22 @@
                                 <h:outputLabel value="Facility: " />
                             </p:column>
                             <p:column>
-                                <h:outputText value="#{activityEntity.booking.timeSlot.facility.facilityName}" />
+                                <h:outputText value="#{activityManagedBean.activityEntityToView.booking.timeSlot.facility.facilityName}" />
                             </p:column>
                         </p:row>
 
-                        <p:row>
+<!--                        <p:row>
                             <p:column>
                                 <h:outputLabel value="Tag(s): " />
                             </p:column>
                             <p:column>
-                                <h:outputText value="#{activityManagedBean.activityEntityToView.tags}" />
+                                <p:repeat value=" add hashtag{activityManagedBean.activityEntityToView.tags}" var="tag">
+                                    <div>
+                                        <h:outputText value="add hashtag{tag}" />
+                                    </div>
+                                </p:repeat>
                             </p:column>
-                        </p:row>
+                        </p:row>-->
 
                         <p:row>
                             <p:column>
@@ -158,8 +162,8 @@
                             <p:column>
                                 <p:repeat value="#{activityManagedBean.activityEntityToView.comments}" var="comment">
                                     <div>
-                                        <h:outputText value="#{comment.text}" />
-                                        <h:outputText value="by #{comment.commentOwner.name}" />
+                                        <h:outputText value="#{comment.text}" /><br/>
+                                        <h:outputText value="by #{comment.commentOwner.name}" /><br/>
                                         <h:outputText value="on #{comment.commentDate}" />
                                     </div>
                                 </p:repeat>
