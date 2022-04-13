@@ -41,7 +41,7 @@ public class ActivityRecordReportManagedBean {
             HashMap parameters = new HashMap();
             parameters.put("Description", "Ongoing Activities");
 
-            InputStream reportStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreport/activityrecordreport.jasper");
+            InputStream reportStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreport/activityreportlandscape.jasper");
             OutputStream outputStream = FacesContext.getCurrentInstance().getExternalContext().getResponseOutputStream();
 
             JasperRunManager.runReportToPdfStream(reportStream, outputStream, parameters, joiNusDataSource.getConnection());

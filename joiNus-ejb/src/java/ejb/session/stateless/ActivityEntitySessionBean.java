@@ -82,15 +82,12 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         Set<ConstraintViolation<ActivityEntity>> constraintViolations = validator.validate(newActivityEntity);
 
         CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
-        System.out.println("going in");
         if (constraintViolations.isEmpty()) {
             try {
                 TimeSlotEntity timeSlotEntity = new TimeSlotEntity();
                 if (timeSlotId != null) {
-                    System.out.println("have timeslotid");
                     timeSlotEntity = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(timeSlotId);
                 } else {
-                    System.out.println("dont have timeslotid");
                     Query query = em.createQuery("SELECT f FROM FacilityEntity f WHERE f.facilityName='Non-NUS Facility'");
                     FacilityEntity facility = (FacilityEntity) query.getSingleResult();
                     System.out.println(facility);
@@ -98,35 +95,24 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
                     timeSlotEntity = timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(timeSlotEntity, facility.getFacilityId());
                 }
                 //set linkages
-                System.out.println("1");
                 BookingEntity newBookingEntity = new BookingEntity();
-                System.out.println("2");
                 newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
-                System.out.println("3");
                 newBookingEntity.setActivity(newActivityEntity);
                 newBookingEntity.setTimeSlot(timeSlotEntity);
-                System.out.println("4");
 
                 timeSlotEntity.setBooking(newBookingEntity);
-                System.out.println("5");
 
                 newActivityEntity.setBooking(newBookingEntity);
-                System.out.println("6");
 
                 normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner());
-                System.out.println("7");
 
                 newActivityEntity.setCategory(categoryEntity);
-                System.out.println("8");
 
                 em.persist(newActivityEntity);
-                System.out.println("9");
                 em.flush();
-                System.out.println("10");
 
                 return newActivityEntity;
             } catch (PersistenceException ex) {
-                System.out.println("oof");
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     throw new UnknownPersistenceException(ex.getMessage());
                 } else {
@@ -147,6 +133,12 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
     
     @Override
+    public List<ActivityEntity> retrieveAllOngoingActivities() {
+        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityOver = false ORDER BY a.activityName ASC");
+
+        return query.getResultList();
+    }
+    
     public List<ActivityEntity> retrieveAllActivitiesIP(long userId) {
         Query query = em.createQuery("SELECT a FROM ActivityEntity a ORDER BY a.activityName ASC");
         List<ActivityEntity> activityList = query.getResultList();

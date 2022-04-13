@@ -8,12 +8,10 @@ package ejb.session.stateless;
 import ejb.enums.SlotStatusEnum;
 import entity.ActivityEntity;
 import entity.FacilityEntity;
+import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
-import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
@@ -29,12 +27,15 @@ import util.exception.InputDataValidationException;
 @Stateless
 public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
 
+    @EJB(name = "NormalUserEntitySessionBeanLocal")
+    private NormalUserEntitySessionBeanLocal normalUserEntitySessionBeanLocal;
+
     @EJB(name = "ActivityEntitySessionBeanLocal")
     private ActivityEntitySessionBeanLocal activityEntitySessionBeanLocal;
 
     @EJB
     private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
-    
+
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
 
@@ -92,6 +93,13 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         } catch (CreateNewTimeSlotException | InputDataValidationException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "1", hour = "8", minute = "0", info = "tokenCreditorTimer")
+    public void tokenCreditorTimer() {
+        System.out.println("ejb.session.stateless.EjbTimerSessionBean.tokenCreditorTimer()");
+        List<NormalUserEntity> normalUsers = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
+        normalUserEntitySessionBeanLocal.creditTokens(normalUsers);
     }
 
     @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "0", info = "activityCompleteTimer") // run every hour
