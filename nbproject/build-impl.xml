@@ -228,6 +228,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.joiNus-war.dist-ear}" todir="${build.dir}//"/>
         <copyfiles files="${reference.joiNus-ejb.dist-ear}" todir="${build.dir}//"/>
         <copyfiles files="${reference.joiNusRws.dist-ear}" todir="${build.dir}//"/>
+        <copyfiles files="${reference.joiNusRws.dist-ear}" todir="${build.dir}//"/>
     </target>
     <target name="post-compile">
         <!-- Empty placeholder for easier customization. -->

@@ -122,6 +122,61 @@ public class ActivityResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    
+    @Path("retrieveAllActivitiesIP/{activityId}")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllActivitiesIP(@PathParam("activityId") Long activityId) {
+
+        try {
+            List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveAllActivitiesIP(activityId);
+
+            for (ActivityEntity activity : activityEntities) {
+                System.out.println(activity.getActivityId());
+                System.out.println(activity.getActivityName());
+                System.out.println(activity.getActivityDescription());
+
+                activity.getActivityOwner().setInterests(null);
+                activity.getActivityOwner().setActivitiesParticipated(null);
+                activity.getActivityOwner().setActivitiesOwned(null);
+
+                for (NormalUserEntity participant : activity.getParticipants()) {
+                    participant.setInterests(null);
+                    participant.setActivitiesParticipated(null);
+                    participant.setActivitiesOwned(null);
+                }
+
+                activity.getCategory().setSubCategories(null);
+                activity.getCategory().setParentCategory(null);
+                activity.getCategory().setActivities(null);
+
+                if (activity.getBooking() != null) {
+                    activity.getBooking().setActivity(null);
+                    if (activity.getBooking().getTimeSlot() != null) {
+                        activity.getBooking().getTimeSlot().setBooking(null);
+                        activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
+                    }
+                }
+
+//                for (CommentEntity comment : activity.getComments()) {
+//                    comment.setCommentOwner(null);
+//                }
+                for (ImageEntity image : activity.getGallery()) {
+                    image.setPostedBy(null);
+                }
+
+            }
+
+            GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
+            };
+
+            System.out.println(genericEntity.getEntity());
+            return Response.status(Status.OK).entity(genericEntity).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
 
     @Path("retrieveActivity/{activityId}")
     @GET
