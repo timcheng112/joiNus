@@ -60,7 +60,7 @@
                         </p:commandButton>
                         <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages" title="Delete">
                             <f:attribute name="activityEntityToDelete" value="#{activityEntity}" />
-                            <p:confirm header="Confirmation" message="Are you sure you want to delete #{activityEntity.activityName} (Activity ID: #{activityEntity.activityId})?" icon="ui-icon-alert" />
+                            <p:confirm header="Confirmation" message="Are you sure you want to delete #{activityEntity.activityName} (Activity ID: #{activityEntity.activityId})? This action is irreversible and all participants will have their tokens refunded." icon="ui-icon-alert" />
                         </p:commandButton>
                     </p:column>
 

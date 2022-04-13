@@ -133,7 +133,7 @@ public class DataInitSessionBean {
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Bouldering"), cat.getCategoryId());
 
             // create activity
-            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 5, new ArrayList<>(), normalUser, new ArrayList<>(), cat, null, date), cat.getCategoryId(), ts.getTimeSlotId());
+            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 5, new ArrayList<>(), normalUser, new ArrayList<>(), cat, null, date), cat.getCategoryId(), ts.getTimeSlotId(), date);
             bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
 
             CommentEntity comment = new CommentEntity("Will anyone be bringing any equipment?", normalUser, date);
