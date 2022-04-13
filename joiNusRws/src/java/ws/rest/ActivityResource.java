@@ -11,6 +11,7 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -215,8 +216,15 @@ public class ActivityResource {
                 activityEntity.setActivityName(createNewNoFacilityActivityReq.getActivityName());
                 activityEntity.setActivityDescription(createNewNoFacilityActivityReq.getActivityDescription());
                 activityEntity.setMaxParticipants(createNewNoFacilityActivityReq.getActivityMaxParticipants());
+                if (createNewNoFacilityActivityReq.getTags() != null) {
+                    System.out.println("Tags is Not Null");
+                } else {
+                    System.out.println("Empty");
+                }
                 activityEntity.setTags(createNewNoFacilityActivityReq.getTags());
                 activityEntity.setActivityOwner(normalUserEntity);
+
+                
 
                 Date activityDate = new Date(createNewNoFacilityActivityReq.getActivityYear() - 1900, createNewNoFacilityActivityReq.getActivityMonth() - 1, createNewNoFacilityActivityReq.getActivityDay(), createNewNoFacilityActivityReq.getActivityHour(), createNewNoFacilityActivityReq.getActivityMinute());
                 System.out.println("test");

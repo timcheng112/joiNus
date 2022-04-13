@@ -47,4 +47,6 @@ public interface NormalUserEntitySessionBeanLocal {
     public int retrieveLeaderboardRank(NormalUserEntity currUser);
     public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException;
 
+    public void creditTokens(List<NormalUserEntity> users);
+
 }

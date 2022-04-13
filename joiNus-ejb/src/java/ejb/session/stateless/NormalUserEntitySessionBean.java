@@ -97,21 +97,21 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
         return query.getResultList();
     }
-    
+
     @Override
     public List<NormalUserEntity> retrieveLeaderboard() {
         Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC").setMaxResults(10);
         List<NormalUserEntity> leaderboard = query.getResultList();
-        
+
         for (NormalUserEntity f : leaderboard) {
             f.getActivitiesOwned().size();
             f.getActivitiesParticipated().size();
             f.getInterests().size();
         }
-        
+
         return query.getResultList();
     }
-    
+
     @Override
     public int retrieveLeaderboardRank(NormalUserEntity currUser) {
         Query query = em.createQuery("Select f FROM NormalUserEntity f ORDER BY f.socialCredits DESC");
@@ -119,7 +119,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         int rank = 0;
         boolean found = false;
         for (NormalUserEntity f : leaderboard) {
-            rank ++;
+            rank++;
             f.getActivitiesOwned().size();
             f.getActivitiesParticipated().size();
             f.getInterests().size();
@@ -137,11 +137,11 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     @Override
     public NormalUserEntity retrieveNormalUserByUserId(Long normalUserId) throws NormalUserNotFoundException {
-        
+
         System.out.println("IN SESSION BEAN: USER ID: " + normalUserId);
         NormalUserEntity normalUserEntity = em.find(NormalUserEntity.class, normalUserId);
         System.out.println(normalUserEntity.getUsername());
-        
+
         if (normalUserEntity != null) {
             normalUserEntity.getActivitiesOwned().size();
             normalUserEntity.getActivitiesParticipated().size();
@@ -163,14 +163,13 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             throw new NormalUserNotFoundException("Username " + username + " does not exist!");
         }
     }
-    
+
     @Override
-    public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException
-    {
+    public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException {
         Query query = em.createQuery("SELECT u FROM NormalUserEntity u WHERE u.name LIKE '%:inName%' OR u.username LIKE '%:inName2%'");
         query.setParameter("inName", name);
         query.setParameter("inName2", name);
-        
+
         return query.getResultList();
     }
 
@@ -248,6 +247,25 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             user.setBookingTokens(user.getBookingTokens() - 2);
         } else {
             throw new InsufficientBookingTokensException("Insufficient Tokens!");
+        }
+    }
+
+    @Override
+    public void creditTokens(List<NormalUserEntity> users) {
+        for (NormalUserEntity user : users) {
+            if (user.getSocialCredits() < 420) {
+                user.setBookingTokens(10);
+            } else if (user.getSocialCredits() <= 690) {
+                user.setBookingTokens(20);
+            } else if (user.getSocialCredits() <= 1337) {
+                user.setBookingTokens(25);
+            } else if (user.getSocialCredits() <= 4200) {
+                user.setBookingTokens(30);
+            } else if (user.getSocialCredits() <= 6969) {
+                user.setBookingTokens(35);
+            } else {
+                user.setBookingTokens(42);
+            }
         }
     }
 

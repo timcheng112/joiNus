@@ -51,6 +51,7 @@ public class ActivityManagedBean implements Serializable {
      * Creates a new instance of ActivityManagedBean
      */
     private List<ActivityEntity> activityEntities;
+    private List<ActivityEntity> ongoingActivityEntities;
     private List<ActivityEntity> filteredActivityEntities;
 
     private ActivityEntity activityEntityToView;
@@ -66,6 +67,7 @@ public class ActivityManagedBean implements Serializable {
     public ActivityManagedBean() {
         activityEntityToView = new ActivityEntity();
         activityEntities = new ArrayList<>();
+        ongoingActivityEntities = new ArrayList<>();
         filteredActivityEntities = new ArrayList<>();
         timeSlots = new ArrayList<>();
     }
@@ -73,6 +75,7 @@ public class ActivityManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         activityEntities = activityEntitySessionBeanLocal.retrieveAllActivities();
+        ongoingActivityEntities = activityEntitySessionBeanLocal.retrieveAllOngoingActivities();
     }
 
 //    public void viewActivityDetails(ActionEvent event) throws IOException {
@@ -86,6 +89,7 @@ public class ActivityManagedBean implements Serializable {
         timeSlots = new ArrayList<>();
         selectedTimeSlotId = null;
         setActivityEntities(activityEntitySessionBeanLocal.retrieveAllActivities());
+        setOngoingActivityEntities(activityEntitySessionBeanLocal.retrieveAllOngoingActivities());
     }
 
     public void editActivityDate(ActionEvent event) throws IOException {
@@ -229,6 +233,20 @@ public class ActivityManagedBean implements Serializable {
      */
     public void setSelectedTimeSlotId(Long selectedTimeSlotId) {
         this.selectedTimeSlotId = selectedTimeSlotId;
+    }
+
+    /**
+     * @return the ongoingActivityEntities
+     */
+    public List<ActivityEntity> getOngoingActivityEntities() {
+        return ongoingActivityEntities;
+    }
+
+    /**
+     * @param ongoingActivityEntities the ongoingActivityEntities to set
+     */
+    public void setOngoingActivityEntities(List<ActivityEntity> ongoingActivityEntities) {
+        this.ongoingActivityEntities = ongoingActivityEntities;
     }
 
 }
