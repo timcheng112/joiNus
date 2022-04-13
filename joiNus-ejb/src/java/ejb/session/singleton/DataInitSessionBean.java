@@ -173,11 +173,11 @@ public class DataInitSessionBean {
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Music"), cat3.getCategoryId());
 
             // create activity
-            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 15, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, date), cat2.getCategoryId(), ts.getTimeSlotId());
+            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 15, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, date), cat2.getCategoryId(), ts.getTimeSlotId(), date);
             activity.setActivityOver(Boolean.TRUE);
 //            bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
 
-            ActivityEntity activity2 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Two", "Activity Two Description", 4, new ArrayList<>(), normalUser2, new ArrayList<>(), cat4, null, date), cat4.getCategoryId(), ts7.getTimeSlotId());
+            ActivityEntity activity2 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Two", "Activity Two Description", 4, new ArrayList<>(), normalUser2, new ArrayList<>(), cat4, null, date), cat4.getCategoryId(), ts7.getTimeSlotId(), date);
 
             CommentEntity comment = new CommentEntity("Will anyone be bringing any equipment?", normalUser, date);
             activityEntitySessionBeanLocal.addComment(comment, activity.getActivityId());
