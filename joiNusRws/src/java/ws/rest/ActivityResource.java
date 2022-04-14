@@ -122,7 +122,7 @@ public class ActivityResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("retrieveAllActivitiesIP/{activityId}")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
@@ -279,8 +279,6 @@ public class ActivityResource {
                 activityEntity.setTags(createNewNoFacilityActivityReq.getActivityTags());
                 activityEntity.setActivityOwner(normalUserEntity);
 
-                
-
                 Date activityDate = new Date(createNewNoFacilityActivityReq.getActivityYear() - 1900, createNewNoFacilityActivityReq.getActivityMonth() - 1, createNewNoFacilityActivityReq.getActivityDay(), createNewNoFacilityActivityReq.getActivityHour(), createNewNoFacilityActivityReq.getActivityMinute());
                 System.out.println("test");
                 activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createNewNoFacilityActivityReq.getCategoryId(), null, activityDate);
@@ -372,8 +370,15 @@ public class ActivityResource {
                 try {
                     activityEntitySessionBeanLocal.signUpForActivity(signUpForActivityReq.getActivityId(), normalUserEntity.getUserId());
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "signed up");
-                    return Response.status(Response.Status.OK).entity(obj).build();
-                } catch (NormalUserNotFoundException ex) {
+//                    return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
+                    ActivityEntity activityEntity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(signUpForActivityReq.getActivityId());
+//                    return Response.status(Response.Status.OK).entity(obj).build();
+                    GenericEntity<ActivityEntity> genericEntity = new GenericEntity<ActivityEntity>(activityEntity) {
+                    };
+
+                    System.out.println(genericEntity.getEntity());
+                    return Response.status(Status.OK).entity(genericEntity).build();
+                } catch (NormalUserNotFoundException | ActivityNotFoundException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "user can't be found");
                     return Response.status(Response.Status.NOT_FOUND).entity("user can't be found").build();
                 } catch (NormalUserAlreadySignedUpException ex) {
