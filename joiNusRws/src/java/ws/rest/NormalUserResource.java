@@ -64,7 +64,13 @@ public class NormalUserResource {
             
             normalUserEntity.getActivitiesOwned().clear();
             normalUserEntity.getActivitiesParticipated().clear();
-            normalUserEntity.getInterests().clear();
+            if(!normalUserEntity.getInterests().isEmpty()){
+                for (CategoryEntity interest : normalUserEntity.getInterests()) {
+                    interest.setParentCategory(null);
+                    interest.getSubCategories().clear();
+                    interest.getActivities().clear();
+                }
+            }
 
             return Response.status(Status.OK).entity(normalUserEntity).build();
         } catch (InvalidLoginCredentialException ex) {
