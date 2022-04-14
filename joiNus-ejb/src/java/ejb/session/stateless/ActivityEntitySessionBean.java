@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import ejb.enums.SlotStatusEnum;
 import entity.ActivityEntity;
+import entity.AdminEntity;
 import entity.BookingEntity;
 import entity.CategoryEntity;
 import entity.CommentEntity;
@@ -131,35 +132,41 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         return query.getResultList();
     }
-    
+
     @Override
-    public List<ActivityEntity> retrieveAllOngoingActivities() {
-        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityOver = false ORDER BY a.activityName ASC");
+    public List<ActivityEntity> retrieveAllOngoingActivities(String club) {
+        Query query;
+        if (club != null) {
+            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.booking.timeSlot.facility.club = :clubName");
+            query.setParameter("clubName", club);
+        } else {
+            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityOver = false ORDER BY a.activityName ASC");
+        }
 
         return query.getResultList();
     }
-    
+
     public List<ActivityEntity> retrieveAllActivitiesIP(long userId) {
         Query query = em.createQuery("SELECT a FROM ActivityEntity a ORDER BY a.activityName ASC");
         List<ActivityEntity> activityList = query.getResultList();
         List<ActivityEntity> interestedList = new ArrayList<ActivityEntity>();
         List<ActivityEntity> uninterestedList = new ArrayList<ActivityEntity>();
-        
+
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         user.getInterests().size();
-        
+
         List<CategoryEntity> interests = user.getInterests();
-        
-        for(ActivityEntity a: activityList){
-            
-            if(interests.contains(a.getCategory())){
+
+        for (ActivityEntity a : activityList) {
+
+            if (interests.contains(a.getCategory())) {
                 interestedList.add(a);
             } else {
                 uninterestedList.add(a);
             }
         }
-        
-        while(!uninterestedList.isEmpty()){
+
+        while (!uninterestedList.isEmpty()) {
             ActivityEntity temp = uninterestedList.get(0);
             uninterestedList.remove(0);
             interestedList.add(temp);

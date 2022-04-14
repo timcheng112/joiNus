@@ -56,8 +56,8 @@ public interface ActivityEntitySessionBeanLocal {
 
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId, Date activityDate) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException, CreateNewTimeSlotException;
 
-    public List<ActivityEntity> retrieveAllOngoingActivities();
-    
     public List<ActivityEntity> retrieveAllActivitiesIP(long userId);
+
+    public List<ActivityEntity> retrieveAllOngoingActivities(String club);
 
 }

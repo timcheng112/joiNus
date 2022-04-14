@@ -6,6 +6,7 @@ NOT DONE NOT DONE NOT DONE NOT DONE
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.AdminEntitySessionBeanLocal;
 import ejb.session.stateless.FacilityEntitySessionBeanLocal;
 import entity.AdminEntity;
 import entity.FacilityEntity;
@@ -21,13 +22,13 @@ import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
+import util.exception.AdminNotFoundException;
 import util.exception.CreateNewFacilityException;
 import util.exception.FacilityNameExistException;
 import util.exception.FacilityNotFoundException;
@@ -42,6 +43,12 @@ import util.exception.UpdateFacilityException;
 @Named(value = "facilitiyManagedBean")
 @ViewScoped
 public class FacilitiyManagedBean implements Serializable {
+
+    @EJB(name = "AdminEntitySessionBeanLocal")
+    private AdminEntitySessionBeanLocal adminEntitySessionBeanLocal;
+
+    @Inject
+    private AdminLoginManagedBean adminLoginManagedBean;
 
     @EJB
     private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
@@ -88,7 +95,12 @@ public class FacilitiyManagedBean implements Serializable {
      */
     @PostConstruct
     public void postConstruct() {
-        setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilities());
+        try {
+            AdminEntity admin = adminEntitySessionBeanLocal.retrieveAdminByUsername(adminLoginManagedBean.getUsername());
+            setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilitiesByClub(admin.getClub()));
+        } catch (AdminNotFoundException ex) {
+            //
+        }
 
         for (FacilityEntity facility : facilityEntities) {
             facility.getTimeSlots();
@@ -97,9 +109,14 @@ public class FacilitiyManagedBean implements Serializable {
     }
 
     public void initialiseState() {
-        setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilities());
+        try {
+            AdminEntity admin = adminEntitySessionBeanLocal.retrieveAdminByUsername(adminLoginManagedBean.getUsername());
+            setFacilityEntities(facilityEntitySessionBeanLocal.retrieveAllFacilitiesByClub(admin.getClub()));
+        } catch (AdminNotFoundException ex) {
+            //
+        }
     }
-    
+
     public void createNewFacility() {
         try {
             System.out.println("jsf.managedbean.FacilitiyManagedBean.createNewFacility()");
@@ -111,7 +128,7 @@ public class FacilitiyManagedBean implements Serializable {
             uploadedFilePath = "";
             uploadedImage = new ImageEntity();
             showImage = false;
-            
+
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Facility created successfully (Facility ID: " + facility.getFacilityId() + ", Facility Name: " + facility.getFacilityName() + ")", null));
 
         } catch (UnknownPersistenceException ex) {
@@ -128,7 +145,7 @@ public class FacilitiyManagedBean implements Serializable {
     public void editExistingFacility() {
         try {
             facilityEntitySessionBeanLocal.updateFacilityNew(facilityEntityToUpdate, newOpeningHour, newClosingHour);
-            
+
             System.out.println("Updated Facility: " + facilityEntityToUpdate.getFacilityId());
 
             if (facilityEntityToUpdate.getFacilityImage() == null) {

@@ -70,11 +70,11 @@ public class ActivityEntity implements Serializable {
 
     @OneToMany
     private List<ImageEntity> gallery;
-    
+
     private List<Long> absentIds;
     private List<Long> commenterIds;
     private List<Long> imagePosterIds;
-    
+
     private Boolean activityOver;
 
     public ActivityEntity() {
@@ -351,5 +351,5 @@ public class ActivityEntity implements Serializable {
     public void setActivityCreationDate(Date activityCreationDate) {
         this.activityCreationDate = activityCreationDate;
     }
-    
+
 }

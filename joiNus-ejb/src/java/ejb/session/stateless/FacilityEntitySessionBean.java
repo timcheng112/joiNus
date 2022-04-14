@@ -115,7 +115,18 @@ public class FacilityEntitySessionBean implements FacilityEntitySessionBeanLocal
         return query.getResultList();
     }
     
-    
+    @Override
+    public List<FacilityEntity> retrieveAllFacilitiesByClub(String club) {
+        Query query;
+        if (club != null) {
+            query = em.createQuery("SELECT f FROM FacilityEntity f WHERE f.club = :clubName");
+            query.setParameter("clubName", club);
+        } else {
+            query = em.createQuery("SELECT f FROM FacilityEntity f ORDER BY f.facilityName ASC");
+        }
+
+        return query.getResultList();
+    }
     
     @Override
     public FacilityEntity retrieveFacilityByFacilityId(Long facilityId) throws FacilityNotFoundException
