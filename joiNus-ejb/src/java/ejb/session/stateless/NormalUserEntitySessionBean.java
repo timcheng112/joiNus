@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CategoryEntity;
+import entity.FacilityEntity;
 import entity.NormalUserEntity;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     @EJB
     private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
-    
+
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
 
@@ -102,7 +103,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
                 if (normalUserEntityToUpdate.getUserId().equals(normalUserEntity.getUserId())) {
                     normalUserEntityToUpdate.setEmail(normalUserEntity.getEmail());
                     normalUserEntityToUpdate.setName(normalUserEntity.getName());
-                    
+
                     //set CategoryEntity for interests if updated
                     if (!normalUserEntity.getInterests().isEmpty()) {
                         normalUserEntityToUpdate.getInterests().clear();
@@ -127,7 +128,7 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
             throw new NormalUserNotFoundException("User ID not provided for user to be updated");
         }
     }
-    
+
     @Override
     public List<NormalUserEntity> retrieveAllNormalUser() {
         Query query = em.createQuery("SELECT f FROM NormalUserEntity f ORDER BY f.name ASC");
@@ -284,11 +285,15 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
     }
 
     @Override
-    public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException {
-        if (isHosting && !((user.getBookingTokens() - 5) < 0)) {
-            user.setBookingTokens(user.getBookingTokens() - 5);
-        } else if (!isHosting && !((user.getBookingTokens() - 2) < 0)) {
-            user.setBookingTokens(user.getBookingTokens() - 2);
+    public void deductTokens(Boolean isHosting, NormalUserEntity user, FacilityEntity facilityEntity) throws InsufficientBookingTokensException {
+        user = em.find(NormalUserEntity.class, user.getUserId());
+        if (isHosting && !((user.getBookingTokens() - facilityEntity.getTokenCost()) < 0)) {
+            System.out.println("Booking Tokens: " + user.getBookingTokens());
+            System.out.println("Facility Token Cost: " + facilityEntity.getTokenCost());
+            System.out.println("Name: " + user.getName());
+            user.setBookingTokens(user.getBookingTokens() - facilityEntity.getTokenCost());
+        } else if (!isHosting && !((user.getBookingTokens() - Math.floorDiv(facilityEntity.getTokenCost(), 2)) < 0)) {
+            user.setBookingTokens(user.getBookingTokens() - Math.floorDiv(facilityEntity.getTokenCost(), 2));
         } else {
             throw new InsufficientBookingTokensException("Insufficient Tokens!");
         }

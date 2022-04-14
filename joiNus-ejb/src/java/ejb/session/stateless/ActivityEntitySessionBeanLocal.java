@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.ActivityEntity;
 import entity.CommentEntity;
+import entity.ImageEntity;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -59,5 +60,7 @@ public interface ActivityEntitySessionBeanLocal {
     public List<ActivityEntity> retrieveAllActivitiesIP(long userId);
 
     public List<ActivityEntity> retrieveAllOngoingActivities(String club);
+
+    public Long createImage(ImageEntity newImageEntity, Long activityId);
 
 }

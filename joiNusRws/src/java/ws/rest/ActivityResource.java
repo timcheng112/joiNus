@@ -43,6 +43,7 @@ import util.exception.NormalUserNotFoundException;
 import util.exception.TimeSlotNotFoundException;
 import ws.datamodel.AddCommentReq;
 import ws.datamodel.CreateActivityReq;
+import ws.datamodel.CreateGalleryPostReq;
 import ws.datamodel.CreateNewNoFacilityActivityReq;
 import ws.datamodel.SignUpForActivityReq;
 import ws.datamodel.PunishReq;
@@ -259,10 +260,9 @@ public class ActivityResource {
 //            for (CommentEntity comment : activity.getComments()) {
 //                comment.setCommentOwner(null);
 //            }
-            
             if (activity.getGallery() != null) {
                 for (ImageEntity image : activity.getGallery()) {
-                    image.setPostedBy(null);
+                    image.getPostedBy();
                 }
             }
 
@@ -337,6 +337,29 @@ public class ActivityResource {
                 return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
             } catch (CategoryNotFoundException | InputDataValidationException | TimeSlotNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            } catch (InvalidLoginCredentialException ex) {
+                return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            } catch (Exception ex) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new activity request").build();
+        }
+    }
+
+    @Path("createGalleryPost")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createGalleryPost(CreateGalleryPostReq createGalleryPostReq) {
+        if (createGalleryPostReq != null) {
+            try {
+                NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(createGalleryPostReq.getUsername(), createGalleryPostReq.getPassword());
+                System.out.println("********** ActivityResource.createGalleryPost(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
+                ImageEntity imageEntity = new ImageEntity(createGalleryPostReq.getImagePath(), createGalleryPostReq.getImageDescription(), createGalleryPostReq.getDatePosted(), normalUserEntity);
+                Long imageEntityId = activityEntitySessionBeanLocal.createImage(imageEntity, createGalleryPostReq.getActivityId());
+
+                return Response.status(Response.Status.OK).entity(imageEntityId).build();
             } catch (InvalidLoginCredentialException ex) {
                 return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             } catch (Exception ex) {

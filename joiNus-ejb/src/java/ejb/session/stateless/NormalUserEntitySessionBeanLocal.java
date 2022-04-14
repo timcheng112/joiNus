@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.FacilityEntity;
 import entity.NormalUserEntity;
 import java.util.List;
 import javax.ejb.Local;
@@ -45,10 +46,11 @@ public interface NormalUserEntitySessionBeanLocal {
     public List<NormalUserEntity> retrieveNormalUsersByName(String name) throws NormalUserNotFoundException;
 
     public int retrieveLeaderboardRank(NormalUserEntity currUser);
-    public void deductTokens(Boolean isHosting, NormalUserEntity user) throws InsufficientBookingTokensException;
 
     public void creditTokens(List<NormalUserEntity> users);
 
     public Long editNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException;
+
+    public void deductTokens(Boolean isHosting, NormalUserEntity user, FacilityEntity facilityEntity) throws InsufficientBookingTokensException;
 
 }

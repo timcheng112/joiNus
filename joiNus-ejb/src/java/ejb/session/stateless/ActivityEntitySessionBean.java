@@ -105,7 +105,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
                 newActivityEntity.setBooking(newBookingEntity);
 
-                normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner());
+                normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner(), timeSlotEntity.getFacility());
 
                 newActivityEntity.setCategory(categoryEntity);
 
@@ -121,7 +121,6 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
                 }
             }
         } else {
-            System.out.println("dafuq");
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
@@ -306,6 +305,15 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         em.remove(activityEntityToRemove);
 
     }
+    
+    @Override
+    public Long createImage(ImageEntity newImageEntity, Long activityId) {
+        ActivityEntity activityEntity = em.find(ActivityEntity.class, activityId);
+        activityEntity.getGallery().add(newImageEntity);
+        em.persist(newImageEntity);
+        em.flush();
+        return newImageEntity.getImageId();
+    }
 
     @Override
     public void deleteImages(ActivityEntity activityEntityToRemove
@@ -394,7 +402,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
             throw new MaxParticipantsExceededException("No space for anymore participants!");
         }
 
-        normalUserEntitySessionBeanLocal.deductTokens(Boolean.FALSE, user);
+        normalUserEntitySessionBeanLocal.deductTokens(Boolean.FALSE, user, activity.getBooking().getTimeSlot().getFacility());
         participants.add(user);
         activity.setParticipants(participants);
     }
