@@ -88,9 +88,41 @@ public class NormalUserResource {
             List<NormalUserEntity> normalUserEntities = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
 
             for (NormalUserEntity user : normalUserEntities) {
-                user.getActivitiesOwned().clear();
-                user.getActivitiesParticipated().clear();
-                user.getInterests().clear();
+                
+                if (!user.getActivitiesOwned().isEmpty()) {
+                    for (ActivityEntity act : user.getActivitiesOwned()) {
+                        act.setActivityOwner(null);
+                        act.getParticipants().clear();
+                        act.setCategory(null);
+                        act.setBooking(null);
+                        act.getComments().clear();
+                        act.getGallery().clear();
+                        act.getAbsentIds().clear();
+                        act.getCommenterIds().clear();
+                        act.getImagePosterIds().clear();
+                    }
+                }
+                if (!user.getActivitiesParticipated().isEmpty()) {
+                    for (ActivityEntity act : user.getActivitiesOwned()) {
+                        act.setActivityOwner(null);
+                        act.getParticipants().clear();
+                        act.setCategory(null);
+                        act.setBooking(null);
+                        act.getComments().clear();
+                        act.getGallery().clear();
+                        act.getAbsentIds().clear();
+                        act.getCommenterIds().clear();
+                        act.getImagePosterIds().clear();
+                    }
+                }
+                
+                if (!user.getInterests().isEmpty()) {
+                    for (CategoryEntity interest : user.getInterests()) {
+                        interest.setParentCategory(null);
+                        interest.getSubCategories().clear();
+                        interest.getActivities().clear();
+                    }
+                }
             }
 
             GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(normalUserEntities) {
@@ -112,7 +144,13 @@ public class NormalUserResource {
             for (NormalUserEntity user : leaderboard) {
                 user.getActivitiesOwned().clear();
                 user.getActivitiesParticipated().clear();
-                user.getInterests().clear();
+                if (!user.getInterests().isEmpty()) {
+                    for (CategoryEntity interest : user.getInterests()) {
+                        interest.setParentCategory(null);
+                        interest.getSubCategories().clear();
+                        interest.getActivities().clear();
+                    }
+                }
             }
 
             GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(leaderboard) {
@@ -133,7 +171,13 @@ public class NormalUserResource {
             for (NormalUserEntity user : normalUserEntities) {
                 user.getActivitiesOwned().clear();
                 user.getActivitiesParticipated().clear();
-                user.getInterests().clear();
+                if (!user.getInterests().isEmpty()) {
+                    for (CategoryEntity interest : user.getInterests()) {
+                        interest.setParentCategory(null);
+                        interest.getSubCategories().clear();
+                        interest.getActivities().clear();
+                    }
+                }
             }
             GenericEntity<List<NormalUserEntity>> genericEntity = new GenericEntity<List<NormalUserEntity>>(normalUserEntities) {
             };
@@ -153,7 +197,13 @@ public class NormalUserResource {
 
             normalUserEntity.getActivitiesOwned().clear();
             normalUserEntity.getActivitiesParticipated().clear();
-            normalUserEntity.getInterests().clear();
+            if (!normalUserEntity.getInterests().isEmpty()) {
+                for (CategoryEntity interest : normalUserEntity.getInterests()) {
+                    interest.setParentCategory(null);
+                    interest.getSubCategories().clear();
+                    interest.getActivities().clear();
+                }
+            }
 
             GenericEntity<NormalUserEntity> genericEntity = new GenericEntity<NormalUserEntity>(normalUserEntity) {
             };
@@ -192,7 +242,13 @@ public class NormalUserResource {
             
             normalUserEntity.getActivitiesOwned().clear();
             normalUserEntity.getActivitiesParticipated().clear();
-            normalUserEntity.getInterests().clear();
+            if (!normalUserEntity.getInterests().isEmpty()) {
+                for (CategoryEntity interest : normalUserEntity.getInterests()) {
+                    interest.setParentCategory(null);
+                    interest.getSubCategories().clear();
+                    interest.getActivities().clear();
+                }
+            }
             
             GenericEntity<NormalUserEntity> genericEntity = new GenericEntity<NormalUserEntity>(normalUserEntity) {
             };
