@@ -49,4 +49,6 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public void creditTokens(List<NormalUserEntity> users);
 
+    public Long editNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException;
+
 }

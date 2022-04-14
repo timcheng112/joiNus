@@ -84,6 +84,32 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
         }
     }
 
+    //for Edit My Profile
+    @Override
+    public Long editNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException {
+        if (normalUserEntity != null && normalUserEntity.getUserId() != null) {
+            Set<ConstraintViolation<NormalUserEntity>> constraintViolations = validator.validate(normalUserEntity);
+
+            if (constraintViolations.isEmpty()) {
+                NormalUserEntity normalUserEntityToUpdate = retrieveNormalUserByUserId(normalUserEntity.getUserId());
+
+                if (normalUserEntityToUpdate.getUserId().equals(normalUserEntity.getUserId())) {
+                    normalUserEntityToUpdate.setEmail(normalUserEntity.getEmail());
+                    normalUserEntityToUpdate.setInterests(normalUserEntity.getInterests());
+                    normalUserEntityToUpdate.setName(normalUserEntity.getName());
+                    
+                    return normalUserEntity.getUserId();
+                } else {
+                    throw new UpdateNormalUserException("User ID error");
+                }
+            } else {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        } else {
+            throw new NormalUserNotFoundException("User ID not provided for user to be updated");
+        }
+    }
+    
     @Override
     public List<NormalUserEntity> retrieveAllNormalUser() {
         Query query = em.createQuery("SELECT f FROM NormalUserEntity f ORDER BY f.name ASC");
