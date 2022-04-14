@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CategoryEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -210,6 +211,34 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
         }
 
         return msg;
+    }
+
+    public List<CategoryEntity> retrieveSubCategories(CategoryEntity category) {
+        return category.getSubCategories();
+    }
+
+    //not sure if accurate yet.
+    @Override
+    public List<CategoryEntity> retrieveAllSubCategories(CategoryEntity category) {
+        List<CategoryEntity> subcategories = new ArrayList<CategoryEntity>();
+        subcategories.add(category);
+
+        for (CategoryEntity c : category.getSubCategories()) {
+
+            if (!c.getSubCategories().isEmpty()) {
+                List<CategoryEntity> subsubcategories = retrieveAllSubCategories(c);
+                //add items from subsubcategorries to subcategory
+                while (!subsubcategories.isEmpty()) {
+                    CategoryEntity temp = subsubcategories.get(0);
+                    subsubcategories.remove(0);
+                    subcategories.add(temp);
+                }
+            } else {
+                subcategories.add(c);
+            }
+        }
+
+        return subcategories;
     }
 
     @Override

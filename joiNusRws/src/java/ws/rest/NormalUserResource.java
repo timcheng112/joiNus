@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -206,6 +207,26 @@ public class NormalUserResource {
         if (req != null) {
             try {
                 Long newNormalUserId = normalUserEntitySessionBeanLocal.createNewNormalUser(req.getNormalUser()).getUserId();
+
+                return Response.status(Response.Status.OK).entity(newNormalUserId).build();
+            } catch (Exception ex) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new record request").build();
+        }
+    }
+    
+    @Path("editNormalUser")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editNormalUser(CreateNormalUserReq req) {
+        System.out.println("ws.rest.NormalUserResource.editNormalUser()");
+        System.out.println(req);
+        if (req != null) {
+            try {
+                Long newNormalUserId = normalUserEntitySessionBeanLocal.editNormalUser(req.getNormalUser());
 
                 return Response.status(Response.Status.OK).entity(newNormalUserId).build();
             } catch (Exception ex) {
