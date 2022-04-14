@@ -152,14 +152,28 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         Query query = em.createQuery("SELECT a FROM ActivityEntity a ORDER BY a.activityName ASC");
         List<ActivityEntity> activityList = query.getResultList();
+        List<ActivityEntity> filtered = new ArrayList<>();
 
         System.out.println("activityList size = " + activityList.size());
-
+        
         List<ActivityEntity> interestedList = new ArrayList<ActivityEntity>();
         List<ActivityEntity> uninterestedList = new ArrayList<ActivityEntity>();
 
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         System.out.println("user = " + user.getName());
+        
+        //CHECK IF YOU ARE ALREADY PARTICIPATING
+        for (ActivityEntity activity: activityList){
+            System.out.println(activity.getActivityName());
+            if (user.getActivitiesOwned().contains(activity) || user.getActivitiesParticipated().contains(activity)) {
+                System.out.println("********************filterred out " + activity.getActivityName());
+            } else
+            {
+                filtered.add(activity);
+            }
+        }
+        
+        activityList = filtered;
 
         user.getInterests().size();
         List<CategoryEntity> interests = user.getInterests();
