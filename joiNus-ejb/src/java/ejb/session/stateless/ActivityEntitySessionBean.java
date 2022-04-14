@@ -149,47 +149,50 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     @Override
     public List<ActivityEntity> retrieveAllActivitiesIP(long userId) {
         System.out.println("**********retrieve all activities IP has been called.");
-        
+
         Query query = em.createQuery("SELECT a FROM ActivityEntity a ORDER BY a.activityName ASC");
         List<ActivityEntity> activityList = query.getResultList();
-        
+
         System.out.println("activityList size = " + activityList.size());
-        
+
         List<ActivityEntity> interestedList = new ArrayList<ActivityEntity>();
         List<ActivityEntity> uninterestedList = new ArrayList<ActivityEntity>();
 
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         System.out.println("user = " + user.getName());
-        
+
         user.getInterests().size();
         List<CategoryEntity> interests = user.getInterests();
         System.out.println("user interests: " + interests.size());
 
-        //for each activity
-        for (ActivityEntity a : activityList) {
-            
-            //CONSIDER EDGE CASE WHERE THERES NO INTEREST!
-            
-            //for each interest gather all of its subinterests, and check if any of them are equal to the activity category.
-            for (CategoryEntity interest : interests) {
-                List<CategoryEntity> subInterest = categoryEntitySessionBeanLocal.retrieveAllSubCategories(interest);
-                if (subInterest.contains(a.getCategory())) {
-                    System.out.println("added interested category:" + a.getCategory().getCategoryName());
-                    interestedList.add(a);
-                } else {
-                    uninterestedList.add(a);
-                    System.out.println("added uninterested category:" + a.getCategory().getCategoryName());
+        if (interests.isEmpty()) {
+            return activityList;
+        } else {
+            //for each activity
+            for (ActivityEntity a : activityList) {
+
+                //CONSIDER EDGE CASE WHERE THERES NO INTEREST!
+                //for each interest gather all of its subinterests, and check if any of them are equal to the activity category.
+                for (CategoryEntity interest : interests) {
+                    List<CategoryEntity> subInterest = categoryEntitySessionBeanLocal.retrieveAllSubCategories(interest);
+                    if (subInterest.contains(a.getCategory())) {
+                        System.out.println("added interested category:" + a.getCategory().getCategoryName());
+                        interestedList.add(a);
+                    } else {
+                        uninterestedList.add(a);
+                        System.out.println("added uninterested category:" + a.getCategory().getCategoryName());
+                    }
                 }
             }
-        }
 
-        while (!uninterestedList.isEmpty()) {
-            ActivityEntity temp = uninterestedList.get(0);
-            uninterestedList.remove(0);
-            interestedList.add(temp);
-            System.out.println("uninterested list:" + uninterestedList.toString());
+            while (!uninterestedList.isEmpty()) {
+                ActivityEntity temp = uninterestedList.get(0);
+                uninterestedList.remove(0);
+                interestedList.add(temp);
+                System.out.println("uninterested list:" + uninterestedList.toString());
+            }
+            return interestedList;
         }
-        return interestedList;
     }
 
     @Override
