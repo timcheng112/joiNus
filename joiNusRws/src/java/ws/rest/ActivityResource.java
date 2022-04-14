@@ -97,6 +97,8 @@ public class ActivityResource {
                         if (activity.getCategory().getParentCategory().getSubCategories() != null) {
                             activity.getCategory().getParentCategory().getSubCategories().clear();
                         }
+                        activity.getCategory().getParentCategory().setParentCategory(null);
+                        activity.getCategory().getParentCategory().setActivities(null);
                     }
                     activity.getCategory().setActivities(null);
                 }
@@ -142,10 +144,12 @@ public class ActivityResource {
                 System.out.println(activity.getActivityName());
                 System.out.println(activity.getActivityDescription());
 
+                System.out.println("test a");
                 activity.getActivityOwner().setInterests(null);
                 activity.getActivityOwner().setActivitiesParticipated(null);
                 activity.getActivityOwner().setActivitiesOwned(null);
 
+                System.out.println("test b");
                 if (activity.getParticipants() != null) {
                     for (NormalUserEntity participant : activity.getParticipants()) {
                         participant.setInterests(null);
@@ -153,6 +157,7 @@ public class ActivityResource {
                         participant.setActivitiesOwned(null);
                     }
                 }
+                System.out.println("test c");
 
                 if (activity.getCategory() != null) {
                     activity.getCategory().setSubCategories(null);
@@ -160,9 +165,13 @@ public class ActivityResource {
                         if (activity.getCategory().getParentCategory().getSubCategories() != null) {
                             activity.getCategory().getParentCategory().getSubCategories().clear();
                         }
+                        activity.getCategory().getParentCategory().setParentCategory(null);
+                        activity.getCategory().getParentCategory().setActivities(null);
                     }
                     activity.getCategory().setActivities(null);
                 }
+
+                System.out.println("test d");
 
                 if (activity.getBooking() != null) {
                     activity.getBooking().setActivity(null);
@@ -171,6 +180,7 @@ public class ActivityResource {
                         activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
                     }
                 }
+                System.out.println("test e");
 
 //                for (CommentEntity comment : activity.getComments()) {
 //                    comment.setCommentOwner(null);
@@ -180,12 +190,15 @@ public class ActivityResource {
                         image.setPostedBy(null);
                     }
                 }
+                System.out.println("test f");
             }
+            System.out.println("reached end of for loop");
             GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
             };
             System.out.println(genericEntity.getEntity());
             return Response.status(Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
+            System.out.println("CAUGHT ERROR HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }

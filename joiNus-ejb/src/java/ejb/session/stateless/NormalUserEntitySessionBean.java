@@ -5,10 +5,12 @@
  */
 package ejb.session.stateless;
 
+import entity.CategoryEntity;
 import entity.NormalUserEntity;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +22,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.CategoryNotFoundException;
 import util.exception.DeleteNormalUserException;
 import util.exception.InputDataValidationException;
 import util.exception.InsufficientBookingTokensException;
@@ -37,6 +40,9 @@ import util.security.CryptographicHelper;
 @Stateless
 public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanLocal {
 
+    @EJB
+    private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
+    
     @PersistenceContext(unitName = "joiNus-ejbPU")
     private EntityManager em;
 
@@ -95,8 +101,18 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
                 if (normalUserEntityToUpdate.getUserId().equals(normalUserEntity.getUserId())) {
                     normalUserEntityToUpdate.setEmail(normalUserEntity.getEmail());
-                    normalUserEntityToUpdate.setInterests(normalUserEntity.getInterests());
                     normalUserEntityToUpdate.setName(normalUserEntity.getName());
+                    
+                    //set CategoryEntity for interests
+                    normalUserEntityToUpdate.getInterests().clear();
+                    for (CategoryEntity i : normalUserEntity.getInterests()) {
+                        try {
+                        CategoryEntity iToAdd = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(i.getCategoryId());
+                        normalUserEntityToUpdate.getInterests().add(iToAdd);
+                        } catch (CategoryNotFoundException ex) {
+                            System.out.println("Unexpected error: Category not found");
+                        }
+                    }
                     
                     return normalUserEntity.getUserId();
                 } else {
