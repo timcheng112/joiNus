@@ -11,7 +11,6 @@ import entity.ActivityEntity;
 import entity.CommentEntity;
 import entity.ImageEntity;
 import entity.NormalUserEntity;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -91,11 +90,11 @@ public class ActivityResource {
                     participant.setActivitiesParticipated(null);
                     participant.setActivitiesOwned(null);
                 }
-                
+
                 if (activity.getCategory() != null) {
                     activity.getCategory().setSubCategories(null);
-                    if (activity.getCategory().getParentCategory() != null){
-                        if(activity.getCategory().getParentCategory().getSubCategories()!= null){
+                    if (activity.getCategory().getParentCategory() != null) {
+                        if (activity.getCategory().getParentCategory().getSubCategories() != null) {
                             activity.getCategory().getParentCategory().getSubCategories().clear();
                         }
                     }
@@ -157,8 +156,8 @@ public class ActivityResource {
 
                 if (activity.getCategory() != null) {
                     activity.getCategory().setSubCategories(null);
-                    if (activity.getCategory().getParentCategory() != null){
-                        if(activity.getCategory().getParentCategory().getSubCategories()!= null){
+                    if (activity.getCategory().getParentCategory() != null) {
+                        if (activity.getCategory().getParentCategory().getSubCategories() != null) {
                             activity.getCategory().getParentCategory().getSubCategories().clear();
                         }
                     }
@@ -201,23 +200,28 @@ public class ActivityResource {
         try {
             NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(username, password);
             System.out.println("********** ActivityResource.retrieveProduct(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
+            System.out.println("Activity ID: " + activityId);
 
             ActivityEntity activityEntity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(activityId);
 
+            System.out.println("Activity Entity: " + activityEntity);
             activityEntity.getActivityOwner().getInterests().clear();
             activityEntity.getActivityOwner().getActivitiesParticipated().clear();
             activityEntity.getActivityOwner().getActivitiesOwned().clear();
 
+            System.out.println("1");
             for (NormalUserEntity participant : activityEntity.getParticipants()) {
                 participant.getInterests().clear();
                 participant.getActivitiesParticipated().clear();
                 participant.getActivitiesOwned().clear();
             }
 
+            System.out.println("2");
             activityEntity.getCategory().getSubCategories().clear();
             activityEntity.getCategory().setParentCategory(null);
             activityEntity.getCategory().getActivities().clear();
 
+            System.out.println("3");
             if (activityEntity.getBooking() != null) {
                 activityEntity.getBooking().setActivity(null);
                 if (activityEntity.getBooking().getTimeSlot() != null) {
@@ -226,10 +230,13 @@ public class ActivityResource {
                 }
             }
 
+            System.out.println("4");
             for (ImageEntity image : activityEntity.getGallery()) {
                 image.setPostedBy(null);
             }
 
+            System.out.println("5");
+            System.out.println(activityEntity);
             return Response.status(Status.OK).entity(activityEntity).build();
         } catch (InvalidLoginCredentialException ex) {
             return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
@@ -325,8 +332,57 @@ public class ActivityResource {
                 System.out.println(addCommentReq.getText());
 
                 Long commentEntityId = activityEntitySessionBeanLocal.addComment(commentEntity, addCommentReq.getActivityId());
+                ActivityEntity activity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(addCommentReq.getActivityId());
+//                    return Response.status(Response.Status.OK).entity(obj).build();
 
-                return Response.status(Response.Status.OK).entity(commentEntityId).build();
+                //dealing w cyclic reference issue
+                activity.getActivityOwner().setInterests(null);
+                activity.getActivityOwner().setActivitiesParticipated(null);
+                activity.getActivityOwner().setActivitiesOwned(null);
+
+                if (activity.getParticipants() != null) {
+                    for (NormalUserEntity participant : activity.getParticipants()) {
+                        participant.setInterests(null);
+                        participant.setActivitiesParticipated(null);
+                        participant.setActivitiesOwned(null);
+                    }
+                }
+
+                if (activity.getCategory() != null) {
+                    activity.getCategory().setSubCategories(null);
+                    if (activity.getCategory().getParentCategory() != null) {
+                        if (activity.getCategory().getParentCategory().getSubCategories() != null) {
+                            activity.getCategory().getParentCategory().getSubCategories().clear();
+                        }
+                    }
+                    activity.getCategory().setActivities(null);
+                }
+
+                if (activity.getBooking() != null) {
+                    activity.getBooking().setActivity(null);
+                    if (activity.getBooking().getTimeSlot() != null) {
+                        activity.getBooking().getTimeSlot().setBooking(null);
+                        activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
+                    }
+                }
+
+                if (activity.getComments() != null) {
+                    for (CommentEntity comment : activity.getComments()) {
+                        comment.setCommentOwner(null);
+                    }
+                }
+
+                if (activity.getGallery() != null) {
+                    for (ImageEntity image : activity.getGallery()) {
+                        image.setPostedBy(null);
+                    }
+                }
+                GenericEntity<ActivityEntity> genericEntity = new GenericEntity<ActivityEntity>(activity) {
+                };
+
+                System.out.println(genericEntity.getEntity());
+                return Response.status(Status.OK).entity(commentEntityId).build();
+//                return Response.status(Response.Status.OK).entity(commentEntityId).build();
             } catch (ActivityNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             } catch (InvalidLoginCredentialException ex) {
@@ -384,9 +440,46 @@ public class ActivityResource {
                     activityEntitySessionBeanLocal.signUpForActivity(signUpForActivityReq.getActivityId(), normalUserEntity.getUserId());
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "signed up");
 //                    return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
-                    ActivityEntity activityEntity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(signUpForActivityReq.getActivityId());
+                    ActivityEntity activity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(signUpForActivityReq.getActivityId());
 //                    return Response.status(Response.Status.OK).entity(obj).build();
-                    GenericEntity<ActivityEntity> genericEntity = new GenericEntity<ActivityEntity>(activityEntity) {
+
+                    //dealing w cyclic reference issue
+                    activity.getActivityOwner().setInterests(null);
+                    activity.getActivityOwner().setActivitiesParticipated(null);
+                    activity.getActivityOwner().setActivitiesOwned(null);
+
+                    if (activity.getParticipants() != null) {
+                        for (NormalUserEntity participant : activity.getParticipants()) {
+                            participant.setInterests(null);
+                            participant.setActivitiesParticipated(null);
+                            participant.setActivitiesOwned(null);
+                        }
+                    }
+
+                    if (activity.getCategory() != null) {
+                        activity.getCategory().setSubCategories(null);
+                        if (activity.getCategory().getParentCategory() != null) {
+                            if (activity.getCategory().getParentCategory().getSubCategories() != null) {
+                                activity.getCategory().getParentCategory().getSubCategories().clear();
+                            }
+                        }
+                        activity.getCategory().setActivities(null);
+                    }
+
+                    if (activity.getBooking() != null) {
+                        activity.getBooking().setActivity(null);
+                        if (activity.getBooking().getTimeSlot() != null) {
+                            activity.getBooking().getTimeSlot().setBooking(null);
+                            activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
+                        }
+                    }
+
+                    if (activity.getGallery() != null) {
+                        for (ImageEntity image : activity.getGallery()) {
+                            image.setPostedBy(null);
+                        }
+                    }
+                    GenericEntity<ActivityEntity> genericEntity = new GenericEntity<ActivityEntity>(activity) {
                     };
 
                     System.out.println(genericEntity.getEntity());
