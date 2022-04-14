@@ -215,42 +215,60 @@ public class ActivityResource {
             System.out.println("********** ActivityResource.retrieveProduct(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
             System.out.println("Activity ID: " + activityId);
 
-            ActivityEntity activityEntity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(activityId);
+            ActivityEntity activity = activityEntitySessionBeanLocal.retrieveActivityByActivityId(activityId);
 
-            System.out.println("Activity Entity: " + activityEntity);
-            activityEntity.getActivityOwner().getInterests().clear();
-            activityEntity.getActivityOwner().getActivitiesParticipated().clear();
-            activityEntity.getActivityOwner().getActivitiesOwned().clear();
+            System.out.println("Activity Entity: " + activity);
+            System.out.println("test a");
+            activity.getActivityOwner().setInterests(null);
+            activity.getActivityOwner().setActivitiesParticipated(null);
+            activity.getActivityOwner().setActivitiesOwned(null);
 
-            System.out.println("1");
-            for (NormalUserEntity participant : activityEntity.getParticipants()) {
-                participant.getInterests().clear();
-                participant.getActivitiesParticipated().clear();
-                participant.getActivitiesOwned().clear();
+            System.out.println("test b");
+            if (activity.getParticipants() != null) {
+                for (NormalUserEntity participant : activity.getParticipants()) {
+                    participant.setInterests(null);
+                    participant.setActivitiesParticipated(null);
+                    participant.setActivitiesOwned(null);
+                }
+            }
+            System.out.println("test c");
+
+            if (activity.getCategory() != null) {
+                activity.getCategory().setSubCategories(null);
+                if (activity.getCategory().getParentCategory() != null) {
+                    if (activity.getCategory().getParentCategory().getSubCategories() != null) {
+                        activity.getCategory().getParentCategory().getSubCategories().clear();
+                    }
+                    activity.getCategory().getParentCategory().setParentCategory(null);
+                    activity.getCategory().getParentCategory().setActivities(null);
+                }
+                activity.getCategory().setActivities(null);
             }
 
-            System.out.println("2");
-            activityEntity.getCategory().getSubCategories().clear();
-            activityEntity.getCategory().setParentCategory(null);
-            activityEntity.getCategory().getActivities().clear();
+            System.out.println("test d");
 
-            System.out.println("3");
-            if (activityEntity.getBooking() != null) {
-                activityEntity.getBooking().setActivity(null);
-                if (activityEntity.getBooking().getTimeSlot() != null) {
-                    activityEntity.getBooking().getTimeSlot().setBooking(null);
-                    activityEntity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
+            if (activity.getBooking() != null) {
+                activity.getBooking().setActivity(null);
+                if (activity.getBooking().getTimeSlot() != null) {
+                    activity.getBooking().getTimeSlot().setBooking(null);
+                    activity.getBooking().getTimeSlot().getFacility().getTimeSlots().clear();
+                }
+            }
+            System.out.println("test e");
+
+//            for (CommentEntity comment : activity.getComments()) {
+//                comment.setCommentOwner(null);
+//            }
+            
+            if (activity.getGallery() != null) {
+                for (ImageEntity image : activity.getGallery()) {
+                    image.setPostedBy(null);
                 }
             }
 
-            System.out.println("4");
-            for (ImageEntity image : activityEntity.getGallery()) {
-                image.setPostedBy(null);
-            }
-
             System.out.println("5");
-            System.out.println(activityEntity);
-            return Response.status(Status.OK).entity(activityEntity).build();
+            System.out.println(activity);
+            return Response.status(Status.OK).entity(activity).build();
         } catch (InvalidLoginCredentialException ex) {
             return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         } catch (ActivityNotFoundException ex) {
