@@ -7,26 +7,28 @@ package jsf.managedbean;
 
 import ejb.enums.SlotStatusEnum;
 import ejb.session.stateless.ActivityEntitySessionBeanLocal;
+import ejb.session.stateless.AdminEntitySessionBeanLocal;
 import ejb.session.stateless.BookingEntitySessionBeanLocal;
 import ejb.session.stateless.TimeSlotEntitySessionBeanLocal;
 import entity.ActivityEntity;
+import entity.AdminEntity;
 import entity.TimeSlotEntity;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 import util.exception.ActivityNotFoundException;
+import util.exception.AdminNotFoundException;
 import util.exception.BookingNotFoundException;
 import util.exception.TimeSlotNotFoundException;
 
@@ -37,6 +39,12 @@ import util.exception.TimeSlotNotFoundException;
 @Named(value = "activityManagedBean")
 @ViewScoped
 public class ActivityManagedBean implements Serializable {
+
+    @EJB(name = "AdminEntitySessionBeanLocal")
+    private AdminEntitySessionBeanLocal adminEntitySessionBeanLocal;
+
+    @Inject
+    private AdminLoginManagedBean adminLoginManagedBean;
 
     @EJB(name = "BookingEntitySessionBeanLocal")
     private BookingEntitySessionBeanLocal bookingEntitySessionBeanLocal;
@@ -74,8 +82,13 @@ public class ActivityManagedBean implements Serializable {
 
     @PostConstruct
     public void postConstruct() {
-        activityEntities = activityEntitySessionBeanLocal.retrieveAllActivities();
-        ongoingActivityEntities = activityEntitySessionBeanLocal.retrieveAllOngoingActivities();
+        try {
+            activityEntities = activityEntitySessionBeanLocal.retrieveAllActivities();
+            AdminEntity admin = adminEntitySessionBeanLocal.retrieveAdminByUsername(adminLoginManagedBean.getUsername());
+            ongoingActivityEntities = activityEntitySessionBeanLocal.retrieveAllOngoingActivities(admin.getClub());
+        } catch (AdminNotFoundException ex) {
+            //
+        }
     }
 
 //    public void viewActivityDetails(ActionEvent event) throws IOException {
@@ -89,7 +102,12 @@ public class ActivityManagedBean implements Serializable {
         timeSlots = new ArrayList<>();
         selectedTimeSlotId = null;
         setActivityEntities(activityEntitySessionBeanLocal.retrieveAllActivities());
-        setOngoingActivityEntities(activityEntitySessionBeanLocal.retrieveAllOngoingActivities());
+        try {
+            AdminEntity admin = adminEntitySessionBeanLocal.retrieveAdminByUsername(adminLoginManagedBean.getUsername());
+            setOngoingActivityEntities(activityEntitySessionBeanLocal.retrieveAllOngoingActivities(admin.getClub()));
+        } catch (AdminNotFoundException ex) {
+            //
+        }
     }
 
     public void editActivityDate(ActionEvent event) throws IOException {
@@ -125,7 +143,7 @@ public class ActivityManagedBean implements Serializable {
     public void retrieveTimeslots(ActionEvent event) {
         System.out.println("edited activity date is");
         System.out.println(editedActivityDate.getDate());
-        List<TimeSlotEntity> retrievedTimeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate()+1, activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
+        List<TimeSlotEntity> retrievedTimeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(editedActivityDate.getYear() + 1900, editedActivityDate.getMonth(), editedActivityDate.getDate() + 1, activityEntityToView.getBooking().getTimeSlot().getFacility().getFacilityId());
         List<TimeSlotEntity> availTimeSlots = new ArrayList<>();
         if (retrievedTimeSlots != null) {
             for (TimeSlotEntity timeSlot : retrievedTimeSlots) {

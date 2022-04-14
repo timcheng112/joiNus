@@ -253,7 +253,7 @@ public class ActivityResource {
                 activityEntity.setActivityName(createActivityReq.getActivityName());
                 activityEntity.setActivityDescription(createActivityReq.getActivityDescription());
                 activityEntity.setMaxParticipants(createActivityReq.getActivityMaxParticipants());
-                activityEntity.setTags(createActivityReq.getTags());
+                activityEntity.setTags(createActivityReq.getActivityTags());
                 activityEntity.setActivityOwner(normalUserEntity);
 
                 activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createActivityReq.getCategoryId(), createActivityReq.getTimeSlotId(), null);
@@ -284,12 +284,12 @@ public class ActivityResource {
                 activityEntity.setActivityName(createNewNoFacilityActivityReq.getActivityName());
                 activityEntity.setActivityDescription(createNewNoFacilityActivityReq.getActivityDescription());
                 activityEntity.setMaxParticipants(createNewNoFacilityActivityReq.getActivityMaxParticipants());
-                if (createNewNoFacilityActivityReq.getTags() != null) {
+                if (createNewNoFacilityActivityReq.getActivityTags() != null) {
                     System.out.println("Tags is Not Null");
                 } else {
                     System.out.println("Empty");
                 }
-                activityEntity.setTags(createNewNoFacilityActivityReq.getTags());
+                activityEntity.setTags(createNewNoFacilityActivityReq.getActivityTags());
                 activityEntity.setActivityOwner(normalUserEntity);
 
                 Date activityDate = new Date(createNewNoFacilityActivityReq.getActivityYear() - 1900, createNewNoFacilityActivityReq.getActivityMonth() - 1, createNewNoFacilityActivityReq.getActivityDay(), createNewNoFacilityActivityReq.getActivityHour(), createNewNoFacilityActivityReq.getActivityMinute());

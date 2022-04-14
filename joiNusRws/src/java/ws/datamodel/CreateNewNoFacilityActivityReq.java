@@ -19,7 +19,7 @@ public class CreateNewNoFacilityActivityReq {
     private String activityName;
     private String activityDescription;
     private Integer activityMaxParticipants;
-    private List<String> tags;
+    private List<String> activityTags;
     private Long categoryId;
     private Integer activityYear;
     private Integer activityMonth;
@@ -30,13 +30,13 @@ public class CreateNewNoFacilityActivityReq {
     public CreateNewNoFacilityActivityReq() {
     }
 
-    public CreateNewNoFacilityActivityReq(String username, String password, String activityName, String activityDescription, Integer activityMaxParticipants, List<String> tags, Long categoryId, Integer activityYear, Integer activityMonth, Integer activityDay, Integer activityHour, Integer activityMinute) {
+    public CreateNewNoFacilityActivityReq(String username, String password, String activityName, String activityDescription, Integer activityMaxParticipants, List<String> activityTags, Long categoryId, Integer activityYear, Integer activityMonth, Integer activityDay, Integer activityHour, Integer activityMinute) {
         this.username = username;
         this.password = password;
         this.activityName = activityName;
         this.activityDescription = activityDescription;
         this.activityMaxParticipants = activityMaxParticipants;
-        this.tags = tags;
+        this.activityTags = activityTags;
         this.categoryId = categoryId;
         this.activityYear = activityYear;
         this.activityMonth = activityMonth;
@@ -116,17 +116,17 @@ public class CreateNewNoFacilityActivityReq {
     }
 
     /**
-     * @return the tags
+     * @return the activityTags
      */
-    public List<String> getTags() {
-        return tags;
+    public List<String> getActivityTags() {
+        return activityTags;
     }
 
     /**
      * @param tags the tags to set
      */
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setActivityTags(List<String> activityTags) {
+        this.activityTags = activityTags;
     }
 
     /**

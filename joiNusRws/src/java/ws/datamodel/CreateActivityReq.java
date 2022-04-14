@@ -20,20 +20,20 @@ public class CreateActivityReq {
     private String activityName;
     private String activityDescription;
     private Integer activityMaxParticipants;
-    private List<String> tags;
+    private List<String> activityTags;
     private Long categoryId;
     private Long timeSlotId;
 
     public CreateActivityReq() {
     }
 
-    public CreateActivityReq(String username, String password, String activityName, String activityDescription, Integer activityMaxParticipants, List<String> tags, Long categoryId, Long timeSlotId) {
+    public CreateActivityReq(String username, String password, String activityName, String activityDescription, Integer activityMaxParticipants, List<String> activityTags, Long categoryId, Long timeSlotId) {
         this.username = username;
         this.password = password;
         this.activityName = activityName;
         this.activityDescription = activityDescription;
         this.activityMaxParticipants = activityMaxParticipants;
-        this.tags = tags;
+        this.activityTags = activityTags;
         this.categoryId = categoryId;
         this.timeSlotId = timeSlotId;
     }
@@ -145,15 +145,15 @@ public class CreateActivityReq {
     /**
      * @return the tags
      */
-    public List<String> getTags() {
-        return tags;
+    public List<String> getActivityTags() {
+        return activityTags;
     }
 
     /**
      * @param tags the tags to set
      */
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setActivityTags(List<String> activityTags) {
+        this.activityTags = activityTags;
     }
 
     /**

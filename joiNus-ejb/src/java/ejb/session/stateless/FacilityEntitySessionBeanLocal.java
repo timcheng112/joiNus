@@ -45,5 +45,7 @@ public interface FacilityEntitySessionBeanLocal {
 
     public void updateFacilityNew(FacilityEntity facilityEntity, int newOpening, int newClosing) throws FacilityNotFoundException, UpdateFacilityException, InputDataValidationException;
 
+    public List<FacilityEntity> retrieveAllFacilitiesByClub(String club);
+
     
 }
