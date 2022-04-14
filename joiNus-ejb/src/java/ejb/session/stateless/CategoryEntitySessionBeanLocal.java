@@ -37,5 +37,7 @@ public interface CategoryEntitySessionBeanLocal {
 
     public void updateCategoryById(Long categoryId, String categoryName, Long parentCategoryId) throws InputDataValidationException, CategoryNotFoundException, UpdateCategoryException;
 
+    public List<CategoryEntity> retrieveAllSubCategories(CategoryEntity category);
+
     
 }

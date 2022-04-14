@@ -91,10 +91,16 @@ public class ActivityResource {
                     participant.setActivitiesParticipated(null);
                     participant.setActivitiesOwned(null);
                 }
-
-                activity.getCategory().setSubCategories(null);
-                activity.getCategory().setParentCategory(null);
-                activity.getCategory().setActivities(null);
+                
+                if (activity.getCategory() != null) {
+                    activity.getCategory().setSubCategories(null);
+                    if (activity.getCategory().getParentCategory() != null){
+                        if(activity.getCategory().getParentCategory().getSubCategories()!= null){
+                            activity.getCategory().getParentCategory().getSubCategories().clear();
+                        }
+                    }
+                    activity.getCategory().setActivities(null);
+                }
 
                 if (activity.getBooking() != null) {
                     activity.getBooking().setActivity(null);
@@ -122,15 +128,15 @@ public class ActivityResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
-    @Path("retrieveAllActivitiesIP/{activityId}")
+
+    @Path("retrieveAllActivitiesIP/{userId}")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllActivitiesIP(@PathParam("activityId") Long activityId) {
+    public Response retrieveAllActivitiesIP(@PathParam("userId") Long userId) {
 
         try {
-            List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveAllActivitiesIP(activityId);
+            List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveAllActivitiesIP(userId);
 
             for (ActivityEntity activity : activityEntities) {
                 System.out.println(activity.getActivityId());
@@ -141,15 +147,23 @@ public class ActivityResource {
                 activity.getActivityOwner().setActivitiesParticipated(null);
                 activity.getActivityOwner().setActivitiesOwned(null);
 
-                for (NormalUserEntity participant : activity.getParticipants()) {
-                    participant.setInterests(null);
-                    participant.setActivitiesParticipated(null);
-                    participant.setActivitiesOwned(null);
+                if (activity.getParticipants() != null) {
+                    for (NormalUserEntity participant : activity.getParticipants()) {
+                        participant.setInterests(null);
+                        participant.setActivitiesParticipated(null);
+                        participant.setActivitiesOwned(null);
+                    }
                 }
 
-                activity.getCategory().setSubCategories(null);
-                activity.getCategory().setParentCategory(null);
-                activity.getCategory().setActivities(null);
+                if (activity.getCategory() != null) {
+                    activity.getCategory().setSubCategories(null);
+                    if (activity.getCategory().getParentCategory() != null){
+                        if(activity.getCategory().getParentCategory().getSubCategories()!= null){
+                            activity.getCategory().getParentCategory().getSubCategories().clear();
+                        }
+                    }
+                    activity.getCategory().setActivities(null);
+                }
 
                 if (activity.getBooking() != null) {
                     activity.getBooking().setActivity(null);
@@ -162,15 +176,14 @@ public class ActivityResource {
 //                for (CommentEntity comment : activity.getComments()) {
 //                    comment.setCommentOwner(null);
 //                }
-                for (ImageEntity image : activity.getGallery()) {
-                    image.setPostedBy(null);
+                if (activity.getGallery() != null) {
+                    for (ImageEntity image : activity.getGallery()) {
+                        image.setPostedBy(null);
+                    }
                 }
-
             }
-
             GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
             };
-
             System.out.println(genericEntity.getEntity());
             return Response.status(Status.OK).entity(genericEntity).build();
         } catch (Exception ex) {
@@ -278,8 +291,6 @@ public class ActivityResource {
                 }
                 activityEntity.setTags(createNewNoFacilityActivityReq.getTags());
                 activityEntity.setActivityOwner(normalUserEntity);
-
-                
 
                 Date activityDate = new Date(createNewNoFacilityActivityReq.getActivityYear() - 1900, createNewNoFacilityActivityReq.getActivityMonth() - 1, createNewNoFacilityActivityReq.getActivityDay(), createNewNoFacilityActivityReq.getActivityHour(), createNewNoFacilityActivityReq.getActivityMinute());
                 System.out.println("test");
