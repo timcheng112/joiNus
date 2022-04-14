@@ -103,17 +103,19 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
                     normalUserEntityToUpdate.setEmail(normalUserEntity.getEmail());
                     normalUserEntityToUpdate.setName(normalUserEntity.getName());
                     
-                    //set CategoryEntity for interests
-                    normalUserEntityToUpdate.getInterests().clear();
-                    for (CategoryEntity i : normalUserEntity.getInterests()) {
-                        try {
-                        CategoryEntity iToAdd = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(i.getCategoryId());
-                        normalUserEntityToUpdate.getInterests().add(iToAdd);
-                        } catch (CategoryNotFoundException ex) {
-                            System.out.println("Unexpected error: Category not found");
+                    //set CategoryEntity for interests if updated
+                    if (!normalUserEntity.getInterests().isEmpty()) {
+                        normalUserEntityToUpdate.getInterests().clear();
+                        for (CategoryEntity i : normalUserEntity.getInterests()) {
+                            try {
+                                CategoryEntity iToAdd = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(i.getCategoryId());
+                                normalUserEntityToUpdate.getInterests().add(iToAdd);
+                            } catch (CategoryNotFoundException ex) {
+                                System.out.println("Unexpected error: Category not found");
+                            }
                         }
                     }
-                    
+
                     return normalUserEntity.getUserId();
                 } else {
                     throw new UpdateNormalUserException("User ID error");
