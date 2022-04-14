@@ -116,4 +116,23 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
             ex.printStackTrace();
         }
     }
+    
+    @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "*", info = "testTimer") // run every min
+    public void testTimer() {
+        System.out.println("ejb.session.stateless.EjbTimerSessionBean.testTimer()");
+
+        List<NormalUserEntity> users = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
+
+        for (NormalUserEntity user : users) {
+            System.out.println("name");
+
+            System.out.println(user.getName());
+            System.out.println("own");
+
+            System.out.println(user.getActivitiesOwned());
+            System.out.println("part");
+
+            System.out.println(user.getActivitiesParticipated());
+        }
+    }
 }
