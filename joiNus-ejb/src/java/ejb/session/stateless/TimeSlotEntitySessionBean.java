@@ -189,23 +189,21 @@ public class TimeSlotEntitySessionBean implements TimeSlotEntitySessionBeanLocal
     @Override
     public void updateTimeSlot(TimeSlotEntity timeSlotEntity) throws TimeSlotNotFoundException, InputDataValidationException, UpdateTimeSlotException {
         Set<ConstraintViolation<TimeSlotEntity>> constraintViolations = validator.validate(timeSlotEntity);
-
         if (constraintViolations.isEmpty()) {
             if (timeSlotEntity.getTimeSlotId() != null) {
                 TimeSlotEntity timeSlotEntityToUpdate = retrieveTimeSlotById(timeSlotEntity.getTimeSlotId());
 
-                if (timeSlotEntity.getFacility() != timeSlotEntityToUpdate.getFacility()) {
+                if (!(timeSlotEntity.getFacility().getFacilityId().equals(timeSlotEntityToUpdate.getFacility().getFacilityId()))) {
                     throw new UpdateTimeSlotException("Updated timeslot and existing timeslot has a facility mismatch!");
                 }
                 if (timeSlotEntity.getBooking() != null && timeSlotEntity.getBooking() != timeSlotEntityToUpdate.getBooking()) {
                     throw new UpdateTimeSlotException("TimeSlot is already allotted another booking! Please Cancel previous booking first.");
                 }
-
+                
                 timeSlotEntityToUpdate.setBooking(timeSlotEntity.getBooking());
                 if (timeSlotEntity.getBooking() != null) {
                     timeSlotEntity.getBooking().setTimeSlot(timeSlotEntity);
                 }
-
                 //probably no need to update facility ever right?
                 //timeSlotEntityToUpdate.setFacility(facility);
                 timeSlotEntityToUpdate.setTimeSlotTime(timeSlotEntity.getTimeSlotTime());

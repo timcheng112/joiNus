@@ -118,13 +118,10 @@ public class TimeSlotManagedBean implements Serializable {
     public void editTimeSlotStatus() {
         try {
             timeSlotEntitySessionBeanLocal.updateTimeSlot(timeSlotToEdit);
-        } catch (TimeSlotNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
-        } catch (InputDataValidationException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
-        } catch (UpdateTimeSlotException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing timeslot", null));
-        }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TimeSlot Status Updated Successfully", null));
+        } catch (TimeSlotNotFoundException | InputDataValidationException | UpdateTimeSlotException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in editing TimeSlot", null));
+        } 
     }
 
     public void setDatesTimeslots() {

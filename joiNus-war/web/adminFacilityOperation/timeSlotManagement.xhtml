@@ -74,7 +74,7 @@
                 </p:column>
 
                 <p:column headerText="Functions" style="text-align: center" >
-                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formSelectedTimeslots formEditTimeSlot" onclick="PF('dialogEditTimeSlot').show();">
+                    <p:commandButton value="Edit" icon="pi pi-pencil" title="Edit" update="formSelectedTimeslots formEditTimeSlot" oncomplete="PF('dialogEditTimeSlot').show();">
                         <f:setPropertyActionListener value="#{timeslotEntity}" target="#{timeSlotManagedBean.timeSlotToEdit}"/>
                     </p:commandButton>
                 </p:column>
