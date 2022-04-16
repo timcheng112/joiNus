@@ -14,6 +14,7 @@ import entity.NormalUserEntity;
 public class CreateNormalUserReq {
 
     private NormalUserEntity normalUser;
+    private String newPassword;
 
     public CreateNormalUserReq() {
     }
@@ -28,6 +29,20 @@ public class CreateNormalUserReq {
 
     public void setNormalUser(NormalUserEntity normalUser) {
         this.normalUser = normalUser;
+    }
+
+    /**
+     * @return the newPassword
+     */
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    /**
+     * @param newPassword the newPassword to set
+     */
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
 }

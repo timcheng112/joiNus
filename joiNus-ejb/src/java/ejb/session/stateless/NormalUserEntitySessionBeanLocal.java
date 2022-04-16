@@ -53,4 +53,6 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public void deductTokens(Boolean isHosting, NormalUserEntity user, FacilityEntity facilityEntity) throws InsufficientBookingTokensException;
 
+    public Long changePassword(NormalUserEntity normalUserEntity, String newPassword) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException;
+
 }
