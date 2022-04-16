@@ -7,7 +7,6 @@ package ejb.session.stateless;
 
 import ejb.enums.SlotStatusEnum;
 import entity.ActivityEntity;
-import entity.AdminEntity;
 import entity.BookingEntity;
 import entity.CategoryEntity;
 import entity.CommentEntity;
@@ -53,9 +52,6 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     @EJB(name = "TimeSlotEntitySessionBeanLocal")
     private TimeSlotEntitySessionBeanLocal timeSlotEntitySessionBeanLocal;
 
-    @EJB(name = "FacilityEntitySessionBeanLocal")
-    private FacilityEntitySessionBeanLocal facilityEntitySessionBeanLocal;
-
     @EJB(name = "CategoryEntitySessionBeanLocal")
     private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
 
@@ -100,6 +96,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
                 newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
                 newBookingEntity.setActivity(newActivityEntity);
                 newBookingEntity.setTimeSlot(timeSlotEntity);
+                timeSlotEntity.setStatus(SlotStatusEnum.UNAVAILABLE);
 
                 timeSlotEntity.setBooking(newBookingEntity);
 
