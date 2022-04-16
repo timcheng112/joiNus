@@ -52,13 +52,13 @@
                     </p:column>
 
                     <p:column headerText="Action" >
-                        <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View" >
+                        <p:commandButton update="formViewActivity" oncomplete="PF('dialogViewActivity').show()" icon="ui-icon-document" title="View" value="View" >
                             <f:setPropertyActionListener value="#{activityEntity}" target="#{activityManagedBean.activityEntityToView}" />
                         </p:commandButton>
-                        <p:commandButton update="formEditActivity" oncomplete="PF('dialogEditActivity').show()" icon="ui-icon-pencil" title="Edit" >
+                        <p:commandButton update="formEditActivity" oncomplete="PF('dialogEditActivity').show()" icon="ui-icon-pencil" title="Edit" value="Edit">
                             <f:setPropertyActionListener value="#{activityEntity}" target="#{activityManagedBean.activityEntityToView}" />
                         </p:commandButton>
-                        <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages" title="Delete">
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{activityManagedBean.deleteActivity}" update="formAllActivities:dataTableAllActivities formAllActivities:messages" title="Delete" value="Delete">
                             <f:attribute name="activityEntityToDelete" value="#{activityEntity}" />
                             <p:confirm header="Confirmation" message="Are you sure you want to delete #{activityEntity.activityName} (Activity ID: #{activityEntity.activityId})? This action is irreversible and all participants will have their tokens refunded." icon="ui-icon-alert" />
                         </p:commandButton>

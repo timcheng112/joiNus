@@ -151,24 +151,23 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         List<ActivityEntity> filtered = new ArrayList<>();
 
         System.out.println("activityList size = " + activityList.size());
-        
+
         List<ActivityEntity> interestedList = new ArrayList<ActivityEntity>();
         List<ActivityEntity> uninterestedList = new ArrayList<ActivityEntity>();
 
         NormalUserEntity user = em.find(NormalUserEntity.class, userId);
         System.out.println("user = " + user.getName());
-        
-        //CHECK IF YOU ARE ALREADY PARTICIPATING
-        for (ActivityEntity activity: activityList){
+
+        //CHECK IF YOU ARE ALREADY PARTICIPATING / HOSTING EVENT
+        for (ActivityEntity activity : activityList) {
             System.out.println(activity.getActivityName());
-            if (user.getActivitiesOwned().contains(activity) || user.getActivitiesParticipated().contains(activity)) {
+            if (activity.getActivityOwner() == user || activity.getParticipants().contains(user)) {
                 System.out.println("********************filterred out " + activity.getActivityName());
-            } else
-            {
+            } else {
                 filtered.add(activity);
             }
         }
-        
+
         activityList = filtered;
 
         user.getInterests().size();
@@ -302,7 +301,7 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         em.remove(activityEntityToRemove);
 
     }
-    
+
     @Override
     public Long createImage(ImageEntity newImageEntity, Long activityId) {
         ActivityEntity activityEntity = em.find(ActivityEntity.class, activityId);
@@ -411,13 +410,14 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
         int month = date.getMonth();
         int year = date.getYear() + 1900;
-//        int day = nowDate.getDate();
         int day = date.getDate();
         int hour = date.getHours();
+        int min = date.getMinutes();
+        int sec = date.getSeconds();
 
         Date dateXD;
 
-        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.MINUTE, min);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         c.set(Calendar.YEAR, year);
@@ -425,51 +425,61 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         c.set(Calendar.DATE, day);
         c.set(Calendar.HOUR_OF_DAY, hour);
 
-        System.out.println("dateXD is " + c.getTime());
+        dateXD = c.getTime();
+        System.out.println("dateXD is ");
+        System.out.println(dateXD);
 
         List<ActivityEntity> allActivities = retrieveAllActivities();
         List<ActivityEntity> pastHourActivities = new ArrayList<>();
 
         for (ActivityEntity activity : allActivities) { // deal with setting complete
-            System.out.println("Activity facility id is " + activity.getBooking().getTimeSlot().getFacility().getFacilityId());
+            System.out.println("**** Activity facility id is " + activity.getBooking().getTimeSlot().getFacility().getFacilityId() + ", Activity name is " + activity.getActivityName());
             System.out.println("Activity facility timeslot id is " + activity.getBooking().getTimeSlot().getTimeSlotId());
 
             Query query = em.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
             // want to check the past 1 hour
             c.add(Calendar.HOUR_OF_DAY, -1);
-            c.add(Calendar.SECOND, 1);
+            c.add(Calendar.MINUTE, -5);
             dateXD = c.getTime();
             query.setParameter("inStart", dateXD, TemporalType.TIMESTAMP);
-            System.out.println("Starting date of check is " + dateXD);
+            System.out.println("* Starting date of check is " + dateXD);
+            
             c.add(Calendar.HOUR_OF_DAY, 1);
+            c.add(Calendar.MINUTE, 5);
             dateXD = c.getTime();
             query.setParameter("inEnd", dateXD, TemporalType.TIMESTAMP);
-            System.out.println("End date of check is " + dateXD);
+            System.out.println("* End date of check is " + dateXD);
+            
             query.setParameter("inFacility", activity.getBooking().getTimeSlot().getFacility().getFacilityId());
 
             List<TimeSlotEntity> timeSlots = query.getResultList();
             System.out.println(timeSlots);
 
             if (!timeSlots.isEmpty()) {
-                System.out.println("Timeslots found");
+                System.out.println("##### Timeslots found #####");
                 for (TimeSlotEntity ts : timeSlots) {
                     System.out.println("Timeslot ID is " + ts.getTimeSlotId());
                     System.out.println("Timeslot Time is " + ts.getTimeSlotTime());
 
-                    activity.setActivityOver(Boolean.TRUE);
+                    if (!activity.getActivityOver()) {
+                        activity.setActivityOver(Boolean.TRUE);
 
-                    for (NormalUserEntity user : activity.getParticipants()) {
-                        user.setSocialCredits(user.getSocialCredits() + 30); // add social credits +30
+                        for (NormalUserEntity user : activity.getParticipants()) {
+                            user.setSocialCredits(user.getSocialCredits() + 30); // add social credits +30
+                        }
+                        activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits() + 40); // add social credit to owner +40
+
+                        activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
+                        System.out.println(activity.getActivityName() + " has been marked complete");
+                    } else {
+                        System.out.println(activity.getActivityName() + " is already marked complete");
                     }
-                    activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits() + 40); // add social credit to owner +40
-
-                    activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
                 }
                 pastHourActivities.add(activity);
             } else {
-                System.out.println("No timeslots");
+                System.out.println("#### No timeslots ####");
             }
-            
+
         }
 
         System.out.println("End of method");

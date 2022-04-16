@@ -95,28 +95,30 @@ public class DataInitSessionBean {
 
             // create normal user
             NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "MR CODER JEREMY", 420, 20, "user0", "password"));
-            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email1@email.com", "Sir Elton John", 200, 20, "user1", "password"));
-            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("JohnWong@gmail.com", "Prof Tan Wee Kek", 6969, 20, "user2", "password"));
+            NormalUserEntity normalUser2 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email1@email.com", "Sir Elton John", 200, 20, "user1", "password"));
+            NormalUserEntity normalUser3 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("JohnWong@gmail.com", "Prof Tan Wee Kek", 6969, 20, "user2", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email3@email.com", "Hedgehog", 421, 20, "user3", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email4@email.com", "Prof Lu Wei Qian", -99, 20, "user4", "password"));
-            NormalUserEntity normalUser3 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email5@email.com", "Joe Biden", 46, 20, "user5", "password"));
+            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email5@email.com", "Joe Biden", 46, 20, "user5", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email6@email.com", "Joe Mama", 902, 20, "user6", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email7@email.com", "Mrs Ligma", 738, 20, "user7", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email8@email.com", "Prof Chong Ket Fah", 3000, 20, "user8", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email9@email.com", "Prof Zhou Li Feng", 3001, 20, "user9", "password"));
-            NormalUserEntity normalUser2 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email10@email.com", "He Who Must Not Be Named", 777, 20, "user10", "password"));
+            NormalUserEntity normalUser4 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email10@email.com", "He Who Must Not Be Named", 777, 20, "user10", "password"));
 
             // create facility
-            FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "NUS Climbing Club", 5, 30, "USC, 2 Sports Drive, Singapore 117288", 10, 18));
-            FacilityEntity imaginary = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("Non-NUS Facility", "Nil", 5, 100, "Nil", 0, 23));
-            FacilityEntity fac2 = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Squash Court 1", "NUS Squash Club", 5, 30, "USC, 2 Sports Drive, Singapore 117288", 16, 22));
+            FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "NUS Climbing Club", 5, 20, "USC, 2 Sports Drive, Singapore 117288", 10, 23));
+            FacilityEntity imaginary = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("Non-NUS Facility", "NUS", 5, 100, "Nil", 0, 23));
+            FacilityEntity fac2 = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Squash Court 1", "NUS Squash Club", 5, 4, "USC, 2 Sports Drive, Singapore 117288", 16, 22));
 
             Date date = new Date();
             date.setMinutes(0);
-            date.setHours(12);
             date.setSeconds(0);
-            date.setDate(13);
-            date.setMonth(3);
+            // NEED TO CHANGE THIS FOR DATA INIT
+            date.setHours(10);
+            date.setDate(17);
+            date.setMonth(3); // need to - 1 from current date
+            // NEED TO CHANGE THIS FOR DATA INIT
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
@@ -124,36 +126,38 @@ public class DataInitSessionBean {
             // create booking
 //            BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
 //            System.out.println("booking first " + booking.getBookingId());
-            date.setHours(13);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts2 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts2, fac.getFacilityId());
 
-            date.setHours(14);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts3 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts3, fac.getFacilityId());
 
-            date.setHours(15);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts4 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts4, fac.getFacilityId());
 
-            date.setHours(16);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts5 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts5, fac.getFacilityId());
 
-            date.setHours(17);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts6 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts6, fac.getFacilityId());
 
-            date.setDate(14);
+            date.setDate(date.getDate() + 1);
+            // NEED TO CHANGE THIS FOR DATA INIT
             date.setHours(18);
+            // NEED TO CHANGE THIS FOR DATA INIT
             TimeSlotEntity ts7 = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac2);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts7, fac2.getFacilityId());
 
-            date.setHours(19);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts8 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac2);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts8, fac2.getFacilityId());
 
-            date.setHours(20);
+            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts9 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac2);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts9, fac2.getFacilityId());
 
@@ -167,19 +171,20 @@ public class DataInitSessionBean {
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Dance"), cat3.getCategoryId());
             categoryEntitySessionBeanLocal.createNewCategoryEntity(new CategoryEntity("Music"), cat3.getCategoryId());
 
+            Date creationDate = new Date();
             // create activity
-            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description", 15, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, date), cat2.getCategoryId(), ts.getTimeSlotId(), date);
+            ActivityEntity activity = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity One", "Activity One Description - Bouldering", 15, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, creationDate), cat2.getCategoryId(), ts.getTimeSlotId(), null);
             activity.setActivityOver(Boolean.TRUE);
-//            bookingEntitySessionBeanLocal.associateBookingWithActivity(booking.getBookingId(), activity.getActivityId());
 
-            ActivityEntity activity2 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Two", "Activity Two Description", 4, new ArrayList<>(), normalUser2, new ArrayList<>(), cat4, null, date), cat4.getCategoryId(), ts7.getTimeSlotId(), date);
+            ActivityEntity activity2 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Two", "Activity Two Description - Squash", 4, new ArrayList<>(), normalUser2, new ArrayList<>(), cat4, null, creationDate), cat4.getCategoryId(), ts7.getTimeSlotId(), null);
 
-            CommentEntity comment = new CommentEntity("Will anyone be bringing any equipment?", normalUser, date);
+            CommentEntity comment = new CommentEntity("Will anyone be bringing chalk?", normalUser, date);
             activityEntitySessionBeanLocal.addComment(comment, activity.getActivityId());
 
             // signup for activity
             activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser2.getUserId());
             activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser3.getUserId());
+            activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser4.getUserId());
 
             activityEntitySessionBeanLocal.signUpForActivity(activity2.getActivityId(), normalUser.getUserId());
             activityEntitySessionBeanLocal.signUpForActivity(activity2.getActivityId(), normalUser3.getUserId());

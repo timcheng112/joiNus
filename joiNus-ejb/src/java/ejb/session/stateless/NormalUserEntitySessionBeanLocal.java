@@ -47,7 +47,7 @@ public interface NormalUserEntitySessionBeanLocal {
 
     public int retrieveLeaderboardRank(NormalUserEntity currUser);
 
-    public void creditTokens(List<NormalUserEntity> users);
+    public void creditTokens();
 
     public Long editNormalUser(NormalUserEntity normalUserEntity) throws NormalUserNotFoundException, UpdateNormalUserException, InputDataValidationException;
 

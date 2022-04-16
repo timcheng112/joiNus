@@ -53,13 +53,13 @@
                     </p:column>
 
                     <p:column headerText="Functions" style="text-align: center" >
-                        <p:commandButton update="formViewCategory" oncomplete="PF('dialogViewCategory').show()" icon="ui-icon-document" title="View" >
+                        <p:commandButton update="formViewCategory" oncomplete="PF('dialogViewCategory').show()" icon="ui-icon-document" title="View" value="View">
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryEntityToView}" />
                         </p:commandButton>
-                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="Edit" >
+                        <p:commandButton update="formEditCategory" oncomplete="PF('dialogEditCategory').show()" icon="ui-icon-pencil" title="Edit" value="Edit">
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryUpdate}" />
                         </p:commandButton>
-                        <p:commandButton update="formDeleteCategory" oncomplete="PF('dialogDeleteCategory').show()" icon="ui-icon-trash" title="Delete" >
+                        <p:commandButton update="formDeleteCategory" oncomplete="PF('dialogDeleteCategory').show()" icon="ui-icon-trash" title="Delete" value="Delete">
                             <f:setPropertyActionListener value="#{categoryEntity}" target="#{categoryManagedBean.categoryDelete}" />
                         </p:commandButton>
 

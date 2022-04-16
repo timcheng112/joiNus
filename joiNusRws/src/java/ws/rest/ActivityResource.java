@@ -59,7 +59,7 @@ public class ActivityResource {
     NormalUserEntitySessionBeanLocal normalUserEntitySessionBeanLocal = lookupNormalUserEntitySessionBeanLocal();
 
     ActivityEntitySessionBeanLocal activityEntitySessionBeanLocal = lookupActivityEntitySessionBeanLocal();
-
+    
     @Context
     private UriInfo context;
 
@@ -136,7 +136,7 @@ public class ActivityResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveAllActivitiesIP(@PathParam("userId") Long userId) {
-
+        System.out.println("ws.rest.ActivityResource.retrieveAllActivitiesIP()");
         try {
             List<ActivityEntity> activityEntities = activityEntitySessionBeanLocal.retrieveAllActivitiesIP(userId);
 
@@ -194,6 +194,11 @@ public class ActivityResource {
                 System.out.println("test f");
             }
             System.out.println("reached end of for loop");
+            
+            System.out.println("######################");
+            for (ActivityEntity ac : activityEntities) {
+                System.out.println(ac.getActivityName());
+            }
             GenericEntity<List<ActivityEntity>> genericEntity = new GenericEntity<List<ActivityEntity>>(activityEntities) {
             };
             System.out.println(genericEntity.getEntity());

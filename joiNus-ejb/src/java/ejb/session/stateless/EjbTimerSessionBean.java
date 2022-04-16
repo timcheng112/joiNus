@@ -53,11 +53,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
             List<FacilityEntity> facilities = facilityEntitySessionBeanLocal.retrieveAllFacilities();
 
             for (FacilityEntity facility : facilities) {
-//                Calendar c = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Singapore")));
-//                c.set(Calendar.MINUTE, 0);
-//                c.set(Calendar.SECOND, 0);
-//                c.set(Calendar.MILLISECOND, 0);
-
+                System.out.println("Generating for Facility : " + facility.getFacilityName());
                 Date date = new Date();
                 date.setMinutes(0);
                 date.setSeconds(0);
@@ -65,8 +61,8 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
                 int openingHour = facility.getOpeningHour();
                 int closingHour = facility.getClosingHour();
 
-                for (int count = 0; count <= 14; count++) { // today + 7 days
-                    System.out.println("day " + count);
+                for (int count = 0; count <= 14; count++) { // today + 14 days
+                    System.out.println("Day Counter" + count);
                     timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(date.getYear(), date.getMonth(), date.getDate(), facility.getFacilityId());
 
                     if (timeSlots == null || timeSlots.isEmpty()) {
@@ -82,8 +78,6 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
                         System.out.println("****** Timeslot exist for " + date.getDate() + "/" + date.getMonth() + " for " + facility.getFacilityName() + " ******");
 
                     }
-//                    c.set(Calendar.HOUR_OF_DAY, 0);
-//                    c.add(Calendar.DATE, 1);
 
                     date.setHours(0);
                     date.setDate(date.getDate() + 1);
@@ -99,8 +93,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "1", hour = "8", minute = "0", info = "tokenCreditorTimer")
     public void tokenCreditorTimer() {
         System.out.println("ejb.session.stateless.EjbTimerSessionBean.tokenCreditorTimer()");
-        List<NormalUserEntity> normalUsers = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
-        normalUserEntitySessionBeanLocal.creditTokens(normalUsers);
+        normalUserEntitySessionBeanLocal.creditTokens();
     }
 
     @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "0", info = "activityCompleteTimer") // run every hour

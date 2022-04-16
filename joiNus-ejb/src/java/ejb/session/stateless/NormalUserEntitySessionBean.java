@@ -324,7 +324,9 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
     }
 
     @Override
-    public void creditTokens(List<NormalUserEntity> users) {
+    public void creditTokens() {
+        System.out.println("ejb.session.stateless.NormalUserEntitySessionBean.creditTokens()");
+        List<NormalUserEntity> users = retrieveAllNormalUser();
         for (NormalUserEntity user : users) {
             if (user.getSocialCredits() < 420) {
                 user.setBookingTokens(10);

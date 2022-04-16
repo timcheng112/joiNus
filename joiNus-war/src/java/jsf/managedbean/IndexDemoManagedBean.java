@@ -7,36 +7,21 @@ package jsf.managedbean;
 
 import ejb.enums.SlotStatusEnum;
 import ejb.session.stateless.ActivityEntitySessionBeanLocal;
-import ejb.session.stateless.AdminEntitySessionBeanLocal;
-import ejb.session.stateless.BookingEntitySessionBeanLocal;
 import ejb.session.stateless.FacilityEntitySessionBeanLocal;
 import ejb.session.stateless.NormalUserEntitySessionBeanLocal;
 import ejb.session.stateless.TimeSlotEntitySessionBeanLocal;
 import entity.ActivityEntity;
-import entity.AdminEntity;
 import entity.FacilityEntity;
-import entity.NormalUserEntity;
 import entity.TimeSlotEntity;
-import java.io.IOException;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.inject.Inject;
-import util.exception.ActivityNotFoundException;
-import util.exception.AdminNotFoundException;
-import util.exception.BookingNotFoundException;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.InputDataValidationException;
-import util.exception.TimeSlotNotFoundException;
 
 /**
  *
@@ -58,26 +43,25 @@ public class IndexDemoManagedBean implements Serializable {
     @EJB(name = "ActivityEntitySessionBeanLocal")
     private ActivityEntitySessionBeanLocal activityEntitySessionBeanLocal;
 
-    
-
     public IndexDemoManagedBean() {
 
     }
 
     @PostConstruct
     public void postConstruct() {
-        
+
     }
 
     public void generateTimeslots() {
         System.out.println("jsf.managedbean.IndexDemoManagedBean.generateTimeslots()");
-        
+
         try {
             List<TimeSlotEntity> timeSlots;
 
             List<FacilityEntity> facilities = facilityEntitySessionBeanLocal.retrieveAllFacilities();
 
             for (FacilityEntity facility : facilities) {
+                System.out.println("Generating for Facility : " + facility.getFacilityName());
                 Date date = new Date();
                 date.setMinutes(0);
                 date.setSeconds(0);
@@ -85,8 +69,8 @@ public class IndexDemoManagedBean implements Serializable {
                 int openingHour = facility.getOpeningHour();
                 int closingHour = facility.getClosingHour();
 
-                for (int count = 0; count <= 14; count++) { // today + 7 days
-                    System.out.println("day " + count);
+                for (int count = 0; count <= 14; count++) { // today + 14 days
+                    System.out.println("Day Counter" + count);
                     timeSlots = timeSlotEntitySessionBeanLocal.retrieveTimeSlotsByDate(date.getYear(), date.getMonth(), date.getDate(), facility.getFacilityId());
 
                     if (timeSlots == null || timeSlots.isEmpty()) {
@@ -111,28 +95,25 @@ public class IndexDemoManagedBean implements Serializable {
             ex.printStackTrace();
         }
     }
-    
+
     public void creditTokens() {
         System.out.println("jsf.managedbean.IndexDemoManagedBean.creditTokens()");
-        List<NormalUserEntity> normalUsers = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
-        normalUserEntitySessionBeanLocal.creditTokens(normalUsers);
+        normalUserEntitySessionBeanLocal.creditTokens();
     }
-    
+
     public void completeActivities() {
         System.out.println("jsf.managedbean.IndexDemoManagedBean.completeActivities()");
         try {
             /* this is for the actual code */
             Date date = new Date();
-            date.setMinutes(0);
-            date.setSeconds(0);
-            
+
             /* this is for testing code 
             Date date = new Date();
             date.setMinutes(0);
             date.setSeconds(0);
             date.setHours(12);
             date.setDate(13);
-            */
+             */
             System.out.println("Date sending in to check is " + date);
             List<ActivityEntity> activitiesToComplete = activityEntitySessionBeanLocal.markActivitiesCompletedByDateForTimer(date);
 

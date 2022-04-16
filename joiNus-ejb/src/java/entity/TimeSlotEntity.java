@@ -96,6 +96,7 @@ public class TimeSlotEntity implements Serializable {
      * @return the timeSlotTime
      */
     public Date getTimeSlotTime() {
+        System.out.println(timeSlotTime);
         return timeSlotTime;
     }
 
