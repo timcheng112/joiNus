@@ -23,6 +23,11 @@
                         <li>Tokens will be shared to all users on a monthly basis, on the 1st of each Month.</li>
                     </ul>
                 </p>
+                
+
+                <p:commandButton value="Simulate Time Slot Generation" actionListener="#{indexDemoManagedBean.generateTimeslots}" icon="pi pi-calendar-plus" /><br />
+                <p:commandButton value="Simulate Token Crediting" actionListener="#{indexDemoManagedBean.creditTokens}" icon="pi pi-ticket" /><br />
+                <p:commandButton value="Generate Time Slots for coming 2 weeks" actionListener="#{indexDemoManagedBean.completeActivities()}" icon="pi pi-check-circle" />
             </article>
         </h:panelGroup>
 

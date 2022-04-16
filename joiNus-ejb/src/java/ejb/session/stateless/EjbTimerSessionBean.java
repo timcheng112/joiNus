@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.CreateNewTimeSlotException;
 import util.exception.InputDataValidationException;
+import util.exception.NormalUserNotFoundException;
 
 /**
  *
@@ -107,32 +108,47 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         System.out.println("ejb.session.stateless.EjbTimerSessionBean.activityCompleteTimer()");
 
         try {
+            /* this is for the actual code */
             Date date = new Date();
             date.setMinutes(0);
             date.setSeconds(0);
+
+            /* this is for testing code 
+            Date date = new Date();
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setHours(12);
+            date.setDate(13);
+             */
             System.out.println("Date sending in to check is " + date);
-            List<ActivityEntity> activitiesToComplete = activityEntitySessionBeanLocal.retrieveActivitiesByDateForTimer(date);
+            List<ActivityEntity> activitiesToComplete = activityEntitySessionBeanLocal.markActivitiesCompletedByDateForTimer(date);
+
+            System.out.println("Activities Checked");
+            for (ActivityEntity activity : activitiesToComplete) {
+                System.out.println(activity.getActivityName());
+                System.out.println(activity.getActivityOver());
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
-    @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "*", info = "testTimer") // run every min
-    public void testTimer() {
-        System.out.println("ejb.session.stateless.EjbTimerSessionBean.testTimer()");
 
-        List<NormalUserEntity> users = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
-
-        for (NormalUserEntity user : users) {
-            System.out.println("name");
-
-            System.out.println(user.getName());
-            System.out.println("own");
-
-            System.out.println(user.getActivitiesOwned());
-            System.out.println("part");
-
-            System.out.println(user.getActivitiesParticipated());
-        }
-    }
+//    @Schedule(dayOfWeek = "*", month = "*", dayOfMonth = "*", hour = "*", minute = "*", info = "testTimer") // run every min
+//    public void testTimer() {
+//        System.out.println("ejb.session.stateless.EjbTimerSessionBean.testTimer()");
+//
+//        List<NormalUserEntity> users = normalUserEntitySessionBeanLocal.retrieveAllNormalUser();
+//
+//        for (NormalUserEntity user : users) {
+//            System.out.println("name");
+//
+//            System.out.println(user.getName());
+//            System.out.println("own");
+//
+//            System.out.println(user.getActivitiesOwned());
+//            System.out.println("part");
+//
+//            System.out.println(user.getActivitiesParticipated());
+//        }
+//    }
 }
