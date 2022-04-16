@@ -405,15 +405,15 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     }
 
     @Override
-    public List<ActivityEntity> retrieveActivitiesByDateForTimer(Date date) {
+    public List<ActivityEntity> markActivitiesCompletedByDateForTimer(Date date) {
         System.out.println("ejb.session.stateless.ActivityEntitySessionBean.retrieveActivitiesByDate()");
         Calendar c = Calendar.getInstance();
 
-        Date nowDate = new Date();
-        int month = nowDate.getMonth();
-        int year = nowDate.getYear() + 1900;
-        int day = 6;
-        int hour = nowDate.getHours();
+        int month = date.getMonth();
+        int year = date.getYear() + 1900;
+//        int day = nowDate.getDate();
+        int day = date.getDate();
+        int hour = date.getHours();
 
         Date dateXD;
 
@@ -425,18 +425,23 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
         c.set(Calendar.DATE, day);
         c.set(Calendar.HOUR_OF_DAY, hour);
 
-        List<ActivityEntity> allActivities = retrieveAllActivities();
+        System.out.println("dateXD is " + c.getTime());
 
-        for (ActivityEntity activity : allActivities) {
+        List<ActivityEntity> allActivities = retrieveAllActivities();
+        List<ActivityEntity> pastHourActivities = new ArrayList<>();
+
+        for (ActivityEntity activity : allActivities) { // deal with setting complete
             System.out.println("Activity facility id is " + activity.getBooking().getTimeSlot().getFacility().getFacilityId());
             System.out.println("Activity facility timeslot id is " + activity.getBooking().getTimeSlot().getTimeSlotId());
 
             Query query = em.createQuery("SELECT ts FROM TimeSlotEntity ts WHERE ts.facility.facilityId = :inFacility AND ts.timeSlotTime BETWEEN :inStart AND :inEnd ORDER BY ts.timeSlotId ASC");
-            c.add(Calendar.SECOND, -1);
+            // want to check the past 1 hour
+            c.add(Calendar.HOUR_OF_DAY, -1);
+            c.add(Calendar.SECOND, 1);
             dateXD = c.getTime();
             query.setParameter("inStart", dateXD, TemporalType.TIMESTAMP);
             System.out.println("Starting date of check is " + dateXD);
-            c.add(Calendar.MINUTE, 1);
+            c.add(Calendar.HOUR_OF_DAY, 1);
             dateXD = c.getTime();
             query.setParameter("inEnd", dateXD, TemporalType.TIMESTAMP);
             System.out.println("End date of check is " + dateXD);
@@ -460,14 +465,14 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
                     activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
                 }
-
+                pastHourActivities.add(activity);
             } else {
                 System.out.println("No timeslots");
             }
-
+            
         }
 
         System.out.println("End of method");
-        return null;
+        return pastHourActivities;
     }
 }
