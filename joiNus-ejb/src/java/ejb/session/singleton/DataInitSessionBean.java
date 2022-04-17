@@ -97,14 +97,14 @@ public class DataInitSessionBean {
             NormalUserEntity normalUser = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email@email.com", "MR CODER JEREMY", 420, 20, "user0", "password"));
             NormalUserEntity normalUser2 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email1@email.com", "Sir Elton John", 200, 20, "user1", "password"));
             NormalUserEntity normalUser3 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("JohnWong@gmail.com", "Prof Tan Wee Kek", 6969, 20, "user2", "password"));
-            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email3@email.com", "Hedgehog", 421, 20, "user3", "password"));
+            NormalUserEntity normalUser4 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email3@email.com", "Hedgehog", 421, 20, "user3", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email4@email.com", "Prof Lu Wei Qian", -99, 20, "user4", "password"));
-            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email5@email.com", "Joe Biden", 46, 20, "user5", "password"));
+            NormalUserEntity normalUser5 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email5@email.com", "Joe Biden", 46, 20, "user5", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email6@email.com", "Joe Mama", 902, 20, "user6", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email7@email.com", "Mrs Ligma", 738, 20, "user7", "password"));
             normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email8@email.com", "Prof Chong Ket Fah", 3000, 20, "user8", "password"));
-            normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email9@email.com", "Prof Zhou Li Feng", 3001, 20, "user9", "password"));
-            NormalUserEntity normalUser4 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email10@email.com", "He Who Must Not Be Named", 777, 20, "user10", "password"));
+            NormalUserEntity normalUser6 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email9@email.com", "Prof Zhou Li Feng", 3001, 20, "user9", "password"));
+            NormalUserEntity normalUser7 = normalUserEntitySessionBeanLocal.createNewNormalUser(new NormalUserEntity("email10@email.com", "He Who Must Not Be Named", 777, 20, "user10", "password"));
 
             // create facility
             FacilityEntity fac = facilityEntitySessionBeanLocal.createNewFacility(new FacilityEntity("USC Bouldering Wall", "NUS Climbing Club", 5, 20, "USC, 2 Sports Drive, Singapore 117288", 10, 23));
@@ -131,7 +131,7 @@ public class DataInitSessionBean {
             // create booking
 //            BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
 //            System.out.println("booking first " + booking.getBookingId());
-            date.setHours(date.getHours() + 1);
+//            date.setHours(date.getHours() + 1);
             TimeSlotEntity ts2 = new TimeSlotEntity(date, SlotStatusEnum.AVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts2, fac.getFacilityId());
 
@@ -181,6 +181,9 @@ public class DataInitSessionBean {
 
             ActivityEntity activity2 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Two", "Activity Two Description - Squash", 4, new ArrayList<>(), normalUser2, new ArrayList<>(), cat4, null, creationDate), cat4.getCategoryId(), ts7.getTimeSlotId(), null);
 
+            ActivityEntity activity3 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Three", "Activity Two Description - Bouldering Cohesion Group 1", 20, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, creationDate), cat2.getCategoryId(), ts2.getTimeSlotId(), null);
+            ActivityEntity activity4 = activityEntitySessionBeanLocal.createNewActivity(new ActivityEntity("Activity Three", "Activity Two Description - Bouldering Cohesion Group 2", 20, new ArrayList<>(), normalUser, new ArrayList<>(), cat2, null, creationDate), cat2.getCategoryId(), ts4.getTimeSlotId(), null);
+
             CommentEntity comment = new CommentEntity("Will anyone be bringing chalk?", normalUser, date);
             activityEntitySessionBeanLocal.addComment(comment, activity.getActivityId());
 
@@ -188,9 +191,14 @@ public class DataInitSessionBean {
             activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser2.getUserId());
             activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser3.getUserId());
             activityEntitySessionBeanLocal.signUpForActivity(activity.getActivityId(), normalUser4.getUserId());
-
+            
             activityEntitySessionBeanLocal.signUpForActivity(activity2.getActivityId(), normalUser.getUserId());
             activityEntitySessionBeanLocal.signUpForActivity(activity2.getActivityId(), normalUser3.getUserId());
+            activityEntitySessionBeanLocal.signUpForActivity(activity2.getActivityId(), normalUser7.getUserId());
+            
+            activityEntitySessionBeanLocal.signUpForActivity(activity3.getActivityId(), normalUser5.getUserId());
+            activityEntitySessionBeanLocal.signUpForActivity(activity3.getActivityId(), normalUser6.getUserId());
+            activityEntitySessionBeanLocal.signUpForActivity(activity4.getActivityId(), normalUser7.getUserId());
 
             System.out.println("Data Initialization Ended");
         } catch (AdminUsernameExistException | CreateNewFacilityException | CreateNewCategoryException | CreateNewTimeSlotException | FacilityNameExistException | UnknownPersistenceException | InputDataValidationException | NormalUserNameExistException | MaxParticipantsExceededException | NormalUserAlreadySignedUpException | NormalUserNotFoundException | ActivityNotFoundException | CategoryNotFoundException | TimeSlotNotFoundException | InsufficientBookingTokensException ex) {
