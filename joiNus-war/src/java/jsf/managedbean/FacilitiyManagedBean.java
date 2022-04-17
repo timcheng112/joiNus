@@ -147,16 +147,18 @@ public class FacilitiyManagedBean implements Serializable {
             facilityEntitySessionBeanLocal.updateFacilityNew(facilityEntityToUpdate, newOpeningHour, newClosingHour);
 
             System.out.println("Updated Facility: " + facilityEntityToUpdate.getFacilityId());
-
-            if (facilityEntityToUpdate.getFacilityImage() == null) {
-                uploadedFilePath = "";
-                uploadedImage = new ImageEntity();
-                showImage = false;
-            } else {
-                uploadedFilePath = facilityEntityToUpdate.getFacilityImage().getImagePath();
-                uploadedImage = facilityEntityToUpdate.getFacilityImage();
-                showImage = true;
-            }
+            uploadedFilePath = "";
+            uploadedImage = new ImageEntity();
+            showImage = false;
+//            if (facilityEntityToUpdate.getFacilityImage() == null) {
+//                uploadedFilePath = "";
+//                uploadedImage = new ImageEntity();
+//                showImage = false;
+//            } else {
+//                uploadedFilePath = facilityEntityToUpdate.getFacilityImage().getImagePath();
+//                uploadedImage = facilityEntityToUpdate.getFacilityImage();
+//                showImage = true;
+//            }
             initialiseState();
             facilityEntityToUpdate = new FacilityEntity();
 

@@ -65,9 +65,6 @@ public class TimeSlotManagedBean implements Serializable {
         currTimeslots = new ArrayList<>();
         timeSlotToAdd = -1;
         timeSlotToEdit = new TimeSlotEntity();
-        currentFacility = null;
-        possibleTimeSlots = new ArrayList<>();
-        currTimeslots = new ArrayList<>();
     }
 
     @PostConstruct

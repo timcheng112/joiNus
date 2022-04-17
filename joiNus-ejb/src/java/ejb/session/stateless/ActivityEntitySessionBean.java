@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -76,39 +77,49 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
 
     @Override
     public ActivityEntity createNewActivity(ActivityEntity newActivityEntity, Long categoryId, Long timeSlotId, Date activityDate) throws UnknownPersistenceException, InputDataValidationException, CategoryNotFoundException, TimeSlotNotFoundException, InsufficientBookingTokensException, CreateNewTimeSlotException {
+        System.out.println("ejb.session.stateless.ActivityEntitySessionBean.createNewActivity()");
         Set<ConstraintViolation<ActivityEntity>> constraintViolations = validator.validate(newActivityEntity);
 
+        System.out.println("A");
         CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
         if (constraintViolations.isEmpty()) {
             try {
+                System.out.println("B");
                 TimeSlotEntity timeSlotEntity = new TimeSlotEntity();
                 if (timeSlotId != null) {
+                    System.out.println("C");
                     timeSlotEntity = timeSlotEntitySessionBeanLocal.retrieveTimeSlotById(timeSlotId);
                 } else {
+                    System.out.println("D");
                     Query query = em.createQuery("SELECT f FROM FacilityEntity f WHERE f.facilityName='Non-NUS Facility'");
                     FacilityEntity facility = (FacilityEntity) query.getSingleResult();
                     System.out.println(facility);
                     timeSlotEntity = new TimeSlotEntity(activityDate, SlotStatusEnum.AVAILABLE, facility);
                     timeSlotEntity = timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(timeSlotEntity, facility.getFacilityId());
                 }
+                System.out.println("E");
                 //set linkages
                 BookingEntity newBookingEntity = new BookingEntity();
+
                 newBookingEntity = bookingEntitySessionBeanLocal.createNewBooking(newBookingEntity);
                 newBookingEntity.setActivity(newActivityEntity);
                 newBookingEntity.setTimeSlot(timeSlotEntity);
+                System.out.println("F");
+
                 timeSlotEntity.setStatus(SlotStatusEnum.UNAVAILABLE);
-
+                System.out.println("F1");
                 timeSlotEntity.setBooking(newBookingEntity);
-
+                System.out.println("F2");
                 newActivityEntity.setBooking(newBookingEntity);
-
+                System.out.println("F3");
                 normalUserEntitySessionBeanLocal.deductTokens(Boolean.TRUE, newActivityEntity.getActivityOwner(), timeSlotEntity.getFacility());
-
+                System.out.println("G");
                 newActivityEntity.setCategory(categoryEntity);
 
                 em.persist(newActivityEntity);
                 em.flush();
 
+                System.out.println("H");
                 return newActivityEntity;
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
@@ -126,20 +137,31 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
     public List<ActivityEntity> retrieveAllActivities() {
         Query query = em.createQuery("SELECT a FROM ActivityEntity a ORDER BY a.activityName ASC");
 
-        return query.getResultList();
+        List<ActivityEntity> activities = query.getResultList();
+        for (ActivityEntity ac : activities) {
+            System.out.println(ac.getActivityName());
+            System.out.println(ac.getBooking().getTimeSlot().getTimeSlotId());
+            System.out.println(ac.getBooking().getTimeSlot().getTimeSlotTime());
+        }
+        return activities;
     }
 
     @Override
     public List<ActivityEntity> retrieveAllOngoingActivities(String club) {
         Query query;
         if (club != null) {
-            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.booking.timeSlot.facility.club = :clubName");
+            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.booking.timeSlot.facility.club = :clubName AND a.activityOver = FALSE ORDER BY a.activityName ASC ");
             query.setParameter("clubName", club);
         } else {
-            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityOver = false ORDER BY a.activityName ASC");
+            query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityOver = false AND a.activityOver = FALSE ORDER BY a.activityName ASC ");
         }
-
-        return query.getResultList();
+        List<ActivityEntity> activities = query.getResultList();
+        for (ActivityEntity ac : activities) {
+            System.out.println(ac.getActivityName());
+            System.out.println(ac.getBooking().getTimeSlot().getTimeSlotId());
+            System.out.println(ac.getBooking().getTimeSlot().getTimeSlotTime());
+        }
+        return activities;
     }
 
     @Override
@@ -443,13 +465,13 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
             dateXD = c.getTime();
             query.setParameter("inStart", dateXD, TemporalType.TIMESTAMP);
             System.out.println("* Starting date of check is " + dateXD);
-            
+
             c.add(Calendar.HOUR_OF_DAY, 1);
             c.add(Calendar.MINUTE, 5);
             dateXD = c.getTime();
             query.setParameter("inEnd", dateXD, TemporalType.TIMESTAMP);
             System.out.println("* End date of check is " + dateXD);
-            
+
             query.setParameter("inFacility", activity.getBooking().getTimeSlot().getFacility().getFacilityId());
 
             List<TimeSlotEntity> timeSlots = query.getResultList();
@@ -458,22 +480,27 @@ public class ActivityEntitySessionBean implements ActivityEntitySessionBeanLocal
             if (!timeSlots.isEmpty()) {
                 System.out.println("##### Timeslots found #####");
                 for (TimeSlotEntity ts : timeSlots) {
-                    System.out.println("Timeslot ID is " + ts.getTimeSlotId());
-                    System.out.println("Timeslot Time is " + ts.getTimeSlotTime());
+                    if (Objects.equals(ts.getTimeSlotId(), activity.getBooking().getTimeSlot().getTimeSlotId())) {
+                        System.out.println("Timeslot ID is " + ts.getTimeSlotId());
+                        System.out.println("Timeslot Time is " + ts.getTimeSlotTime());
 
-                    if (!activity.getActivityOver()) {
-                        activity.setActivityOver(Boolean.TRUE);
+                        if (!activity.getActivityOver()) {
+                            activity.setActivityOver(Boolean.TRUE);
 
-                        for (NormalUserEntity user : activity.getParticipants()) {
-                            user.setSocialCredits(user.getSocialCredits() + 30); // add social credits +30
+                            for (NormalUserEntity user : activity.getParticipants()) {
+                                user.setSocialCredits(user.getSocialCredits() + 30); // add social credits +30
+                            }
+                            activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits() + 40); // add social credit to owner +40
+
+                            activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
+                            System.out.println(activity.getActivityName() + " has been marked complete");
+                        } else {
+                            System.out.println(activity.getActivityName() + " is already marked complete");
                         }
-                        activity.getActivityOwner().setSocialCredits(activity.getActivityOwner().getSocialCredits() + 40); // add social credit to owner +40
-
-                        activity.getBooking().setBookingStatus(SlotStatusEnum.UNAVAILABLE);
-                        System.out.println(activity.getActivityName() + " has been marked complete");
                     } else {
-                        System.out.println(activity.getActivityName() + " is already marked complete");
+                        System.out.println("#### No timeslots to change ####");
                     }
+
                 }
                 pastHourActivities.add(activity);
             } else {

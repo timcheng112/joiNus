@@ -310,15 +310,24 @@ public class NormalUserEntitySessionBean implements NormalUserEntitySessionBeanL
 
     @Override
     public void deductTokens(Boolean isHosting, NormalUserEntity user, FacilityEntity facilityEntity) throws InsufficientBookingTokensException {
+        System.out.println("ejb.session.stateless.NormalUserEntitySessionBean.deductTokens()");
+        System.out.println(isHosting);
+        System.out.println(user);
+        System.out.println(facilityEntity);
+        System.out.println("S");
         user = em.find(NormalUserEntity.class, user.getUserId());
+        System.out.println("T");
         if (isHosting && !((user.getBookingTokens() - facilityEntity.getTokenCost()) < 0)) {
+            System.out.println("U");
             System.out.println("Booking Tokens: " + user.getBookingTokens());
             System.out.println("Facility Token Cost: " + facilityEntity.getTokenCost());
             System.out.println("Name: " + user.getName());
             user.setBookingTokens(user.getBookingTokens() - facilityEntity.getTokenCost());
         } else if (!isHosting && !((user.getBookingTokens() - Math.floorDiv(facilityEntity.getTokenCost(), 2)) < 0)) {
+            System.out.println("V");
             user.setBookingTokens(user.getBookingTokens() - Math.floorDiv(facilityEntity.getTokenCost(), 2));
         } else {
+            System.out.println("W");
             throw new InsufficientBookingTokensException("Insufficient Tokens!");
         }
     }

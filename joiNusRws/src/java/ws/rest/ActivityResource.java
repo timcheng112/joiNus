@@ -300,7 +300,8 @@ public class ActivityResource {
                 activityEntity.setActivityOwner(normalUserEntity);
 
                 activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createActivityReq.getCategoryId(), createActivityReq.getTimeSlotId(), null);
-
+                
+                System.out.println("END OF METHOD ws.rest.ActivityResource.createNewActivity()");
                 return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
             } catch (CategoryNotFoundException | InputDataValidationException | TimeSlotNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
@@ -322,7 +323,7 @@ public class ActivityResource {
         if (createNewNoFacilityActivityReq != null) {
             try {
                 NormalUserEntity normalUserEntity = normalUserEntitySessionBeanLocal.normalUserLogin(createNewNoFacilityActivityReq.getUsername(), createNewNoFacilityActivityReq.getPassword());
-                System.out.println("********** ActivityResource.createActivity(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
+                System.out.println("********** ActivityResource.createNoFacilityActivity(): NormalUser " + normalUserEntity.getUsername() + " login remotely via web service");
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setActivityName(createNewNoFacilityActivityReq.getActivityName());
                 activityEntity.setActivityDescription(createNewNoFacilityActivityReq.getActivityDescription());
@@ -339,6 +340,7 @@ public class ActivityResource {
                 System.out.println("test");
                 activityEntity = activityEntitySessionBeanLocal.createNewActivity(activityEntity, createNewNoFacilityActivityReq.getCategoryId(), null, activityDate);
 
+                System.out.println("END OF METHOD ws.rest.ActivityResource.createNewNoFacilityActivity()");
                 return Response.status(Response.Status.OK).entity(activityEntity.getActivityId()).build();
             } catch (CategoryNotFoundException | InputDataValidationException | TimeSlotNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
@@ -545,16 +547,16 @@ public class ActivityResource {
                     return Response.status(Status.OK).entity(genericEntity).build();
                 } catch (NormalUserNotFoundException | ActivityNotFoundException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "user can't be found");
-                    return Response.status(Response.Status.NOT_FOUND).entity("user can't be found").build();
+                    return Response.status(Response.Status.NOT_FOUND).entity(obj).build();
                 } catch (NormalUserAlreadySignedUpException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "user already signed up");
-                    return Response.status(Response.Status.BAD_REQUEST).entity("user already signed up").build();
+                    return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
                 } catch (MaxParticipantsExceededException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "no space for anymore participants");
-                    return Response.status(Response.Status.BAD_REQUEST).entity("user already signed up").build();
+                    return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
                 } catch (InsufficientBookingTokensException ex) {
                     JsonObjectBuilder obj = Json.createObjectBuilder().add("msg", "insufficient tokens");
-                    return Response.status(Response.Status.BAD_REQUEST).entity("insufficient tokens!").build();
+                    return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
                 }
             }
         } catch (InvalidLoginCredentialException ex) {

@@ -128,8 +128,8 @@ public class ActivityManagedBean implements Serializable {
 
             activityEntities.remove(activityEntityToDelete);
 
-            if (filteredActivityEntities != null) {
-                filteredActivityEntities.remove(activityEntityToDelete);
+            if (ongoingActivityEntities != null) {
+                ongoingActivityEntities.remove(activityEntityToDelete);
             }
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Activity deleted successfully", null));
