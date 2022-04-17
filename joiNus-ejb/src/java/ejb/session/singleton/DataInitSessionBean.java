@@ -115,13 +115,18 @@ public class DataInitSessionBean {
             date.setMinutes(0);
             date.setSeconds(0);
             // NEED TO CHANGE THIS FOR DATA INIT
-            date.setHours(10);
-            date.setDate(17);
+            date.setHours(16);
+            date.setDate(16);
             date.setMonth(3); // need to - 1 from current date
             // NEED TO CHANGE THIS FOR DATA INIT
 
             TimeSlotEntity ts = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts, fac.getFacilityId());
+
+            // NEED TO CHANGE THIS FOR DATA INIT
+            date.setHours(10);
+            // NEED TO CHANGE THIS FOR DATA INIT
+            date.setDate(17);
 
             // create booking
 //            BookingEntity booking = bookingEntitySessionBeanLocal.createNewBooking(new BookingEntity(SlotStatusEnum.AVAILABLE, date, null, ts));
@@ -147,9 +152,7 @@ public class DataInitSessionBean {
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts6, fac.getFacilityId());
 
             date.setDate(date.getDate() + 1);
-            // NEED TO CHANGE THIS FOR DATA INIT
             date.setHours(18);
-            // NEED TO CHANGE THIS FOR DATA INIT
             TimeSlotEntity ts7 = new TimeSlotEntity(date, SlotStatusEnum.UNAVAILABLE, fac2);
             timeSlotEntitySessionBeanLocal.createNewTimeSlotEntity(ts7, fac2.getFacilityId());
 
