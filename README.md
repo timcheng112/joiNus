@@ -19,7 +19,8 @@
 - A social credit system serves as a form of gamification, where credits are gained upon participation of activities, while credits can be forfeited if a user does not turn up for an event. This system encourages active participation while deterring no-shows especially for events that require booking of facilities.
 
 # Screenshots
-
+- Following are screenshots of the web application.
+- Please view the screenshots of the mobile application @ https://github.com/timcheng112/joiNusIonic
 ![activity management](https://user-images.githubusercontent.com/89450828/195497473-50a1b554-fe49-402f-b89f-0c2d2408d7bc.png)
 ![facility management](https://user-images.githubusercontent.com/89450828/195497479-b7cef9fc-584a-4687-a451-2e61f624300b.png)
 ![registration](https://user-images.githubusercontent.com/89450828/195497489-5a5f49ff-7b05-41e8-bd3f-8a06b0e4bc58.png)
